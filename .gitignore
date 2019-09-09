@@ -9,3 +9,7 @@
 
 # Compiled output
 /dist
+
+# Coverage data
+coverage/
+.nyc_output/
