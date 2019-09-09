@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha test/ --reporter spec",
     "cover": "./node_modules/.bin/nyc ./node_modules/.bin/mocha && ./node_modules/.bin/nyc report --reporter lcov --reporter html",
-    "build": "tsc"
+    "build": "tsc",
+    "docs": "./node_modules/.bin/typedoc --out docs"
   },
   "dependencies": {},
   "devDependencies": {
@@ -16,8 +17,8 @@
     "nyc": "^14.1.1",
     "source-map-support": "^0.5.13",
     "ts-node": "^8.3.0",
-    "typescript": "^3.6.2",
-    "chai": "^4.2.0"
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.2"
   },
   "directories": {
     "test": "test"

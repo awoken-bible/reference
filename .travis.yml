@@ -11,7 +11,8 @@ install:
   - npm run build
 
 script:
-  - npm cover
+  - npm run cover
+  - npm run docs
 
 # Send coverage data to Coveralls
 after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
