@@ -3,5 +3,9 @@
 *.#*
 *~
 
+# Node generated
 **/node_modules/
 **/package-lock.json
+
+# Compiled output
+/dist
