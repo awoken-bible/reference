@@ -4,7 +4,12 @@
 // :TODO: there are various "extra" books that appear in some texts/cultures
 // that are not included below...
 
-const MANIFEST = {
+export interface Manifest {
+	order: string[],
+	book_names: { [index: string] : string },
+};
+
+const MANIFEST : Manifest = {
   order: [
     'GEN', 'EXO', 'LEV', 'NUM', 'DEU', 'JOS', 'JDG', 'RUT', '1SA', '2SA',
     '1KI', '2KI', '1CH', '2CH', 'EZR', 'NEH', 'EST', 'JOB', 'PSA', 'PRO',
