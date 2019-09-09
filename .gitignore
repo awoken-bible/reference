@@ -1,0 +1,7 @@
+# Ignore Emacs Backup Files
+*#*#
+*.#*
+*~
+
+**/node_modules/
+**/package-lock.json
