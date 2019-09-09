@@ -1,0 +1,17 @@
+language: node_js
+
+node_js:
+  - 8
+  - 10.4
+  - lts/*
+  - node
+
+install:
+  - npm install
+  - npm run build
+
+script:
+  - npm test
+
+# Send coverage data to Coveralls
+after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
