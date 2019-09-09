@@ -39,5 +39,21 @@
   "homepage": "https://github.com/jnterry/usfm-reference#readme",
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+      "**/*/*.d.ts"
+    ],
+    "all": true,
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ]
+  }
 }
