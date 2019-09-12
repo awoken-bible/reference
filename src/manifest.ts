@@ -39,7 +39,7 @@ const MANIFEST : Manifest = {
 		'NEH': "Nehemiah",
 		'EST': "Esther",
 		'JOB': "Job",
-		'PSA': "Psalms",
+		'PSA': "Psalm",
 		'PRO': "Proverbs",
 		'ECC': "Ecclesiastes",
 		'SNG': "Song of Solomon",
