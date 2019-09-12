@@ -52,8 +52,11 @@ const pBookId : P.Parser<string> = P
 	}).desc("USFM book identifier (eg: 'GEN', 'REV')");
 
 const pBookPrefixNumber : P.Parser<number> = P.alt(
+	P.string("1st").map((x) => 1),
+	P.string("2nd").map((x) => 2),
+	P.string("3rd").map((x) => 3),
 	P.oneOf("123").map(x => parseInt(x)),
-	P.regex(/I{1,3}/i).map(x => x.length),
+	P.oneOf("I").times(1,3).map(x => x.length),
 );
 
 const pBookName : P.Parser<string> = P.alt(
@@ -81,14 +84,48 @@ const pBook : P.Parser<string> = P.alt(pBookName, pBookId);
 
 ///////////////////////////////////////////////////////////////////////
 
-const pRef = pInt;
+const pVerseSeperator : P.Parser<string> = P.oneOf(":v.");
 
-function parse(str : string) : any {
-	return pRef.tryParse(str);
-}
+const pChptVerseRef   : P.Parser<[number,number|null]> = P.seq(
+	pInt, pVerseSeperator.then(pInt).fallback(null)
+);
+
+
+const pBibleRef : P.Parser<[BibleRef]> = P.alt(
+	// Book name followed by standard chapter/verse reference
+	P.seqMap(
+		pBook.skip(P.optWhitespace),
+		pChptVerseRef,
+		(book, [chapter, verse]) => {
+
+			if(chapter == 0 && verse == null){
+				let max_chapter = Object.keys(VERSIFICATION[book]).length;
+				let max_verse   = VERSIFICATION[book][max_chapter];
+				return [{
+					is_range: true,
+					start : { book, chapter: 1, verse: 1 },
+					end   : { book, chapter: max_chapter, verse: max_verse},
+				}];
+			}
+
+			if(verse != null){
+				return [{ book, chapter, verse }];
+			}
+
+			return [{
+				is_range: true,
+				start: { book, chapter, verse: 1 },
+				end:   { book, chapter, verse: VERSIFICATION[book][chapter] },
+			}];
+		}),
+);
 
 
 let Api = {
-	parse,
+	parse : (str : string) => pBibleRef.parse(str),
+
+	parser : pBibleRef,
+	parser_book: pBook,
+
 };
 export default Api;

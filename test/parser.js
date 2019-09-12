@@ -47,10 +47,82 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("2 John"         )).to.equal("2JN");
     expect(      pBookName.tryParse("III John"       )).to.equal("3JN");
     expect(      pBookName.tryParse("3 John"         )).to.equal("3JN");
+    expect(      pBookName.tryParse("2nd Samuel"     )).to.equal("2SA");
     expect(      pBookName.tryParse("song of solomon")).to.equal("SNG");
 
-    expect(() => pBookName.tryParse(""     )).to.throw();
-    expect(() => pBookName.tryParse("exod" )).to.throw();
-    expect(() => pBookName.tryParse("hello")).to.throw();
+    expect(() => pBookName.tryParse(""       )).to.throw();
+    expect(() => pBookName.tryParse("exod"   )).to.throw();
+    expect(() => pBookName.tryParse("hello"  )).to.throw();
+    expect(() => pBookName.tryParse("3 Kings")).to.throw();
   });
+});
+
+
+describe("parse", () => {
+
+  it("Single Verse", () => {
+    expect(parse('Malachi 10:8')).to.deep.equal({
+      status: true,
+      value: [
+        { book: 'MAL', chapter: 10, verse:  8 },
+      ]
+    });
+  });
+
+  it("Full Chapters", () => {
+    expect(parse('Mark 8')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start : { book: 'MRK', chapter:  8, verse:  1 },
+          end   : { book: 'MRK', chapter:  8, verse: 38 },
+        }
+      ]
+    });
+  });
+
+  it("Full Books", () => {
+    expect(parse('Genesis')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start: { book: 'GEN', chapter:  1, verse:  1 },
+          end  : { book: 'GEN', chapter: 50, verse: 26 },
+        }
+      ]
+    });
+
+    expect(parse('Ruth')).to.deep.equal({
+      status: true,
+      value: [{
+        is_range: true,
+        start: { book: 'RUT', chapter:  1, verse:  1 },
+        end  : { book: 'RUT', chapter:  4, verse: 22 },
+      }]
+    });
+  });
+
+
+
+  /*
+    it("Comma seperated", () => {
+    expect(parse('GEN 3:12,15')).to.deep.equal({
+      status: true,
+      value: [
+        { book: 'GEN', chapter: 3, verse: 12 },
+        { book: 'GEN', chapter: 3, verse: 15 },
+      ],
+    });
+
+    expect(parse('GEN 3:12,4:15')).to.deep.equal({
+      status: true,
+      value: [
+        { book: 'GEN', chapter: 3, verse: 12 },
+        { book: 'GEN', chapter: 4, verse: 15 },
+      ],
+    });
+  });
+  */
 });
