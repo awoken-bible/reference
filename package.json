@@ -9,9 +9,13 @@
     "build": "tsc",
     "docs": "./node_modules/.bin/typedoc --out docs"
   },
-  "dependencies": {},
+  "dependencies": {
+    "parsimmon": "1.13.0"
+  },
   "devDependencies": {
+    "@types/parsimmon": "^1.10.0",
     "chai": "^4.2.0",
+    "rewire": "^4.0.1",
     "coveralls": "^3.0.6",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
