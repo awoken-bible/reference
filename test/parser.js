@@ -60,7 +60,6 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("sos"            )).to.equal("SNG");
 
     expect(() => pBookName.tryParse(""       )).to.throw();
-
     expect(() => pBookName.tryParse("hello"  )).to.throw();
     expect(() => pBookName.tryParse("3 Kings")).to.throw();
   });
