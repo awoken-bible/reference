@@ -14,9 +14,16 @@ for(let book of VERSIFICATION.order){
 	book_name_to_id[book.name.toLowerCase()] = book.id;
 }
 
+
+///////////////////////////////////////////////////////////////////////
+// Basic Parses
+
+// differs to parsimons whitespace in that it doesn't consume new lines
+const pAnySpace : P.Parser<string> = P.regex(/[ \t]*/);
+
 const pInt : P.Parser<number> = P
 	.regex(/[0-9]+/)
-	.skip(P.optWhitespace)
+	.skip(pAnySpace)
 	.map(s => Number(s));
 
 ///////////////////////////////////////////////////////////////////////
@@ -49,7 +56,7 @@ const pBookName : P.Parser<string> = P.alt(
 	P.string("song of songs"  ).chain(x => P.succeed("SNG")),
 
 	// Number followed by single word (eg: 1 Kings)
-	P.seq(pBookPrefixNumber, P.optWhitespace, P.letters).chain(x => {
+	P.seq(pBookPrefixNumber, pAnySpace, P.letters).chain(x => {
 		let name = x[0] + ' ' + x[2].toLowerCase();
 		let id   = book_name_to_id[name];
 		if(id){ return P.succeed(id); }
@@ -64,31 +71,34 @@ const pBookName : P.Parser<string> = P.alt(
 	})
 ).desc("Book name (eg, 'Genesis', '2 Kings')");
 
-const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(P.optWhitespace);
+const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(pAnySpace);
 
 ///////////////////////////////////////////////////////////////////////
 
 // Parses a character that seperates a chapter number from verse number
-const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(P.optWhitespace);
+const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(pAnySpace);
 
 // Parses a comma seperator, optionally followed by whitespace
-const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(P.optWhitespace);
+const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(pAnySpace);
 
 const pRangeSeperator : P.Parser<string> = P
 	.optWhitespace
 	.then(P.oneOf("-"))
-	.skip(P.optWhitespace);
+	.skip(pAnySpace);
 
 // Represents an integer or optionally a range of ints such as "5" or "5 - 7"
 interface IntRange {
 	start : number,
 	end   : number | null,
 };
-const pIntRange : P.Parser<IntRange> = P.seqMap(
-	pInt,
-	pRangeSeperator.then(pInt).fallback(null),
-	(start : number, end: number | null) => { return { start, end }; }
-);
+const pIntRange : P.Parser<IntRange> = P.seq(
+	pInt, pRangeSeperator.then(pInt).fallback(null)
+).chain(([start, end]) => {
+	if(end && end <= start){
+		return P.fail("End of range must be higher than start");
+	}
+	return P.succeed({ start, end });
+});
 
 // Parses a chapter/verse reference such as:
 // full_chapters:
@@ -207,7 +217,7 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 );
 
 const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
-	.sepBy1(P.optWhitespace.then(P.oneOf(';')).then(P.optWhitespace))
+	.sepBy1(pAnySpace.then(P.oneOf(';')).then(pAnySpace))
 	.map((list) => list.reduce((acc, x) => acc.concat(x), []));
 
 

@@ -47,12 +47,14 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("John"           )).to.equal("JHN");
     expect(      pBookName.tryParse("I John"         )).to.equal("1JN");
     expect(      pBookName.tryParse("1 John"         )).to.equal("1JN");
+    expect(      pBookName.tryParse("1st John"       )).to.equal("1JN");
     expect(      pBookName.tryParse("II John"        )).to.equal("2JN");
     expect(      pBookName.tryParse("2 John"         )).to.equal("2JN");
     expect(      pBookName.tryParse("III John"       )).to.equal("3JN");
     expect(      pBookName.tryParse("2 THESS"        )).to.equal("2TH");
     expect(      pBookName.tryParse("II THESS"       )).to.equal("2TH");
     expect(      pBookName.tryParse("3 John"         )).to.equal("3JN");
+    expect(      pBookName.tryParse("3rd John"       )).to.equal("3JN");
     expect(      pBookName.tryParse("2nd Samuel"     )).to.equal("2SA");
     expect(      pBookName.tryParse("2nd Sam"        )).to.equal("2SA");
     expect(      pBookName.tryParse("song of solomon")).to.equal("SNG");
@@ -67,7 +69,6 @@ describe("parser internals", () => {
 
 
 describe("parse", () => {
-
   it("Single Verse", () => {
     expect(parse('Malachi 10:8')).to.deep.equal({
       status: true,
@@ -251,5 +252,16 @@ describe("parse", () => {
               },
              ]
     });
+  });
+
+  it("Invalid look alikes", () => {
+    expect(parse("Gen 1-2-3" ).status).to.deep.equal(false);
+    expect(parse("Gen 1:2:3" ).status).to.deep.equal(false);
+    expect(parse("Gen 1:2,3,").status).to.deep.equal(false);
+    expect(parse("Gen 1 a"   ).status).to.deep.equal(false);
+    expect(parse("Gen 1 -"   ).status).to.deep.equal(false);
+    expect(parse("Gen\n1"    ).status).to.deep.equal(false); // dont allow \n
+    expect(parse("Gen 9 - 9" ).status).to.deep.equal(false); // invalid range
+    expect(parse("Gen 9 - 5" ).status).to.deep.equal(false); // invalid range
   });
 });
