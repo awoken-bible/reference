@@ -1,13 +1,11 @@
 import VERSIFICATION from './Versification';
-import manifest      from './manifest';
 import BibleRef      from './BibleRef';
 import * as P from 'parsimmon';
 
 
 let book_name_to_id : { [ index: string ] : string } = {};
-for(let k in manifest.book_names){
-	let v = manifest.book_names[k];
-	book_name_to_id[v.toLowerCase()] = k;
+for(let book of VERSIFICATION.order){
+	book_name_to_id[book.name.toLowerCase()] = book.id;
 }
 
 const pInt : P.Parser<number> = P.regex(/[0-9]+/).map(s => Number(s));
@@ -19,7 +17,7 @@ const pBookId : P.Parser<string> = P
 	.regex(/[0-9A-Z]{3}/i)
 	.chain(x => {
 		x = x.toUpperCase();
-		if(VERSIFICATION[x]){
+		if(VERSIFICATION.book[x]){
 			return P.succeed(x);
 		} else {
 			return P.fail(`Invalid book ID: ${x}`);
@@ -106,7 +104,7 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 		return [{
 			is_range: true,
 			start: { book, chapter, verse: 1 },
-			end:   { book, chapter, verse: VERSIFICATION[book][chapter] },
+			end:   { book, chapter, verse: VERSIFICATION.book[book][chapter] },
 		}];
 	}
 
@@ -134,8 +132,8 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.seqMap(
 
 		if(cv_list.length == 0){
 			// Then we just got a book name, no chapter/verse
-			let max_chapter = Object.keys(VERSIFICATION[book]).length;
-			let max_verse   = VERSIFICATION[book][max_chapter];
+			let max_chapter = VERSIFICATION.book[book].chapter_count;
+			let max_verse   = VERSIFICATION.book[book][max_chapter];
 			return [{
 				is_range: true,
 				start : { book, chapter: 1, verse: 1 },

@@ -1,4 +1,4 @@
-import MANIFEST from './manifest';
+import VERSIFICATION from './Versification';
 
 /**
  * Represents a sequence of books, eg, could be the entire bible,
@@ -98,9 +98,8 @@ function createFromLists(refs : string[], names: string[]) : BookSequence {
 }
 
 function createFromRange(start: number, end: number) : BookSequence {
-	let refs  = MANIFEST.order.slice(start, end);
-	let names = refs.map((x) => MANIFEST.book_names[x]);
-	return createFromLists(refs, names);
+	let books = VERSIFICATION.order.slice(start, end);
+	return createFromLists(books.map(b => b.id), books.map(b => b.name));
 }
 
 const Bible        = createFromRange( 0, 66);
