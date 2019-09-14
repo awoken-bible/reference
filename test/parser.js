@@ -63,9 +63,27 @@ describe("parse", () => {
   it("Single Verse", () => {
     expect(parse('Malachi 10:8')).to.deep.equal({
       status: true,
-      value: [
-        { book: 'MAL', chapter: 10, verse:  8 },
-      ]
+      value: [{ book: 'MAL', chapter: 10, verse:  8 }]
+    });
+  });
+
+  it("Verse Range", () => {
+    expect(parse('Job 8:3-6')).to.deep.equal({
+      status: true,
+      value: [{ is_range: true,
+                start : { book: 'JOB', chapter: 8, verse:  3 },
+                end   : { book: 'JOB', chapter: 8, verse:  6 },
+              }
+             ]
+    });
+
+    expect(parse('Esther 7 v 5 - 10')).to.deep.equal({
+      status: true,
+      value: [{ is_range: true,
+                start : { book: 'EST', chapter: 7, verse:  5 },
+                end   : { book: 'EST', chapter: 7, verse: 10 },
+              }
+             ]
     });
   });
 
@@ -104,15 +122,23 @@ describe("parse", () => {
     });
   });
 
-
-
-  /*
-    it("Comma seperated", () => {
+  it("Comma seperated", () => {
     expect(parse('GEN 3:12,15')).to.deep.equal({
       status: true,
       value: [
         { book: 'GEN', chapter: 3, verse: 12 },
         { book: 'GEN', chapter: 3, verse: 15 },
+      ],
+    });
+
+    expect(parse('GEN 3:12-15,18')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'GEN', chapter: 3, verse: 12 },
+          end  : { book: 'GEN', chapter: 3, verse: 15 },
+        },
+        { book: 'GEN', chapter: 3, verse: 18 },
       ],
     });
 
@@ -124,5 +150,38 @@ describe("parse", () => {
       ],
     });
   });
-  */
+
+  it("Seperated by ;", () => {
+    expect(parse('Matthew 1:1; John 3:16')).to.deep.equal({
+      status: true,
+      value: [{ book: 'MAT', chapter: 1, verse:  1 },
+              { book: 'JHN', chapter: 3, verse: 16 }]
+    });
+  });
+
+  it("All features simultaniosuly", () => {
+    expect(parse('Genesis 2, 4:3,8, 6:9-12,18-20,27 ; ECC 7')).to.deep.equal({
+      status: true,
+      value: [{ is_range: true,
+                start: { book: 'GEN', chapter: 2, verse:  1 },
+                end  : { book: 'GEN', chapter: 2, verse: 25 },
+              },
+              { book: 'GEN', chapter: 4, verse:  3 },
+              { book: 'GEN', chapter: 4, verse:  8 },
+              { is_range: true,
+                start: { book: 'GEN', chapter: 6, verse:  9 },
+                end  : { book: 'GEN', chapter: 6, verse: 12 },
+              },
+              { is_range: true,
+                start: { book: 'GEN', chapter: 6, verse: 18 },
+                end  : { book: 'GEN', chapter: 6, verse: 20 },
+              },
+              { book: 'GEN', chapter: 6, verse: 27 },
+              { is_range: true,
+                start: { book: 'ECC', chapter: 7, verse:  1 },
+                end  : { book: 'ECC', chapter: 7, verse: 29 },
+              },
+             ]
+    });
+  });
 });

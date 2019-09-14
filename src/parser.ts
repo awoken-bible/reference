@@ -35,7 +35,7 @@ export interface BibleVerseRange {
 
 export type BibleRef = BibleVerse | BibleVerseRange;
 
-const pInt : P.Parser<number> = P.digits.map(s => Number(s));
+const pInt : P.Parser<number> = P.regex(/[0-9]+/).map(s => Number(s));
 
 ///////////////////////////////////////////////////////////////////////
 // Bible Book
@@ -84,41 +84,101 @@ const pBook : P.Parser<string> = P.alt(pBookName, pBookId);
 
 ///////////////////////////////////////////////////////////////////////
 
-const pVerseSeperator : P.Parser<string> = P.oneOf(":v.");
+// Parses a character that seperates a chapter number from verse number
+const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(P.optWhitespace);
 
-const pChptVerseRef   : P.Parser<[number,number|null]> = P.seq(
-	pInt, pVerseSeperator.then(pInt).fallback(null)
+// Parses a comma seperator, optionally followed by whitespace
+const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(P.optWhitespace);
+
+// Represents a verse specifier such as "5" or "5 - 7"
+interface VerseSpecifier {
+	start : number,
+	end   : number | null,
+};
+const pVerseSpecifier : P.Parser<VerseSpecifier> = P.seqMap(
+	pInt,
+	P.optWhitespace
+		.skip(P.oneOf("-"))
+		.skip(P.optWhitespace)
+		.then(pInt)
+		.fallback(null),
+	(start : number, end: number | null) => { return { start, end }; }
 );
 
+// Parses a chapter/verse reference such as:
+// 5         :: full chapter
+// 5:6       :: single verse
+// 5:6,12    :: multiple verses
+// 5:6-12    :: range of verses
+// 5:6-12,14 :: multiple ranges/verses
+interface ChapterVerseSpecifier {
+	chapter : number,
+	verses  : VerseSpecifier[],
+};
+const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.seqMap(
+	pInt.skip(P.optWhitespace),
+	pVerseSeperator.then(
+		(pVerseSpecifier.notFollowedBy(pVerseSeperator)).sepBy(pCommaSeperator)
+	).fallback([]),
+	(chapter : number, verses : VerseSpecifier[]) => { return { chapter, verses }; }
+);
 
-const pBibleRef : P.Parser<[BibleRef]> = P.alt(
-	// Book name followed by standard chapter/verse reference
-	P.seqMap(
-		pBook.skip(P.optWhitespace),
-		pChptVerseRef,
-		(book, [chapter, verse]) => {
+// Converts a parsed ChapterVerseSpecifier into a list of BibleRefs
+function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifier) : BibleRef[]{
+	let chapter = cv.chapter;
 
-			if(chapter == 0 && verse == null){
-				let max_chapter = Object.keys(VERSIFICATION[book]).length;
-				let max_verse   = VERSIFICATION[book][max_chapter];
-				return [{
-					is_range: true,
-					start : { book, chapter: 1, verse: 1 },
-					end   : { book, chapter: max_chapter, verse: max_verse},
-				}];
-			}
+	if(cv.verses.length == 0){ // Then we just got a chapter number
+		return [{
+			is_range: true,
+			start: { book, chapter, verse: 1 },
+			end:   { book, chapter, verse: VERSIFICATION[book][chapter] },
+		}];
+	}
 
-			if(verse != null){
-				return [{ book, chapter, verse }];
-			}
+	let results : BibleRef[] = [];
 
+	for(let v of cv.verses){
+		if(v.end){
+			results.push({
+				is_range: true,
+				start : { book, chapter, verse: v.start },
+				end   : { book, chapter, verse: v.end   },
+			});
+		} else {
+			results.push({ book, chapter, verse: v.start });
+		}
+	}
+
+	return results;
+}
+
+const pBibleRefSingle : P.Parser<BibleRef[]> = P.seqMap(
+	pBook.skip(P.optWhitespace),
+	pChapterVerseSpecifier.sepBy(pCommaSeperator),
+	(book : string, cv_list : ChapterVerseSpecifier[]) => {
+
+		if(cv_list.length == 0){
+			// Then we just got a book name, no chapter/verse
+			let max_chapter = Object.keys(VERSIFICATION[book]).length;
+			let max_verse   = VERSIFICATION[book][max_chapter];
 			return [{
 				is_range: true,
-				start: { book, chapter, verse: 1 },
-				end:   { book, chapter, verse: VERSIFICATION[book][chapter] },
+				start : { book, chapter: 1, verse: 1 },
+				end   : { book, chapter: max_chapter, verse: max_verse},
 			}];
-		}),
+		}
+
+		let results : BibleRef[] = [];
+		for(let cv of cv_list){
+			results = results.concat(chapterVerseSpecifierToBibleRef(book, cv));
+		}
+		return results;
+	}
 );
+
+const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
+	.sepBy1(P.optWhitespace.then(P.oneOf(';')).then(P.optWhitespace))
+	.map((list) => list.reduce((acc, x) => acc.concat(x), []));
 
 
 let Api = {
