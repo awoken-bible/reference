@@ -14,7 +14,10 @@ for(let book of VERSIFICATION.order){
 	book_name_to_id[book.name.toLowerCase()] = book.id;
 }
 
-const pInt : P.Parser<number> = P.regex(/[0-9]+/).map(s => Number(s));
+const pInt : P.Parser<number> = P
+	.regex(/[0-9]+/)
+	.skip(P.optWhitespace)
+	.map(s => Number(s));
 
 ///////////////////////////////////////////////////////////////////////
 // Bible Book
@@ -61,7 +64,7 @@ const pBookName : P.Parser<string> = P.alt(
 	})
 ).desc("Book name (eg, 'Genesis', '2 Kings')");
 
-const pBook : P.Parser<string> = P.alt(pBookName, pBookId);
+const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(P.optWhitespace);
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -71,27 +74,33 @@ const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(P.optWhitespace);
 // Parses a comma seperator, optionally followed by whitespace
 const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(P.optWhitespace);
 
+const pRangeSeperator : P.Parser<string> = P
+	.optWhitespace
+	.then(P.oneOf("-"))
+	.skip(P.optWhitespace);
+
 // Represents an integer or optionally a range of ints such as "5" or "5 - 7"
 interface IntRange {
 	start : number,
 	end   : number | null,
 };
 const pIntRange : P.Parser<IntRange> = P.seqMap(
-	pInt.skip(P.optWhitespace),
-	P.oneOf("-")
-		.skip(P.optWhitespace)
-		.then(pInt)
-		.skip(P.optWhitespace)
-		.fallback(null),
+	pInt,
+	pRangeSeperator.then(pInt).fallback(null),
 	(start : number, end: number | null) => { return { start, end }; }
 );
 
 // Parses a chapter/verse reference such as:
+// full_chapters:
 // 5         :: full chapter
 // 5-8       :: chapter range
+//
+// verse:
 // 5:6       :: single verse
 // 5:6,12    :: multiple verses
 // 5:6-12    :: range of verses
+//
+// Comma seperated list:
 // 5:6-12,14 :: multiple ranges/verses
 type ChapterVerseSpecifier = {
 	kind: "full_chapter",
@@ -109,7 +118,7 @@ const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
 
 	// Parses single chapter with verses, eg "5:8", "5:8-10",
 	P.seqMap(
-		pInt.skip(P.optWhitespace),
+		pInt,
 		pVerseSeperator.then(
 			(pIntRange.notFollowedBy(pVerseSeperator)).sepBy(pCommaSeperator)
 		),
@@ -151,28 +160,50 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 	}
 }
 
-const pBibleRefSingle : P.Parser<BibleRef[]> = P.seqMap(
-	pBook.skip(P.optWhitespace),
-	pChapterVerseSpecifier.sepBy(pCommaSeperator),
-	(book : string, cv_list : ChapterVerseSpecifier[]) => {
+const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
+	// Ranges accross chapters
+	P.seqMap(
+		pBook,
+		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)),
+		pRangeSeperator,
+		pBook,
+		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)),
+		(b1, [c1, v1], r, b2, [c2, v2]) => {
+			 if(v1 == null) { v1 = 1; }
+			 if(v2 == null) { v2 = VERSIFICATION.book[b2][c2]; }
 
-		if(cv_list.length == 0){
-			// Then we just got a book name, no chapter/verse
-			let max_chapter = VERSIFICATION.book[book].chapter_count;
-			let max_verse   = VERSIFICATION.book[book][max_chapter];
-			return [{
-				is_range: true,
-				start : { book, chapter: 1, verse: 1 },
-				end   : { book, chapter: max_chapter, verse: max_verse},
-			}];
-		}
+			 return [{ is_range: true,
+								 start : { book: b1, chapter: c1, verse: v1 },
+								 end   : { book: b2, chapter: c2, verse: v2 },
+							 }];
+		 }
+	),
 
-		let results : BibleRef[] = [];
-		for(let cv of cv_list){
-			results = results.concat(chapterVerseSpecifierToBibleRef(book, cv));
+	// Ranges within a single chapter
+	// EG: Gen 5:12-14
+	P.seqMap(
+		pBook,
+		pChapterVerseSpecifier.sepBy(pCommaSeperator),
+		(book : string, cv_list : ChapterVerseSpecifier[]) => {
+
+			if(cv_list.length == 0){
+				// Then we just got a book name, no chapter/verse
+				let max_chapter = VERSIFICATION.book[book].chapter_count;
+				let max_verse   = VERSIFICATION.book[book][max_chapter];
+				return [{
+					is_range: true,
+					start : { book, chapter: 1, verse: 1 },
+					end   : { book, chapter: max_chapter, verse: max_verse},
+				}];
+			}
+
+			let results : BibleRef[] = [];
+			for(let cv of cv_list){
+				results = results.concat(chapterVerseSpecifierToBibleRef(book, cv));
+			}
+			return results;
 		}
-		return results;
-	}
+	),
 );
 
 const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle

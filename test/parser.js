@@ -170,6 +170,53 @@ describe("parse", () => {
         { book: 'GEN', chapter: 4, verse: 15 },
       ],
     });
+
+    expect(parse('GEN 2,6')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'GEN', chapter: 2, verse:  1 },
+          end  : { book: 'GEN', chapter: 2, verse: 25 },
+        },
+        { is_range: true,
+          start: { book: 'GEN', chapter: 6, verse:  1 },
+          end  : { book: 'GEN', chapter: 6, verse: 22 },
+        }
+      ],
+    });
+  });
+
+
+  it("Cross Book Range", () => {
+    expect(parse('Exo 39:10 - Lev 2:6')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'EXO', chapter: 39, verse: 10 },
+          end  : { book: 'LEV', chapter:  2, verse:  6 },
+        },
+      ],
+    });
+
+    expect(parse('Exo 39 - Lev 2')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'EXO', chapter: 39, verse:  1 },
+          end  : { book: 'LEV', chapter:  2, verse: 16 },
+        },
+      ],
+    });
+
+    expect(parse('Exo 39:10 - Lev 2')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'EXO', chapter: 39, verse: 10 },
+          end  : { book: 'LEV', chapter:  2, verse: 16 },
+        },
+      ],
+    });
   });
 
   it("Seperated by ;", () => {
