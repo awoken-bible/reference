@@ -108,6 +108,19 @@ describe("parse", () => {
     });
   });
 
+  it("Chapter Range", () => {
+    expect(parse('Mark 8-10')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start : { book: 'MRK', chapter:  8, verse:  1 },
+          end   : { book: 'MRK', chapter: 10, verse: 52 },
+        }
+      ]
+    });
+  });
+
   it("Full Books", () => {
     expect(parse('Genesis')).to.deep.equal({
       status: true,

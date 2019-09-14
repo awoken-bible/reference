@@ -71,66 +71,84 @@ const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(P.optWhitespace);
 // Parses a comma seperator, optionally followed by whitespace
 const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(P.optWhitespace);
 
-// Represents a verse specifier such as "5" or "5 - 7"
-interface VerseSpecifier {
+// Represents an integer or optionally a range of ints such as "5" or "5 - 7"
+interface IntRange {
 	start : number,
 	end   : number | null,
 };
-const pVerseSpecifier : P.Parser<VerseSpecifier> = P.seqMap(
-	pInt,
-	P.optWhitespace
-		.skip(P.oneOf("-"))
+const pIntRange : P.Parser<IntRange> = P.seqMap(
+	pInt.skip(P.optWhitespace),
+	P.oneOf("-")
 		.skip(P.optWhitespace)
 		.then(pInt)
+		.skip(P.optWhitespace)
 		.fallback(null),
 	(start : number, end: number | null) => { return { start, end }; }
 );
 
 // Parses a chapter/verse reference such as:
 // 5         :: full chapter
+// 5-8       :: chapter range
 // 5:6       :: single verse
 // 5:6,12    :: multiple verses
 // 5:6-12    :: range of verses
 // 5:6-12,14 :: multiple ranges/verses
-interface ChapterVerseSpecifier {
+type ChapterVerseSpecifier = {
+	kind: "full_chapter",
+	range: IntRange
+} | {
+	kind    : "verse",
 	chapter : number,
-	verses  : VerseSpecifier[],
+	verses  : IntRange[],
 };
-const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.seqMap(
-	pInt.skip(P.optWhitespace),
-	pVerseSeperator.then(
-		(pVerseSpecifier.notFollowedBy(pVerseSeperator)).sepBy(pCommaSeperator)
-	).fallback([]),
-	(chapter : number, verses : VerseSpecifier[]) => { return { chapter, verses }; }
+const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
+	// Parses full chapters, eg "5", "5-8"
+	pIntRange.notFollowedBy(pVerseSeperator).map((range) => {
+		return { kind: "full_chapter", range };
+	}),
+
+	// Parses single chapter with verses, eg "5:8", "5:8-10",
+	P.seqMap(
+		pInt.skip(P.optWhitespace),
+		pVerseSeperator.then(
+			(pIntRange.notFollowedBy(pVerseSeperator)).sepBy(pCommaSeperator)
+		),
+		(chapter : number, verses : IntRange[]) => {
+			return { kind: "verse", chapter, verses };
+		}
+	)
 );
 
 // Converts a parsed ChapterVerseSpecifier into a list of BibleRefs
 function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifier) : BibleRef[]{
-	let chapter = cv.chapter;
-
-	if(cv.verses.length == 0){ // Then we just got a chapter number
-		return [{
-			is_range: true,
-			start: { book, chapter, verse: 1 },
-			end:   { book, chapter, verse: VERSIFICATION.book[book][chapter] },
-		}];
-	}
-
-	let results : BibleRef[] = [];
-
-	for(let v of cv.verses){
-		if(v.end){
-			results.push({
+	switch(cv.kind){
+		case "full_chapter": {
+			let start : number = cv.range.start;
+			let end   : number = cv.range.end ? cv.range.end : cv.range.start;
+			return [{
 				is_range: true,
-				start : { book, chapter, verse: v.start },
-				end   : { book, chapter, verse: v.end   },
-			});
-		} else {
-			results.push({ book, chapter, verse: v.start });
+				start : { book, chapter: start, verse: 1 },
+				end   : { book, chapter: end,   verse: VERSIFICATION.book[book][end] },
+			}];
+		}
+		case "verse": {
+			let chapter = cv.chapter;
+			let results : BibleRef[] = [];
+			for(let v of cv.verses){
+				if(v.end){
+					results.push({
+						is_range: true,
+						start : { book, chapter, verse: v.start },
+						end   : { book, chapter, verse: v.end   },
+					});
+				} else {
+					results.push({ book, chapter, verse: v.start });
+				}
+			}
+
+			return results;
 		}
 	}
-
-	return results;
 }
 
 const pBibleRefSingle : P.Parser<BibleRef[]> = P.seqMap(
