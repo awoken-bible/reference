@@ -1,39 +1,14 @@
 import VERSIFICATION from './Versification';
 import manifest      from './manifest';
+import BibleRef      from './BibleRef';
 import * as P from 'parsimmon';
+
 
 let book_name_to_id : { [ index: string ] : string } = {};
 for(let k in manifest.book_names){
 	let v = manifest.book_names[k];
 	book_name_to_id[v.toLowerCase()] = k;
 }
-
-export interface BibleVerse {
-	/**
-   * The 3 character book id
-   */
-	book: string,
-
-	/**
-	 * The chapter number within the book, note, this is indexed from 1
-	 * rather than 0 as with arrays
-	 */
-	chapter: number,
-
-  /**
-   * The number of the references verse
-	 * @note This is index from 1 rather than 0!
-	 */
-  verse: number,
-};
-
-export interface BibleVerseRange {
-	is_range: true,
-	start : BibleVerse,
-	end   : BibleVerse,
-};
-
-export type BibleRef = BibleVerse | BibleVerseRange;
 
 const pInt : P.Parser<number> = P.regex(/[0-9]+/).map(s => Number(s));
 
