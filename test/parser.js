@@ -37,8 +37,12 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("genesis"        )).to.equal("GEN");
     expect(      pBookName.tryParse("GENESIS"        )).to.equal("GEN");
     expect(      pBookName.tryParse("Exodus"         )).to.equal("EXO");
+    expect(      pBookName.tryParse("exod"           )).to.equal("EXO");
     expect(      pBookName.tryParse("Mark"           )).to.equal("MRK");
     expect(      pBookName.tryParse("Psalm"          )).to.equal("PSA");
+    expect(      pBookName.tryParse("Psalms"         )).to.equal("PSA");
+    expect(      pBookName.tryParse("Ps"             )).to.equal("PSA");
+    expect(      pBookName.tryParse("2 Kgs"          )).to.equal("2KI");
     expect(      pBookName.tryParse("2 Kings"        )).to.equal("2KI");
     expect(      pBookName.tryParse("John"           )).to.equal("JHN");
     expect(      pBookName.tryParse("I John"         )).to.equal("1JN");
@@ -46,12 +50,17 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("II John"        )).to.equal("2JN");
     expect(      pBookName.tryParse("2 John"         )).to.equal("2JN");
     expect(      pBookName.tryParse("III John"       )).to.equal("3JN");
+    expect(      pBookName.tryParse("2 THESS"        )).to.equal("2TH");
+    expect(      pBookName.tryParse("II THESS"       )).to.equal("2TH");
     expect(      pBookName.tryParse("3 John"         )).to.equal("3JN");
     expect(      pBookName.tryParse("2nd Samuel"     )).to.equal("2SA");
+    expect(      pBookName.tryParse("2nd Sam"        )).to.equal("2SA");
     expect(      pBookName.tryParse("song of solomon")).to.equal("SNG");
+    expect(      pBookName.tryParse("song of songs"  )).to.equal("SNG");
+    expect(      pBookName.tryParse("sos"            )).to.equal("SNG");
 
     expect(() => pBookName.tryParse(""       )).to.throw();
-    expect(() => pBookName.tryParse("exod"   )).to.throw();
+
     expect(() => pBookName.tryParse("hello"  )).to.throw();
     expect(() => pBookName.tryParse("3 Kings")).to.throw();
   });

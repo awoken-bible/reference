@@ -3,8 +3,14 @@ import BibleRef      from './BibleRef';
 import * as P from 'parsimmon';
 
 
-let book_name_to_id : { [ index: string ] : string } = {};
+let book_name_to_id      : { [ index: string ] : string } = {};
 for(let book of VERSIFICATION.order){
+	let ns = [ book.name, ...book.aliases ].map(n => n.toLowerCase());
+	for(let n of ns){
+		book_name_to_id[n] = book.id;
+	}
+
+	let name = book.name.toLowerCase();
 	book_name_to_id[book.name.toLowerCase()] = book.id;
 }
 
@@ -36,6 +42,8 @@ const pBookName : P.Parser<string> = P.alt(
 	// Multiword book names
 	P.string("Song of Solomon").chain(x => P.succeed("SNG")),
 	P.string("song of solomon").chain(x => P.succeed("SNG")),
+	P.string("Song of songs"  ).chain(x => P.succeed("SNG")),
+	P.string("song of songs"  ).chain(x => P.succeed("SNG")),
 
 	// Number followed by single word (eg: 1 Kings)
 	P.seq(pBookPrefixNumber, P.optWhitespace, P.letters).chain(x => {
