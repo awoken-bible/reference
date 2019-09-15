@@ -78,3 +78,57 @@ Additionally the library supports more interesting operations such as:
 - Counting the number of verses in a set of ranges
 - Truncating a list of ranges to a new list of ranges containing the first N verses (useful for pagination, or short previews of a longer text)
 
+## Data Types
+
+The following data types are exported:
+
+```typescript
+/** Representation of single verse */
+interface BibleVerse {
+  book    : string,
+  chapter : number,
+  verse   : number,
+}
+
+/** Representation of continous block of verses */
+interface BibleRange {
+	is_range : true,
+	start    : BibleVerse,
+	end      : BibleVerse,
+};
+
+/** Generic reference to verse or range */
+type BibleRef = BibleVerse | BibleRange;
+```
+
+Most functions take `BibleRef`s as arguments and/or produce them as output, thus the `is_range` field can be used to distinguish the types from one another.
+
+The `BibleVerse.book` string is always a 3 character mix of upper case letters and digits, as per the [USFM specification](https://ubsicap.github.io/usfm/identification/books.html).
+
+## API
+
+```typescript
+type ParseResult = {
+	status: true,
+	value: BibleRef[],
+} | {
+	status: false,
+	expected: string[],
+	index: { column: number, line: number, offset: number },
+};
+parse(str: string) : ParseResult
+```
+
+Parses a human readable or compact string representing a bible reference, returning an array of references when the reference string contains multiple non-continous blocks, for example `Genesis ; Leviticus `, `Genesis 1, 10`, `Genesis 1:1,10`
+
+```typescript
+parseOrThrow(str: string) : BibleRef[]
+```
+
+As with `parse`, but returns the resultant object directly throwing if an error occurs.
+
+```typescript
+format(ref: BibleRef[] | BibleVerse | BibleRange, opts? : FormatOptions) : string
+```
+
+Formats any type of reference as a string, with opts allowing you to control verbosity.
