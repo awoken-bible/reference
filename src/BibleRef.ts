@@ -21,9 +21,9 @@ export interface BibleVerse {
   verse: number,
 };
 
-export interface BibleVerseRange {
+export interface BibleRange {
 	/**
-	 * Field that allows us to distingish a BibleVerseRange from a BibleVerse
+	 * Field that allows us to distingish a BibleRange from a BibleVerse
 	 */
 	is_range: true,
 	start : BibleVerse,
@@ -34,5 +34,5 @@ export interface BibleVerseRange {
  * Union type that represents any continous section of bible, including
  * a single verse, to a span of text over multiple chapters
  */
-export type BibleRef = BibleVerse | BibleVerseRange;
+export type BibleRef = BibleVerse | BibleRange;
 export default BibleRef;

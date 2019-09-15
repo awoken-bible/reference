@@ -160,7 +160,7 @@ let data : BookMeta[] = [
 	},
 	{ id            : 'SNG',
 		name          : "Song of Solomon",
-		aliases       : [ "Song", "Song of Songs", "SOS"],
+		aliases       : [ "Song", "Song of Songs", "SOS", "SongOfSolomon", "SongOfSongs"],
 		chapter_count : 8,
 		"1":17,"2":17,"3":11,"4":16,"5":16,"6":13,"7":13,"8":14,
 	},
