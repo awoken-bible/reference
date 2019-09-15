@@ -4,6 +4,11 @@
 
 export interface BibleVerse {
 	/**
+	 * Field that allows us to distingish a BibleRange from a BibleVerse
+	 */
+	is_range? : undefined,
+
+	/**
    * The 3 character book id
    */
 	book: string,
