@@ -447,6 +447,5 @@ let default_data : BookMetaRaw[] = [
 	},
 ];
 
-const VERSIFICATION : Versification = createVersification(default_data);
-
+export const VERSIFICATION : Versification = createVersification(default_data);
 export default VERSIFICATION;
