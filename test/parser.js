@@ -231,6 +231,16 @@ describe("parse", () => {
         },
       ],
     });
+
+    expect(parse('GEN3:8-EXO3:10')).to.deep.equal({
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: 'GEN', chapter:  3, verse:  8 },
+          end  : { book: 'EXO', chapter:  3, verse: 10 },
+        },
+      ],
+    });
   });
 
   it("Seperated by ;", () => {
@@ -265,6 +275,43 @@ describe("parse", () => {
               },
              ]
     });
+  });
+
+  it("John edge cases", () => {
+    // This nasty since the "1-2" could be a range of verses inside
+    // 1 john, and then the second part could be a new bible referenmce
+    // to "John 4:5" - however since there is no ; seperator we should
+    // be parsing this in its entirety
+    let res_a = {
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: '1JN', chapter: 10, verse:  1 },
+          end  : { book: '2JN', chapter:  4, verse:  5 },
+        },
+      ],
+    };
+    expect(parse('1 John 10:1 - 2 John 4:5')).to.deep.equal(res_a);
+
+    let res_b = {
+      status: true,
+      value: [
+        { is_range: true,
+          start: { book: '1JN', chapter: 10, verse:  1 },
+          end  : { book: '1JN', chapter: 10, verse:  2 },
+        },
+        { book: 'JHN', chapter: 4, verse: 5 }
+      ],
+    };
+    expect(parse('1 John 10:1 - 2 ; John 4:5')).to.deep.equal(res_b);
+
+    // We also want to be able to parse this without whitespace if it were
+    // included in a URL
+    expect(parse('1JN 10:1 - 2JN 4:5')).to.deep.equal(res_a);
+    expect(parse('1JN10:1-2JN4:5')).to.deep.equal(res_a);
+
+    expect(parse('1JN 10:1-2 ; JHN 4:5')).to.deep.equal(res_b);
+    expect(parse('1JN10:1-2;JHN4:5')).to.deep.equal(res_b);
   });
 
   it("Invalid look alikes", () => {

@@ -3,7 +3,7 @@
 const chai     = require('chai');
 const expect   = chai.expect;
 
-const { formatBibleVerse } = require('../src/printer.ts');
+const { formatBibleVerse, formatBibleRange } = require('../src/printer.ts');
 
 
 describe("printer", () => {
@@ -63,9 +63,57 @@ describe("printer", () => {
         .is.deep.equal('SNG3:4');
     });
 
-
     it('Exception Tests', () => {
       expect(() => formatBibleVerse({ book: 'BAD', chapter: 1, verse: 1 })).to.throw();
+    });
+  });
+
+  describe('formatBibleRange', () => {
+    it('Default Options', () => {
+      // Verse range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'GEN', chapter: 3, verse: 10 },
+                              }))
+        .is.deep.equal('Genesis 3:8-10');
+
+      // Cross Chapter Range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'GEN', chapter: 4, verse: 10 },
+                              }))
+        .is.deep.equal('Genesis 3:8 - 4:10');
+
+      // Cross Book Range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'EXO', chapter: 3, verse: 10 },
+                              }))
+        .is.deep.equal('Genesis 3:8 - Exodus 3:10');
+    });
+
+    it('Strip Whitespace and book id', () => {
+      let opts = { strip_whitespace: true, use_book_id: true };
+      // Verse range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'GEN', chapter: 3, verse: 10 },
+                              }, opts))
+        .is.deep.equal('GEN3:8-10');
+
+      // Cross Chapter Range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'GEN', chapter: 4, verse: 10 },
+                              }, opts))
+        .is.deep.equal('GEN3:8-4:10');
+
+      // Cross Book Range
+      expect(formatBibleRange({ is_range: true,
+                                start: { book: 'GEN', chapter: 3, verse:  8 },
+                                end  : { book: 'EXO', chapter: 3, verse: 10 },
+                              }, opts))
+        .is.deep.equal('GEN3:8-EXO3:10');
     });
   });
 });
