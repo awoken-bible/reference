@@ -164,7 +164,7 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 			return [{
 				is_range: true,
 				start : { book, chapter: start, verse: 1 },
-				end   : { book, chapter: end,   verse: VERSIFICATION.book[book][end] },
+				end   : { book, chapter: end,   verse: VERSIFICATION.book[book][end].verse_count },
 			}];
 		}
 		case "verse": {
@@ -203,7 +203,7 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)),
 		(b1, [c1, v1], r, b2, [c2, v2]) => {
 			 if(v1 == null) { v1 = 1; }
-			 if(v2 == null) { v2 = VERSIFICATION.book[b2][c2]; }
+			 if(v2 == null) { v2 = VERSIFICATION.book[b2][c2].verse_count; }
 
 			 return [{ is_range: true,
 								 start : { book: b1, chapter: c1, verse: v1 },
@@ -221,8 +221,8 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 
 			if(cv_list.length == 0){
 				// Then we just got a book name, no chapter/verse
-				let max_chapter = VERSIFICATION.book[book].chapter_count;
-				let max_verse   = VERSIFICATION.book[book][max_chapter];
+				let max_chapter : number = VERSIFICATION.book[book].chapters.length;
+				let max_verse   : number = VERSIFICATION.book[book][max_chapter].verse_count;
 				return [{
 					is_range: true,
 					start : { book, chapter: 1, verse: 1 },
