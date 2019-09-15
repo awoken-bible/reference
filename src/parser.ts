@@ -109,9 +109,10 @@ const pIntRange : P.Parser<IntRange> = P.seq(
 // 5:6       :: single verse
 // 5:6,12    :: multiple verses
 // 5:6-12    :: range of verses
-//
-// Comma seperated list:
 // 5:6-12,14 :: multiple ranges/verses
+//
+// chapter_range:
+// 5:12 - 6:13
 type ChapterVerseSpecifier = {
 	kind: "full_chapter",
 	range: IntRange
@@ -119,8 +120,24 @@ type ChapterVerseSpecifier = {
 	kind    : "verse",
 	chapter : number,
 	verses  : IntRange[],
+} | {
+	kind: "chapter_range",
+	c1 : number,
+	v1 : number,
+	c2 : number,
+	v2 : number,
 };
 const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
+	// chapter_range:
+	P.seqMap(
+		pInt.skip(pVerseSeperator),
+		pInt,
+		pRangeSeperator,
+		pInt.skip(pVerseSeperator),
+		pInt,
+		(c1, v1, r, c2, v2) => { return { kind: "chapter_range", c1, v1, c2, v2 }; }
+	),
+
 	// Parses full chapters, eg "5", "5-8"
 	pIntRange.notFollowedBy(pVerseSeperator).map((range) => {
 		return { kind: "full_chapter", range };
@@ -167,6 +184,12 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 
 			return results;
 		}
+		case "chapter_range":
+			return [{
+				is_range: true,
+				start : { book, chapter: cv.c1, verse: cv.v1 },
+				end   : { book, chapter: cv.c2, verse: cv.v2 },
+			}];
 	}
 }
 

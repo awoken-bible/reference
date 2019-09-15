@@ -120,6 +120,17 @@ describe("parse", () => {
         }
       ]
     });
+
+    expect(parse('Mark 8:5-10:15')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start : { book: 'MRK', chapter:  8, verse:  5 },
+          end   : { book: 'MRK', chapter: 10, verse: 15 },
+        }
+      ]
+    });
   });
 
   it("Full Books", () => {
@@ -263,5 +274,13 @@ describe("parse", () => {
     expect(parse("Gen\n1"    ).status).to.deep.equal(false); // dont allow \n
     expect(parse("Gen 9 - 9" ).status).to.deep.equal(false); // invalid range
     expect(parse("Gen 9 - 5" ).status).to.deep.equal(false); // invalid range
+
+    // We could choose to parse these:
+    // 1 - 2:3 :: Chapter 1 verse 1 --- Chapter 2 verse 3
+    // 1:2 - 3 :: Chapter 1 verse 2 --- end of chapter 3
+    // However the second is already used to mean "chapter 1 verse 2 - 3"
+    // Hence the first option should fail to parse as it makes the language
+    // semantics confusingly ambiogious
+    expect(parse("Gen 1 - 2:3" ).status).to.deep.equal(false);
   });
 });
