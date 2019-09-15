@@ -4,8 +4,8 @@ const rewire   = require('rewire');
 const chai     = require('chai');
 const expect   = chai.expect;
 
+const Parser   = require('../src/parser.ts').default;
 const p = rewire('../src/parser.ts');
-const { parse } = require('../src/parser.ts').default;
 
 describe("parser internals", () => {
   it("pBookId", () => {
@@ -71,6 +71,8 @@ describe("parser internals", () => {
 
 
 describe("parse", () => {
+  function parse(str){ return Parser.BibleRef.parse(str); }
+
   it("Single Verse", () => {
     expect(parse('Malachi 10:8')).to.deep.equal({
       status: true,

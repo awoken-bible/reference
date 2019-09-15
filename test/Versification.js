@@ -9,7 +9,7 @@ function collectNames(b) {
   return [ b.id, b.name, ...b.aliases ].map(n => n.toLowerCase());
 }
 
-describe("BookSequence", () => {
+describe("Versification", () => {
   it('No duplicate ids/names/aliases', () => {
 
     for(let i = 0; i < V.order.length-1; ++i){

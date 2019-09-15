@@ -243,12 +243,18 @@ const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
 	.sepBy1(pAnySpace.then(P.oneOf(';')).then(pAnySpace))
 	.map((list) => list.reduce((acc, x) => acc.concat(x), []));
 
-
-let Api = {
-	parse : (str : string) => pBibleRef.parse(str),
-
-	parser : pBibleRef,
-	parser_book: pBook,
-
+export type ParseResult = {
+	status: true,
+	value: BibleRef[],
+} | {
+	status: false,
+	expected: string[],
+	index: { column: number, line: number, offset: number },
 };
-export default Api;
+
+const Parsers = {
+	Book     : pBook,
+	BibleRef : pBibleRef,
+};
+export default Parsers;
+export { Parsers };
