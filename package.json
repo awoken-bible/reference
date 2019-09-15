@@ -1,7 +1,7 @@
 {
-  "name": "usfm-reference",
+  "name": "awoken-bible-reference",
   "version": "0.0.1",
-  "description": "Bible verse referencing using USFM",
+  "description": "Bible verse reference parser, generator and manipulator",
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha test/ --reporter spec",
@@ -29,18 +29,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jnterry/usfm-reference.git"
+    "url": "git+ssh://git@github.com/jnterry/awoken-reference.git"
   },
   "keywords": [
     "bible",
-    "usfm"
+    "usfm",
+    "parser",
+    "format"
   ],
   "author": "Jamie Terry",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jnterry/usfm-reference/issues"
+    "url": "https://github.com/jnterry/awoken-bible-reference/issues"
   },
-  "homepage": "https://github.com/jnterry/usfm-reference#readme",
+  "homepage": "https://github.com/jnterry/awoken-bible-reference#readme",
   "files": [
     "dist/**/*"
   ],
