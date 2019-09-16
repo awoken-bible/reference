@@ -59,15 +59,6 @@ export function countVerses(v : Versification, ref : BibleRef) : number {
 }
 
 /**
- * Comapres two verses returning negative, zero or postive as per the array.sort
- * compareFunction requirements
- */
-export function comparator(v : Versification, a: BibleVerse, b: BibleVerse) : number {
-	return toVidx(v, a) - toVidx(v, b);
-}
-
-
-/**
  * Takes a list of BibleRefs and returns a new list containing just the first N
  * verses from the set
  */

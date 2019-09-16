@@ -34,44 +34,6 @@ describe("vidx", () => {
     expect(fromVidx(v, 31101)).to.deep.equal({ book: 'REV', chapter: 22, verse: 21});
   });
 
-  it('to/from round trip', () => {
-    for(let i = 0; i < 33102; ++i){
-      expect(toVidx(v,fromVidx(v,i))).to.deep.equal(i);
-    }
-  });
-
-  it('compare', () => {
-    expect(comparator(v,
-                      { book: 'GEN', chapter: 5, verse: 10 },
-                      { book: 'GEN', chapter: 5, verse: 10 }
-                     )).to.deep.equal(0);
-    expect(comparator(v,
-                      { book: 'GEN', chapter: 5, verse: 10 },
-                      { book: 'GEN', chapter: 5, verse: 11 }
-                     )).to.deep.equal(-1);
-    expect(comparator(v,
-                      { book: 'GEN', chapter: 5, verse: 11 },
-                      { book: 'GEN', chapter: 5, verse: 10 }
-                     )).to.deep.equal(1);
-    expect([{ book: 'MAL', chapter: 1, verse: 12 },
-            { book: 'GEN', chapter: 5, verse:  9 },
-            { book: 'MAL', chapter: 1, verse: 11 },
-            { book: 'GEN', chapter: 4, verse: 10 },
-            { book: 'REV', chapter: 1, verse:  1 },
-            { book: 'MAL', chapter: 1, verse: 10 },
-            { book: 'GEN', chapter: 4, verse: 11 },
-           ].sort((a,b) => comparator(v, a, b))
-          ).to.deep.equal([
-            { book: 'GEN', chapter: 4, verse: 10 },
-            { book: 'GEN', chapter: 4, verse: 11 },
-            { book: 'GEN', chapter: 5, verse:  9 },
-            { book: 'MAL', chapter: 1, verse: 10 },
-            { book: 'MAL', chapter: 1, verse: 11 },
-            { book: 'MAL', chapter: 1, verse: 12 },
-            { book: 'REV', chapter: 1, verse:  1 },
-          ]);
-  });
-
   it('verseCount', () => {
     expect(countVerses(v, { book: 'GEN', chapter: 1, verse:  1 })).to.deep.equal(1);
     expect(countVerses(v, { book: 'JHN', chapter: 3, verse: 16 })).to.deep.equal(1);
