@@ -1,3 +1,11 @@
+- v1.1.0:
+  date: '2019-09-19'
+  name: 'First release'
+  features:
+    - Addition of `validate` and repair `functions` to check for (and fix) errors with reference objects
+  fixes:
+    - Prevent crash in parser when a full chapter reference is made to an out of bounds chapter number
+
 - v1.0.0:
   date: '2019-09-18'
   name: 'First release'
