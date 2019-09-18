@@ -74,6 +74,13 @@ Additionally the library supports more interesting operations such as:
 - Generating verbose human readable reference strings, and compact URL encodable equivalents
   - `Genesis 10 v6-10` vs `GEN10:6-10`
   - `Song of Solomon` vs `SNG`
+- Validation and fixing of references, including out of range chapters and verses, and inverted ranges
+  - `validate({book: 'GEN', chapter: 51, verse: 1})`<br/>
+     becomes<br/>
+    `{ message: "Genesis has only 50 chapters", got: 51, max_value: 50, ... }`
+  - `fixErrors({book: 'GEN', chapter: 51, verse: 1})`<br/>
+     becomes<br/>
+    `{book: 'GEN', chapter: 50, verse: 26}`
 - Sorting a list of references
 - Counting the number of verses in a set of ranges
 - Truncating a list of ranges to a new list of ranges containing the first N verses (useful for pagination, or short previews of a longer text)

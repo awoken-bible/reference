@@ -4,15 +4,18 @@
 
 import { BibleRef, BibleVerse } from './BibleRef';
 import { Parsers, ParseResult } from './parser';
-import * as Printer      from './printer';
-import VERSIFICATION from './Versification';
-import * as Vidx from './vidx';
+import * as Printer             from './printer';
+import VERSIFICATION            from './Versification';
+import * as Vidx                from './vidx';
+import * as Validate            from './validate';
 
-import { Versification } from './Versification';
-import { FormatOptions } from './printer';
+import { Versification   } from './Versification';
+import { FormatOptions   } from './printer';
+import { ValidationError } from './validate';
 
-export { Versification } from './Versification';
-export { FormatOptions } from './printer';
+export { Versification }   from './Versification';
+export { FormatOptions }   from './printer';
+export { ValidationError } from './validate';
 
 /**
  * Publically exposed interface to this library
@@ -73,6 +76,19 @@ export interface BibleRefLib {
 	 * or list of refs
 	 */
 	countVerses(refs : BibleRef | BibleRef[]) : number;
+
+	/**
+	 * Validates a set of BibleRefs returning a list of errors, such as out of
+	 * bound chapter and verse numbers, backwards ranges, etc
+	 */
+	validate(refs: BibleRef | BibleRef[], include_warnings?: boolean) : ValidationError[];
+
+	/**
+	 * Repairs a BibleRef, resolving errors found by validate
+	 * Note this function can throw if it encounters an error that cannot be
+	 * repaired
+	 */
+	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
 }
 
 function parse(this: BibleRefLib, str: string) : ParseResult{
@@ -138,6 +154,23 @@ function countVerses(this: BibleRefLib, refs: BibleRef | BibleRef[]) : number {
 }
 
 
+function validate(this: BibleRefLib,
+									refs: BibleRef | BibleRef[],
+									include_warnings?: boolean) {
+	if('length' in refs){
+		return refs
+			.map((r) => Validate.validate(this.versification, r, include_warnings))
+			.reduce((acc, x) => acc.concat(x), []);
+	} else {
+		return Validate.validate(this.versification, refs, include_warnings);
+	}
+}
+
+function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : BibleRef {
+	return Validate.repair(this.versification, ref, include_warnings);
+}
+
+
 /**
  * Constructor interface
  *
@@ -158,6 +191,8 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.fromVidx      = fromVidx;
 	this.firstNVerses  = firstNVerses;
 	this.countVerses   = countVerses;
+	this.validate      = validate;
+	this.repair        = repair;
 	return this;
 };
 constructFunc.versification = VERSIFICATION;
@@ -169,5 +204,7 @@ constructFunc.toVidx        = toVidx.bind(constructFunc);
 constructFunc.fromVidx      = fromVidx.bind(constructFunc);
 constructFunc.firstNVerses  = firstNVerses.bind(constructFunc);
 constructFunc.countVerses   = countVerses.bind(constructFunc);
+constructFunc.validate      = validate.bind(constructFunc);
+constructFunc.repair        = repair.bind(constructFunc);
 
 export default constructFunc;

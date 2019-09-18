@@ -132,4 +132,48 @@ describe("index", () => {
     expect(BibleRef.firstNVerses({ book: 'MRK', chapter: 10, verse: 2}, 10))
       .is.deep.equal([{ book: 'MRK', chapter: 10, verse: 2}]);
   });
+
+  it('Validate and Repair', () => {
+    let errs;
+
+    errs = BibleRef.validate([
+      { book: 'GEN', chapter: 100, verse: 1 },
+      { book: 'XYZ', chapter:   1, verse: 1 },
+    ]);
+    expect(errs.length).to.deep.equal(2);
+    expect(errs[0].kind).to.deep.equal("BADCHPT");
+    expect(errs[1].kind).to.deep.equal("BADBOOK");
+
+    errs = BibleRef.validate(
+      { is_range: true,
+        start : { book: 'GEN', chapter: 1, verse: 100 },
+        end   : { book: 'GEN', chapter: 1, verse: 100 },
+      }
+    );
+    expect(errs.length).to.deep.equal(3);
+    expect(errs[0].kind).to.deep.equal("BADVERSE");
+		expect(errs[1].kind).to.deep.equal("BADVERSE");
+    expect(errs[2].kind).to.deep.equal("RANGEOFONE");
+
+    expect(BibleRef.repair(
+      { is_range: true,
+        start : { book: 'GEN', chapter: 100, verse: 1 },
+        end   : { book: 'GEN', chapter: 100, verse: 1 },
+      }
+    )).to.deep.equal({
+      book: 'GEN', chapter: 50, verse: 26
+    });
+
+    expect(BibleRef.repair(
+      { is_range: true,
+        start : { book: 'GEN', chapter: 100, verse: 1 },
+        end   : { book: 'GEN', chapter: 100, verse: 1 },
+      }, false
+    )).to.deep.equal(
+      { is_range: true,
+        start : { book: 'GEN', chapter: 50, verse: 26 },
+        end   : { book: 'GEN', chapter: 50, verse: 26 },
+      }
+    );
+  });
 });
