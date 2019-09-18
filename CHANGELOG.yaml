@@ -1,0 +1,7 @@
+- v1.0.0:
+  date: '2019-09-18'
+  name: 'First release'
+  features:
+    - Parsing / Generating bible reference strings
+    - Converting bible reference objects to/from verse indicies
+    - Meta function to count number of verses, trunctate to first N verses, sort into order, etc

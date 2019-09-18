@@ -1,6 +1,6 @@
 {
   "name": "awoken-bible-reference",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Bible verse reference parser, generator and manipulator",
   "main": "dist/index.js",
   "scripts": {
