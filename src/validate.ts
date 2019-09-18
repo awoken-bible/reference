@@ -1,43 +1,44 @@
 /**
- * Allows for validation of BibleRefs
+ * Allows for validation (and fixing) of BibleRefs
  */
 
-import { BibleRef, BibleVerse }    from './BibleRef';
+import { BibleRef, BibleVerse, BibleRange }    from './BibleRef';
 import { Versification, BookMeta } from './Versification'
-
 
 export enum ErrKind {
 	/** The specified book does not exist */
-	InvalidBook = "BADBOOK",
+	BadBook = "BADBOOK",
 
 	/** Verse number is higher than number of verses in chapter */
-	OutOfBoundsVerse = "BADVERSE",
+	BadVerse = "BADVERSE",
 
 	/** Chapter number is higher than number of chapters in book */
-	OutOfBoundsChapter = "BADCHPT",
+	BadChapter = "BADCHPT",
 
 	/** A range goes from later in the bible to earlier in the bible */
-	BackwardsRange = "INVERTEDRANGE",
+	BackwardsRange = "BACKWARDSRANGE",
 
 	//////////////////////////////////////////////
 	// Warnings below
 
 	/** A range contains just a single verse */
-	RangeOfOne = "USELESSRANGE",
+	RangeOfOne = "RANGEOFONE",
 };
 
 export type ValidationError = {
-	kind: ErrKind.InvalidBook,
+	kind: ErrKind.BadBook,
 	is_warning: false,
 	message: string,
 	got: string,
+	ref: BibleVerse,
 } | {
-	kind: ErrKind.OutOfBoundsVerse | ErrKind.OutOfBoundsChapter,
+	kind: ErrKind.BadVerse | ErrKind.BadChapter,
 	is_warning: false,
 	message: string,
 
 	max_value: number,
 	got: number,
+	ref: BibleVerse,
 } | {
 	kind: ErrKind.BackwardsRange,
 	is_warning: false,
@@ -45,10 +46,12 @@ export type ValidationError = {
 
 	/** The most significant part of the range which is reversed */
 	component: "book" | "chapter" | "verse",
+	ref: BibleRange,
 } | {
 	kind: ErrKind.RangeOfOne,
 	is_warning: true,
 	message: string,
+	ref: BibleRange,
 };
 
 function _validateVerse(v : Versification, ref: BibleVerse) : ValidationError[] {
@@ -58,14 +61,16 @@ function _validateVerse(v : Versification, ref: BibleVerse) : ValidationError[] 
 
 	if(b_data == undefined){
 		results.push({
-			kind       : ErrKind.InvalidBook,
+			ref        : ref,
+			kind       : ErrKind.BadBook,
 			is_warning : false,
 			message    : "The specified book does not exist",
 			got        : ref.book,
 		});
 	} else if (b_data.chapters.length < ref.chapter){
 		results.push({
-			kind       : ErrKind.OutOfBoundsChapter,
+			ref        : ref,
+			kind       : ErrKind.BadChapter,
 			is_warning : false,
 			message    : `${b_data.name} has only ${b_data.chapters.length} chapters`,
 			max_value  : b_data.chapters.length,
@@ -73,7 +78,8 @@ function _validateVerse(v : Versification, ref: BibleVerse) : ValidationError[] 
 		});
 	} else if(b_data[ref.chapter].verse_count < ref.verse){
 		results.push({
-			kind       : ErrKind.OutOfBoundsVerse,
+			ref        : ref,
+			kind       : ErrKind.BadVerse,
 			is_warning : false,
 			message    : `${b_data.name} ${ref.chapter} has only ${b_data[ref.chapter].verse_count} verses`,
 			max_value  : b_data[ref.chapter].verse_count,
@@ -86,6 +92,8 @@ function _validateVerse(v : Versification, ref: BibleVerse) : ValidationError[] 
 /**
  * Validates a BibleRef, returning an array of errors, or empty array if no
  * issues
+ * Note that the .ref field of each error produced will be a reference to the
+ * BibleRef passed in rather than a copy
  * @param include_warnings - if true then warning messages will be included
  */
 export function validate(v : Versification, ref : BibleRef, include_warnings?: boolean) : ValidationError[] {
@@ -104,6 +112,7 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
 
 		if(b1_data && b2_data && b2_data.index < b1_data.index){
 			results.push({
+				ref        : ref,
 				kind       : ErrKind.BackwardsRange,
 				is_warning : false,
 				message    : `Range is backwards (${b2_data.name} comes before ${b1_data.name})`,
@@ -112,6 +121,7 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
 		} else if(ref.start.book === ref.end.book){
 			if(ref.end.chapter < ref.start.chapter){
 				results.push({
+					ref        : ref,
 					kind       : ErrKind.BackwardsRange,
 					is_warning : false,
 					message    : `Chapter range is backwards`,
@@ -120,6 +130,7 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
 			} else if (ref.end.chapter === ref.start.chapter){
 				if(ref.end.verse < ref.start.verse){
 					results.push({
+						ref        : ref,
 						kind       : ErrKind.BackwardsRange,
 						is_warning : false,
 						message    : `Verse range is backwards`,
@@ -127,6 +138,7 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
 					});
 				} else if(ref.end.verse === ref.start.verse && include_warnings){
 					results.push({
+						ref        : ref,
 						kind       : ErrKind.RangeOfOne,
 						is_warning : true,
 						message    : `Range contains only a single verse`,
@@ -137,4 +149,57 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
 	}
 
 	return results;
+}
+
+/**
+ * Attempts to fix errors identified by "validate". Will modify the specified
+ * ref in place rather than making a copy
+ * Will throw if the error is unfixable
+ * @return reference to the passed in BibleRef
+ */
+export function fixErrors(v: Versification, ref: BibleRef, include_warnings? : boolean) : BibleRef{
+	let errors = validate(v, ref, include_warnings);
+
+	for(let i = 0; i < 5 && errors.length; ++i){
+		for(let err of errors){
+			_fixError(v, err);
+		}
+		errors = validate(v, ref, include_warnings);
+	}
+
+	if(errors.length){ throw new Error("Max fix passes exceeded"); }
+
+	return ref;
+}
+
+
+function _fixError(v : Versification, err: ValidationError) : void {
+	switch(err.kind){
+		case ErrKind.BadBook:
+			throw new Error("Cannot fix an 'unknown book' error");
+		case ErrKind.BadChapter:
+			err.ref.chapter = err.max_value;
+			err.ref.verse   = v.book[err.ref.book][err.ref.chapter].verse_count;
+			break;
+		case ErrKind.BadVerse:
+			err.ref.verse = err.max_value;
+			break;
+		case ErrKind.BackwardsRange:
+			let tmp = err.ref.start;
+			err.ref.start = err.ref.end;
+			err.ref.end   = tmp;
+			break;
+		case ErrKind.RangeOfOne:
+			// We have to modify the object in place rather then setting to a new
+			// object (as the whole point is we've passed it by reference)
+			// Hence rebuild the members of the existing object
+			let r = err.ref as any;
+			r.book    = r.start.book;
+			r.chapter = r.start.chapter;
+			r.verse   = r.start.verse;
+			delete r.is_range;
+			delete r.start;
+			delete r.end;
+			break;
+	}
 }
