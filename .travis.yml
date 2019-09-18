@@ -8,6 +8,7 @@ node_js:
 install:
   - npm install
   - npm run build
+  - npm run pack
 
 script:
   - npm run cover
@@ -32,7 +33,8 @@ deploy:
   provider: release
   api_key:
     secure: TEcRk+p5Q1TVRZsAgJe16ATjXv8nllRP/gvuZqwKmscCxRWnihUS1pA96S6hqXVZVAoxa4yOPJ/haZFFMWIHle+Kms0rILjH+ONSlF/aXfHu3rYA3EW2l3w1vENiu5AqhQ8xjArNar3uvLj/WdudII6O+YEzYp8j/vUKbunAbmkAOlj6U9TmbtlazdSiSwL42RFVZHUx/f5qINXVM0HEzEbGQk26RIlSzGMi0h8NCbTQGpw2+51Mn12W7nOoZfhTtkg3DfhtaFlHh8AFZjkOtXrLXMbVnhf8TjoU31hBlrKZ3Nn3bUV1OUHR4mKxEDfrpnMQ20TglK4d3O17sdiNxzpTVzwXlOUe0lcBkYR0UCAvlaeVbE1caSZko3naJ0DFWj94H/Z2bShsK244VHsWDtGLmLBX3mMrNR59C+LslVHIZqS89YdaARPNCN2ewcYuNAn87z+MeYMLkfAxt6QEnjqWmoKfBzkQfxrP9b+JK+G2Uy0cNn+iKrEfp0eQLPDlg6JHf6JmueYhzntZutShVGD4yJcep0MyHCuA8QOIfwr2CRV5zm6UiFmhhHlliXbAF/UjAjNfvAftYD1JGMr6Qso3XWrYsO69XpgHLJ19MKfjZMCfw43uQ8YWaeJOjhGK96KAePwWsndmqxGkHLzC6Bln+wu2VwUa2vuNzQbvv7I=
-  file: ''
+  file_glob: true
+  file: 'awoken-bible-reference-*.tgz'
   skip_cleanup: true
   on:
     tags: yes
