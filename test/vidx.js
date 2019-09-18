@@ -7,8 +7,6 @@ const v        = require('../src/Versification.ts').default;
 const Parsers  = require('../src/parser.ts').default;
 const { toVidx, fromVidx, comparator, firstNVerses, countVerses } = require('../src/vidx.ts');
 
-console.dir(Parsers);
-
 function p(str){
   return Parsers.BibleRef.parse(str).value;
 }
