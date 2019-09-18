@@ -334,4 +334,17 @@ describe("parse", () => {
     // semantics confusingly ambiogious
     expect(parse("Gen 1 - 2:3" ).status).to.deep.equal(false);
   });
+
+  it("Out of range values don't crash", () => {
+    // The numbers in these strings are higher than really exist, but these
+    // shouldn't crash - user is expected to call validate() to ensure its
+    // a valid reference
+    expect(parse('Ruth 12'  ).value)
+      .to.deep.equal([ { is_range: true,
+                         start: { book: 'RUT', chapter: 12, verse: 1 },
+                         end  : { book: 'RUT', chapter: 12, verse: 1 }
+                       } ]);
+    expect(parse('Ruth 2:50').value)
+      .to.deep.equal([ { book: 'RUT', chapter: 2, verse: 50 } ]);
+  });
 });
