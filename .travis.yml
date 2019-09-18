@@ -14,4 +14,28 @@ script:
   - npm run docs
 
 # Send coverage data to Coveralls
-after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
+after_script: cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
+
+deploy:
+  # Deploy to NPM
+  provider: npm
+  email: jamie-terry@outlook.com
+  api_key:
+    secure: gtv4j5ifu5/wKVKpejl6hUMwhzWT1x6MxNlE3/K9zLfWlCB5hwUhx7+2i+oD2TKPLtnhF0hhVU5EYKH0iOwm4k+Ent+BmCwynI1slxZnv1eaQ+0ciuj2JJ869KZGAIVV53sfr9U6CfgSajwC5axzVK7KAO4xmHINZr/vtLa/tZWMcjOmJpsmlEhjwrohb838sGU2oNN3KUL2411r/k/Ya1QQIPgE0lFRGyKyciuzy7HNOU+L3E+Il0e0tkuTH3nTUToec2l0pTFUWnfdxLQyDUoS3eaPevVcRy8AofEsEVkpDYat9p872cAZAttkdopMB4FuckBki6HtXnXDtuGkzMKFdiuJIrFunUWTEq0nyepSKjADKWlzyewTH5k9kgBtnIXsm4mw3KS/vWqojY9mQOIbMN7QQj0YJTSK8R43kqdIGC8yJCL8d76yiVwl/5/G59Ymgv8uxvViaBSMT7sF98Lgnuu7/PyxtUtlhMYvqwbU+3jrzzu642ftjg8kgR7ojTfqrSZyqjLBxEXU0YJugpRUXB8Q6yhGzO1rR+nWS7HPe2X478T3KwWi696o6t2u/AdKbO0BQjz7hv9fZgfqBnpH3cA3FoGnhP85t8Ecg9g17z8zVK8xIhCiu111M8XNiVOnn/d69eTVJCFCKFtizL1ZWf2k5myzs+FpX7fCiDs=
+  on:
+    tags: yes
+    branches:
+      only:
+        - master
+
+  # Make a github release
+  provider: release
+  api_key:
+    secure: TEcRk+p5Q1TVRZsAgJe16ATjXv8nllRP/gvuZqwKmscCxRWnihUS1pA96S6hqXVZVAoxa4yOPJ/haZFFMWIHle+Kms0rILjH+ONSlF/aXfHu3rYA3EW2l3w1vENiu5AqhQ8xjArNar3uvLj/WdudII6O+YEzYp8j/vUKbunAbmkAOlj6U9TmbtlazdSiSwL42RFVZHUx/f5qINXVM0HEzEbGQk26RIlSzGMi0h8NCbTQGpw2+51Mn12W7nOoZfhTtkg3DfhtaFlHh8AFZjkOtXrLXMbVnhf8TjoU31hBlrKZ3Nn3bUV1OUHR4mKxEDfrpnMQ20TglK4d3O17sdiNxzpTVzwXlOUe0lcBkYR0UCAvlaeVbE1caSZko3naJ0DFWj94H/Z2bShsK244VHsWDtGLmLBX3mMrNR59C+LslVHIZqS89YdaARPNCN2ewcYuNAn87z+MeYMLkfAxt6QEnjqWmoKfBzkQfxrP9b+JK+G2Uy0cNn+iKrEfp0eQLPDlg6JHf6JmueYhzntZutShVGD4yJcep0MyHCuA8QOIfwr2CRV5zm6UiFmhhHlliXbAF/UjAjNfvAftYD1JGMr6Qso3XWrYsO69XpgHLJ19MKfjZMCfw43uQ8YWaeJOjhGK96KAePwWsndmqxGkHLzC6Bln+wu2VwUa2vuNzQbvv7I=
+  file: ''
+  skip_cleanup: true
+  on:
+    tags: yes
+    branches:
+      only:
+        - master
