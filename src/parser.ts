@@ -161,10 +161,14 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 		case "full_chapter": {
 			let start : number = cv.range.start;
 			let end   : number = cv.range.end ? cv.range.end : cv.range.start;
+			let last_verse = 1;
+			if(VERSIFICATION.book[book][end] !== undefined){
+				last_verse = VERSIFICATION.book[book][end].verse_count;
+			}
 			return [{
 				is_range: true,
 				start : { book, chapter: start, verse: 1 },
-				end   : { book, chapter: end,   verse: VERSIFICATION.book[book][end].verse_count },
+				end   : { book, chapter: end,   verse: last_verse },
 			}];
 		}
 		case "verse": {
