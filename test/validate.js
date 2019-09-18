@@ -3,7 +3,7 @@
 const chai     = require('chai');
 const expect   = chai.expect;
 
-const { validate, fixErrors } = require('../src/validate.ts');
+const { validate, repair } = require('../src/validate.ts');
 const v = require('../src/Versification.ts').default;
 
 describe('validate', () => {
@@ -264,10 +264,10 @@ describe('validate', () => {
   });
 });
 
-describe('fixErrors', () => {
+describe('repair', () => {
 
   function testFix(input, expected){
-    let got = fixErrors(v, input);
+    let got = repair(v, input);
 
     // Should have modifed original input
     expect(input).to.deep.equal(got);
@@ -278,12 +278,12 @@ describe('fixErrors', () => {
 
   it('No-op when input has no errors', () => {
     let ref = { book: 'GEN', chapter: 3, verse: 10 };
-    let ref2 = fixErrors(v, { ...ref });
+    let ref2 = repair(v, { ...ref });
     expect(ref).to.deep.equal(ref2);
   });
 
   it('Bad book will throw', () => {
-    expect(() => fixErrors(v, { book: '???', chapter: 1, verse: 1 })).to.throw();
+    expect(() => repair(v, { book: '???', chapter: 1, verse: 1 })).to.throw();
   });
 
   it('Bad chapter limitted to max', () => {

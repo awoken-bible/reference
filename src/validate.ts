@@ -157,7 +157,7 @@ export function validate(v : Versification, ref : BibleRef, include_warnings?: b
  * Will throw if the error is unfixable
  * @return reference to the passed in BibleRef
  */
-export function fixErrors(v: Versification, ref: BibleRef, include_warnings? : boolean) : BibleRef{
+export function repair(v: Versification, ref: BibleRef, include_warnings? : boolean) : BibleRef{
 	let errors = validate(v, ref, include_warnings);
 
 	for(let i = 0; i < 5 && errors.length; ++i){
