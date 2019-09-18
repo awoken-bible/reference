@@ -1,6 +1,13 @@
+- v1.1.1:
+  date: '2019-09-19'
+  name: 'Packaging fixes'
+  fixes:
+    - Add prepare script to package.json to ensure build is ran before publish
+    - Actually package the code from the last release
+
 - v1.1.0:
   date: '2019-09-19'
-  name: 'First release'
+  name: 'BibleRef Validation'
   features:
     - Addition of `validate` and repair `functions` to check for (and fix) errors with reference objects
   fixes:

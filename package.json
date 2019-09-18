@@ -1,13 +1,14 @@
 {
   "name": "awoken-bible-reference",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Bible verse reference parser, generator and manipulator",
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha test/ --reporter spec",
     "cover": "./node_modules/.bin/nyc ./node_modules/.bin/mocha && ./node_modules/.bin/nyc report --reporter lcov --reporter html",
     "build": "tsc",
-    "docs": "./node_modules/.bin/typedoc --out docs"
+    "docs": "./node_modules/.bin/typedoc --out docs",
+		"prepare": "git clean -Xf && npm run build"
   },
   "dependencies": {
     "parsimmon": "1.13.0"
