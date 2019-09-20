@@ -147,7 +147,7 @@ const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
 	P.seqMap(
 		pInt,
 		pVerseSeperator.then(
-			(pIntRange.notFollowedBy(pVerseSeperator)).sepBy(pCommaSeperator)
+			(pIntRange.notFollowedBy(pVerseSeperator)).sepBy1(pCommaSeperator)
 		),
 		(chapter : number, verses : IntRange[]) => {
 			return { kind: "verse", chapter, verses };

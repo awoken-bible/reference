@@ -321,7 +321,8 @@ describe("parse", () => {
     expect(parse("Gen 1:2:3" ).status).to.deep.equal(false);
     expect(parse("Gen 1:2,3,").status).to.deep.equal(false);
     expect(parse("Gen 1 a"   ).status).to.deep.equal(false);
-    expect(parse("Gen 1 -"   ).status).to.deep.equal(false);
+    expect(parse("Gen 1 -"   ).status).to.deep.equal(false); // incomplete
+    expect(parse("Gen 1:"    ).status).to.deep.equal(false); // incomplete
     expect(parse("Gen\n1"    ).status).to.deep.equal(false); // dont allow \n
     expect(parse("Gen 9 - 9" ).status).to.deep.equal(false); // invalid range
     expect(parse("Gen 9 - 5" ).status).to.deep.equal(false); // invalid range
