@@ -176,4 +176,34 @@ describe("index", () => {
       }
     );
   });
+
+  it('makeRange', () => {
+    expect(BibleRef.makeRange('GEN')).is.deep.equal({
+      is_range: true,
+      start: { book: 'GEN', chapter:  1, verse:  1 },
+      end  : { book: 'GEN', chapter: 50, verse: 26 },
+    });
+
+    expect(BibleRef.makeRange('RUT')).is.deep.equal({
+      is_range: true,
+      start: { book: 'RUT', chapter:  1, verse:  1 },
+      end  : { book: 'RUT', chapter:  4, verse: 22 },
+    });
+
+
+    expect(BibleRef.makeRange('JOB', 41)).is.deep.equal({
+      is_range: true,
+      start: { book: 'JOB', chapter: 41, verse:  1 },
+      end  : { book: 'JOB', chapter: 41, verse: 34 },
+    });
+    expect(BibleRef.makeRange('JOB', 42)).is.deep.equal({
+      is_range: true,
+      start: { book: 'JOB', chapter: 42, verse:  1 },
+      end  : { book: 'JOB', chapter: 42, verse: 17 },
+    });
+
+    expect(() => BibleRef.makeRange('JOB', 43)).to.throw();
+    expect(() => BibleRef.makeRange('ABC',  1)).to.throw();
+    expect(() => BibleRef.makeRange('ABC'    )).to.throw();
+  });
 });

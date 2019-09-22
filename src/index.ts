@@ -2,7 +2,7 @@
  * Main file representing the full API of the library
  */
 
-import { BibleRef, BibleVerse } from './BibleRef';
+import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
 import { Parsers, ParseResult } from './parser';
 import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
@@ -89,6 +89,14 @@ export interface BibleRefLib {
 	 * repaired
 	 */
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
+
+	/**
+	 * Creates a BibleRange representing either an entire book, or
+	 * an entire chapter
+	 * Note that this function will throw if the specified book is not a
+	 * valid book ID, or if the specified chapter is too high
+	 */
+	makeRange(book : string, chapter?: number) : BibleRange;
 }
 
 function parse(this: BibleRefLib, str: string) : ParseResult{
@@ -153,7 +161,6 @@ function countVerses(this: BibleRefLib, refs: BibleRef | BibleRef[]) : number {
 	}
 }
 
-
 function validate(this: BibleRefLib,
 									refs: BibleRef | BibleRef[],
 									include_warnings?: boolean) {
@@ -168,6 +175,30 @@ function validate(this: BibleRefLib,
 
 function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : BibleRef {
 	return Validate.repair(this.versification, ref, include_warnings);
+}
+
+function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleRange{
+	let b_meta = this.versification.book[book];
+	if(b_meta == null){ throw new Error("Specified book id does not exist"); }
+	if(chapter){
+		if(chapter > b_meta.chapters.length){
+			throw new Error("Specified chapter index is too high");
+		}
+		return {
+			is_range: true,
+			start   : { book, chapter, verse: 1 },
+			end     : { book, chapter, verse: b_meta.chapters[chapter-1].verse_count }
+		};
+	} else {
+		return {
+			is_range: true,
+			start   : { book, chapter: 1, verse: 1 },
+			end     : { book,
+									chapter: b_meta.chapters.length,
+									verse: b_meta.chapters[b_meta.chapters.length-1].verse_count
+								}
+		};
+	}
 }
 
 
@@ -193,6 +224,7 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.countVerses   = countVerses;
 	this.validate      = validate;
 	this.repair        = repair;
+	this.makeRange     = makeRange;
 	return this;
 };
 constructFunc.versification = VERSIFICATION;
@@ -206,5 +238,6 @@ constructFunc.firstNVerses  = firstNVerses.bind(constructFunc);
 constructFunc.countVerses   = countVerses.bind(constructFunc);
 constructFunc.validate      = validate.bind(constructFunc);
 constructFunc.repair        = repair.bind(constructFunc);
+constructFunc.makeRange     = makeRange.bind(constructFunc);
 
 export default constructFunc;
