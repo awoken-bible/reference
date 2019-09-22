@@ -1,3 +1,9 @@
+- v1.2.0:
+  date: '2019-09-22'
+  name: 'Make Range Function'
+  features:
+    - Add makeRange function to create a BibleRange from incomplete data (eg, just "Genesis", or "Genesis 2")
+
 - v1.1.2:
   date: '2019-09-20'
   name: 'Minor Parser Fixes'
