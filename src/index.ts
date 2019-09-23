@@ -73,6 +73,24 @@ export interface BibleRefLib {
 	firstNVerses(refs : BibleRef | BibleRef[], n : number) : BibleRef[];
 
 	/**
+	 * Expands a set of Ranges to more explict objects that can be more easily
+	 * iterated over.
+	 * By default returns a list of BibleVerse objects, such that the length of
+	 * the returned list is equal to calling countVerses on the same input.
+	 * If `collate_chapters` is set then the output may contain ranges within
+	 * the same chapter of the same book - however cross chapter or cross book
+	 * ranges will still be split into smaller objects
+	 */
+	//expandRanges(refs: BibleRef | BibleRef[], collate_chapters?: boolean) : BibleRef[];
+
+	/**
+	 * Generates the most compressed representation possible of some set of
+	 * verses/ranges by combining adjacent or overlapping ranges into
+	 * single larger ones
+	 */
+	//compressRanges(refs: BibleRef | BibleRef[]) : BibleRef[];
+
+	/**
 	 * Counts the total number of verses represented by a single BibleRef
 	 * or list of refs
 	 */
