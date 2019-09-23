@@ -111,6 +111,19 @@ export function* iterateChapterRanges(v: Versification, refs: BibleRef[], verse_
 	}
 }
 
+export function* iterateVerses(v: Versification, refs: BibleRef[]){
+	for(let cur of iterateChapterRanges(v, refs, false)){
+		if(cur.is_range){
+			for(let v = cur.start.verse; v <= cur.end.verse; ++v){
+				yield { book: cur.start.book, chapter: cur.start.chapter, verse: v };
+			}
+		} else {
+			yield cur;
+		}
+	}
+}
+
+
 
 		/*
 
