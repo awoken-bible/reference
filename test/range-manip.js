@@ -3,7 +3,10 @@
 const chai     = require('chai');
 const expect   = chai.expect;
 
-const { iterateBookRanges, iterateChapterRanges, iterateVerses } = require('../src/range-manip.ts');
+const { iterateBookRanges,
+        iterateChapterRanges,
+        iterateVerses,
+        combineRanges } = require('../src/range-manip.ts');
 const v = require('../src/Versification.ts').default;
 
 describe('range-manip', () => {
@@ -323,5 +326,116 @@ describe('range-manip', () => {
       { book: 'JOB', chapter:  1, verse:  4 },
       { book: 'JOB', chapter:  1, verse:  5 },
     ]);
+  });
+
+  it('combineRanges', () => {
+    // non-overlapping ranges is no-op
+    expect(combineRanges(v, [
+      { book: 'GEN', chapter: 2, verse: 3 },
+      { book: 'GEN', chapter: 2, verse: 5 },
+    ])).to.deep.equal([
+      { book: 'GEN', chapter: 2, verse: 3 },
+      { book: 'GEN', chapter: 2, verse: 5 },
+    ]);
+
+    // adjacent verses are merged
+    expect(combineRanges(v, [
+      { book: 'GEN', chapter: 2, verse: 3 },
+      { book: 'GEN', chapter: 2, verse: 4 },
+    ])).to.deep.equal([
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse: 3 },
+        end  : { book: 'GEN', chapter: 2, verse: 4 },
+      }
+    ]);
+
+    // many adjacent verses are merged
+    expect(combineRanges(v, [
+      { book: 'GEN', chapter: 2, verse: 3 },
+      { book: 'GEN', chapter: 2, verse: 4 },
+      { book: 'GEN', chapter: 2, verse: 5 },
+      { book: 'GEN', chapter: 2, verse: 7 },
+      { book: 'GEN', chapter: 2, verse: 8 },
+      { book: 'GEN', chapter: 2, verse: 9 },
+    ])).to.deep.equal([
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse: 3 },
+        end  : { book: 'GEN', chapter: 2, verse: 5 },
+      },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse: 7 },
+        end  : { book: 'GEN', chapter: 2, verse: 9 },
+      }
+    ]);
+
+    // overlapping ranges are merged
+    expect(combineRanges(v, [
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  3 },
+        end  : { book: 'GEN', chapter: 2, verse:  7 },
+      },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  5 },
+        end  : { book: 'GEN', chapter: 2, verse: 10 },
+      },
+    ])).to.deep.equal([
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  3 },
+        end  : { book: 'GEN', chapter: 2, verse: 10 },
+      },
+    ]);
+
+
+    expect(combineRanges(v, [
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  3 },
+        end  : { book: 'GEN', chapter: 2, verse:  5 },
+      },
+      { book: 'GEN', chapter: 2, verse:  6 },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  7 },
+        end  : { book: 'GEN', chapter: 2, verse: 12 },
+      },
+    ])).to.deep.equal([
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  3 },
+        end  : { book: 'GEN', chapter: 2, verse: 12 },
+      },
+    ]);
+
+
+    expect(combineRanges(v, [
+      { book: 'GEN', chapter: 2, verse:  6 },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  3 },
+        end  : { book: 'GEN', chapter: 2, verse:  5 },
+      },
+      { book: 'EXO', chapter: 1, verse:  1 },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 2, verse:  7 },
+        end  : { book: 'GEN', chapter: 2, verse: 12 },
+      },
+      { book: 'EXO', chapter: 2, verse:  9 },
+      { book: 'EXO', chapter: 2, verse:  7 },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 50, verse:  10 },
+        end:   { book: 'EXO', chapter:  2, verse:   6 },
+      },
+      { book: 'GEN', chapter:  9, verse: 10 },
+      { book: 'GEN', chapter: 50, verse:  9 },
+    ])).to.deep.equal([
+      { is_range: true,
+        start: { book: 'GEN', chapter:  2, verse:  3 },
+        end  : { book: 'GEN', chapter:  2, verse: 12 },
+      },
+      { book: 'GEN', chapter: 9, verse: 10 },
+      { is_range: true,
+        start: { book: 'GEN', chapter: 50, verse:  9 },
+        end  : { book: 'EXO', chapter:  2, verse:  7 },
+      },
+      { book: 'EXO', chapter: 2, verse:  9 },
+    ]);
+
+
   });
 });

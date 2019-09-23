@@ -123,45 +123,47 @@ export function* iterateVerses(v: Versification, refs: BibleRef[]){
 	}
 }
 
+export function combineRanges(v: Versification, refs: BibleRef[]) : BibleRef[]{
 
+	// Convert BibleRefs into vidx pairs representing the range
+	let ranges : [number,number][] = refs
+		.map((x) => x.is_range ? x : { is_range: true, start: x, end: x })
+		.map((x) => [ Vidx.toVidx(v, x.start), Vidx.toVidx(v, x.end) ]);
 
-		/*
+	// Sort ranges based on start
+	ranges.sort((a,b) => a[0] - b[0]);
 
-function _expandToChapters(v: Versification, refs: BibleRef[]) : BibleRef[] {
-	let results : BibleRef[] = [];
+	// Combine all ranges
+	let out_ranges : [number,number][] = [];
+	let cur_r : [number,number] | null = null;
+	for(let new_r of ranges){
+		if(cur_r == null){
+			cur_r = new_r;
+			continue;
+		}
 
+		if(new_r[0] > cur_r[1]+1){
+			// then no overlap
+			out_ranges.push(cur_r);
+			cur_r = new_r;
+			continue;
+		}
 
-	let results : BibleVerse[] = [];
-
-
-}
-
-function _expandToVerses(v: Versificaton, refs: BibleRef[]) : BibleVerse[] {
-	let chpts = _expandToChaters();
-
-	let results : BibleVerse[] = [];
-
-	return results;
-}
-
-*/
-
-/**
- * Expands a range into a simpler object for iteration by splitting cross
- * chapter ranges into multiple single chapter ranges, or all ranges into
- * BibleVerse instances
- */
-
-		/*
-export function expandRanges(v: Versification,
-														 refs: BibleRef[],
-														 collate_chapter? : boolean){
-	if(collate_chapters){
-		return _expandToChapters(v, refs);
-	} else {
-		return _expandToVerses(v, refs);
+		// expand the current cur_r to end at the end of the new one
+		if(new_r[1] > cur_r[1]){ cur_r[1] = new_r[1] };
 	}
+	if(cur_r){ out_ranges.push(cur_r); }
 
+
+	// Convert vidx pairs back into BibleRefs
+	return out_ranges.map((r) => {
+		if(r[0] == r[1]){
+			return Vidx.fromVidx(v, r[0]);
+		} else {
+			return { is_range: true,
+							 start : Vidx.fromVidx(v, r[0]),
+							 end   : Vidx.fromVidx(v, r[1]),
+						 };
+		}
+	});
 }
-
-		*/
