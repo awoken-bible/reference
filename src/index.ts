@@ -8,6 +8,7 @@ import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
 import * as Vidx                from './vidx';
 import * as Validate            from './validate';
+import * as RangeManip          from './range-manip';
 
 import { Versification   } from './Versification';
 import { FormatOptions   } from './printer';
@@ -177,28 +178,8 @@ function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : 
 	return Validate.repair(this.versification, ref, include_warnings);
 }
 
-function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleRange{
-	let b_meta = this.versification.book[book];
-	if(b_meta == null){ throw new Error("Specified book id does not exist"); }
-	if(chapter){
-		if(chapter > b_meta.chapters.length){
-			throw new Error("Specified chapter index is too high");
-		}
-		return {
-			is_range: true,
-			start   : { book, chapter, verse: 1 },
-			end     : { book, chapter, verse: b_meta.chapters[chapter-1].verse_count }
-		};
-	} else {
-		return {
-			is_range: true,
-			start   : { book, chapter: 1, verse: 1 },
-			end     : { book,
-									chapter: b_meta.chapters.length,
-									verse: b_meta.chapters[b_meta.chapters.length-1].verse_count
-								}
-		};
-	}
+function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleRange {
+	return RangeManip.makeRange(this.versification, book, chapter);
 }
 
 
