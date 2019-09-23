@@ -226,6 +226,11 @@ describe("printer", () => {
   });
 
   describe('formatBibleRefList', () => {
+    it('Edge cases', () => {
+      expect(formatBibleVerse(v, [])).is.deep.equal('');
+    });
+
+
     it('Non-connected list', () => {
       expect(formatBibleRefList(v, [{ book: 'GEN', chapter: 3, verse:  8 }]))
         .is.deep.equal('Genesis 3:8');

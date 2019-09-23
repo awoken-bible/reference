@@ -329,6 +329,9 @@ describe('range-manip', () => {
   });
 
   it('combineRanges', () => {
+    // empty input is no-up
+    expect(combineRanges(v, [])).is.deep.equal([]);
+
     // non-overlapping ranges is no-op
     expect(combineRanges(v, [
       { book: 'GEN', chapter: 2, verse: 3 },
