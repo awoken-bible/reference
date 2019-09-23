@@ -140,6 +140,89 @@ describe("printer", () => {
                              ))
         .is.deep.equal('GEN3:8-EXO3:10');
     });
+
+    it('Compact', () => {
+      let r;
+
+      r = { is_range: true,
+            start: { book: 'GEN', chapter:  1, verse:  1 },
+            end  : { book: 'GEN', chapter: 50, verse: 26 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Genesis');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Genesis 1:1 - 50:26');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  3, verse: 19 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1 - 3:19');
+
+
+      r = { is_range: true,
+            start: { book: 'GEN', chapter:  1, verse:  1 },
+            end  : { book: 'GEN', chapter: 50, verse: 26 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Genesis');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Genesis 1:1 - 50:26');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  3, verse: 18 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum 1:1 - 3:18');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1 - 3:18');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  2, verse: 13 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum 1 - 2');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1 - 2:13');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  2, verse: 12 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum 1:1 - 2:12');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1 - 2:12');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  1, verse: 15 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum 1');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1-15');
+
+
+      r = { is_range: true,
+            start: { book: 'NAM', chapter:  1, verse:  1 },
+            end  : { book: 'NAM', chapter:  1, verse: 14 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Nahum 1:1-14');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Nahum 1:1-14');
+    });
   });
 
   describe('formatBibleRefList', () => {
