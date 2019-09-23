@@ -83,6 +83,7 @@ Additionally the library supports more interesting operations such as:
     `{book: 'GEN', chapter: 50, verse: 26}`
 - Sorting a list of references
 - Counting the number of verses in a set of ranges
+- Iterating by book/chapter/verse
 - Truncating a list of ranges to a new list of ranges containing the first N verses (useful for pagination, or short previews of a longer text)
 
 ## Data Types
