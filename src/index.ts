@@ -111,13 +111,13 @@ function parseOrThrow(this: BibleRefLib, str: string) : BibleRef[]{
 
 function format(this: BibleRefLib, b : BibleRef | BibleRef[], opts?: FormatOptions) : string{
 	if('length' in b){
-		return Printer.formatBibleRefList(b, opts);
+		return Printer.formatBibleRefList(this.versification, b, opts);
 	}
 
 	if(b.is_range){
-		return Printer.formatBibleRange(b, opts);
+		return Printer.formatBibleRange(this.versification, b, opts);
 	} else {
-		return Printer.formatBibleVerse(b, opts);
+		return Printer.formatBibleVerse(this.versification, b, opts);
 	}
 }
 

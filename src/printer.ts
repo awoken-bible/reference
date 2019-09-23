@@ -3,7 +3,9 @@
  */
 
 import VERSIFICATION from './Versification';
+import { Versification } from './Versification';
 import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
+
 
 export interface FormatOptions {
 	/**
@@ -42,11 +44,11 @@ function _stripWhitespaceMaybe(str: string, opts : FormatOptions){
 // Returns a string representing the name of the specified book id
 // obeying the format options
 // Will have a trailing space unless strip_whitespace is set
-function _formatBookName(id : string, opts : FormatOptions){
+function _formatBookName(v: Versification, id : string, opts : FormatOptions){
 	if(opts.use_book_id){
 		return opts.strip_whitespace ? id : id + ' ';
 	}
-	return _stripWhitespaceMaybe(VERSIFICATION.book[id].name + ' ', opts);
+	return _stripWhitespaceMaybe(v.book[id].name + ' ', opts);
 }
 
 // Formats a chapter verse specifier, eg "3:5"
@@ -57,39 +59,41 @@ function _formatChapterVerse(x: BibleVerse, opts: FormatOptions){
 /**
  * Format a single BibleVerse to a string
  */
-export function formatBibleVerse(x : BibleVerse, arg_opts? : FormatOptions){
+export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : FormatOptions){
 	let opts : FormatOptions = { ...DEFAULT_OPTS, ...(arg_opts ? arg_opts : {}) };
-	return _formatBookName(x.book, opts) + _formatChapterVerse(x, opts);
+	return _formatBookName(v, x.book, opts) + _formatChapterVerse(x, opts);
 }
 
 /**
  * Format a single BibleRange to a string
  */
-export function formatBibleRange(x: BibleRange, arg_opts? : FormatOptions){
+export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : FormatOptions){
 	let opts : FormatOptions = { ...DEFAULT_OPTS, ...(arg_opts ? arg_opts : {}) };
+
+	let b_meta = v.book[x.start.book];
 
 	if(x.start.book !== x.end.book){
 		// cross book range
 		// Format as two completely seperate BibleVerse refs, joined by " - "
-		return (formatBibleVerse(x.start, opts) +
+		return (formatBibleVerse(v, x.start, opts) +
 						_stripWhitespaceMaybe(' - ', opts) +
-						formatBibleVerse(x.end, opts)
+						formatBibleVerse(v, x.end, opts)
 					 );
 	} else if (x.start.chapter !== x.end.chapter){
-		// cross chapter range within single book
+		// Cross chapter range within single book
 		// Format as "Genesis 1:2 - 3:4"
-		return (_formatBookName      (x.start.book, opts) +
+		return (_formatBookName      (v, x.start.book, opts) +
 						_formatChapterVerse  (x.start,      opts) +
 						_stripWhitespaceMaybe(' - ',        opts) +
 						_formatChapterVerse  (x.end,        opts)
 					 );
 	} else if (x.start.verse !== x.end.verse){
-		// range of verses within single chapter
+		// Range of verses within single chapter
 		// Format as "Genesis 1:2-3"
-		return formatBibleVerse(x.start, opts) + '-' + x.end.verse;
+		return formatBibleVerse(v, x.start, opts) + '-' + x.end.verse;
 	} else {
 		// Then start == end
-		return formatBibleVerse(x.start, opts);
+		return formatBibleVerse(v, x.start, opts);
 	}
 }
 
@@ -104,7 +108,7 @@ export function formatBibleRange(x: BibleRange, arg_opts? : FormatOptions){
  * By using this function we instead get the more compact "Genesis 1:1,2"
  */
 
-export function formatBibleRefList(xs: BibleRef[], arg_opts? : FormatOptions){
+export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatOptions){
 	if(xs.length == 0){ return ""; }
 	let opts : FormatOptions = { ...DEFAULT_OPTS, ...(arg_opts ? arg_opts : {}) };
 
@@ -120,11 +124,11 @@ export function formatBibleRefList(xs: BibleRef[], arg_opts? : FormatOptions){
 		if(cur_str.length > 0){ results.push(cur_str) };
 		cur_str = "";
 		if(x['is_range']){
-			cur_str = formatBibleRange(x, opts);
+			cur_str = formatBibleRange(v, x, opts);
 			if(x.start.book    === x.end.book)   { cur_book = x.start.book; }
 			if(x.start.chapter === x.end.chapter){ cur_chpt = x.start.chapter; }
 		} else {
-			cur_str = formatBibleVerse(x, opts);
+			cur_str = formatBibleVerse(v, x, opts);
 			cur_book  = x.book;
 			cur_chpt  = x.chapter;
 		}
