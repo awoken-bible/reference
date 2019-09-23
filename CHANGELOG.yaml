@@ -1,3 +1,11 @@
+- v1.3.0:
+  date: '2019-09-22'
+  name: 'Fomatter Improvements'
+  features:
+    - Add compact option to formatter, to hide implicit elements (eg: "Genesis 1:1-31" becomes "Genesis 1")
+  fixes:
+    - format function now obeys the versificaiton scheme in use, rather than using the default
+
 - v1.2.0:
   date: '2019-09-22'
   name: 'Make Range Function'
