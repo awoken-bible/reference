@@ -227,7 +227,7 @@ describe("printer", () => {
 
   describe('formatBibleRefList', () => {
     it('Edge cases', () => {
-      expect(formatBibleVerse(v, [])).is.deep.equal('');
+      expect(formatBibleRefList(v, [])).is.deep.equal('');
     });
 
 
