@@ -5,6 +5,7 @@
 import VERSIFICATION from './Versification';
 import { Versification } from './Versification';
 import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
+import { combineRanges } from './range-manip';
 
 export interface FormatOptions {
 	/**
@@ -34,6 +35,12 @@ export interface FormatOptions {
 	 * printed "Genesis" rather than "Genesis 1:1 - 50:26"]
 	 */
 	compact : boolean,
+
+	/**
+	 * If true then adjacent/overlapping ranges will sorted into order and
+	 * combined before printing
+	 */
+	combine_ranges : boolean,
 };
 
 const DEFAULT_OPTS : FormatOptions = {
@@ -41,6 +48,7 @@ const DEFAULT_OPTS : FormatOptions = {
 	verse_seperator: ':',
 	strip_whitespace: false,
 	compact: false,
+	combine_ranges: false,
 };
 
 
@@ -148,9 +156,11 @@ export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : Fo
  * By using this function we instead get the more compact "Genesis 1:1,2"
  */
 
-export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatOptions){
+export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatOptions) {
 	if(xs.length == 0){ return ""; }
 	let opts : FormatOptions = { ...DEFAULT_OPTS, ...(arg_opts ? arg_opts : {}) };
+
+	if(opts.combine_ranges){ xs = combineRanges.bind({ versification: v })(xs); }
 
 	let cur_book  : string | null = null;
 	let cur_chpt  : number | null = null;

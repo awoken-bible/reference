@@ -1,3 +1,11 @@
+- v1.4.0:
+  date: '2019-09-28'
+  name: 'Range Manipulation'
+  features:
+    - Add function to create range from incomplete data (IE, range from just a book, or just a book and chapter)
+    - Add functions to split ranges on consistant boundaries (book, chapter or verse)
+    - Add function to combine overlapping/adjacent ranges
+
 - v1.3.0:
   date: '2019-09-22'
   name: 'Fomatter Improvements'

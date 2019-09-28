@@ -8,10 +8,12 @@ import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
 import * as Vidx                from './vidx';
 import * as Validate            from './validate';
+import * as RangeManip          from './range-manip';
 
 import { Versification   } from './Versification';
 import { FormatOptions   } from './printer';
 import { ValidationError } from './validate';
+import { RangeManipFunctions } from './range-manip';
 
 export { Versification }   from './Versification';
 export { FormatOptions }   from './printer';
@@ -20,7 +22,7 @@ export { ValidationError } from './validate';
 /**
  * Publically exposed interface to this library
  */
-export interface BibleRefLib {
+export type BibleRefLib = {
 	/**
 	 * Versification used by all methods
 	 */
@@ -89,15 +91,7 @@ export interface BibleRefLib {
 	 * repaired
 	 */
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
-
-	/**
-	 * Creates a BibleRange representing either an entire book, or
-	 * an entire chapter
-	 * Note that this function will throw if the specified book is not a
-	 * valid book ID, or if the specified chapter is too high
-	 */
-	makeRange(book : string, chapter?: number) : BibleRange;
-}
+} & RangeManipFunctions;
 
 function parse(this: BibleRefLib, str: string) : ParseResult{
 	return Parsers.BibleRef.parse(str);
@@ -177,31 +171,6 @@ function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : 
 	return Validate.repair(this.versification, ref, include_warnings);
 }
 
-function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleRange{
-	let b_meta = this.versification.book[book];
-	if(b_meta == null){ throw new Error("Specified book id does not exist"); }
-	if(chapter){
-		if(chapter > b_meta.chapters.length){
-			throw new Error("Specified chapter index is too high");
-		}
-		return {
-			is_range: true,
-			start   : { book, chapter, verse: 1 },
-			end     : { book, chapter, verse: b_meta.chapters[chapter-1].verse_count }
-		};
-	} else {
-		return {
-			is_range: true,
-			start   : { book, chapter: 1, verse: 1 },
-			end     : { book,
-									chapter: b_meta.chapters.length,
-									verse: b_meta.chapters[b_meta.chapters.length-1].verse_count
-								}
-		};
-	}
-}
-
-
 /**
  * Constructor interface
  *
@@ -213,31 +182,47 @@ function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleR
 type BibleRefLibConstructor =	(this: BibleRefLib) => BibleRefLib;
 
 const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib) : BibleRefLib {
-	this.versification = VERSIFICATION;
-	this.parse         = parse;
-	this.parseOrThrow  = parseOrThrow;
-	this.format        = format;
-	this.sort          = sort;
-	this.toVidx        = toVidx;
-	this.fromVidx      = fromVidx;
-	this.firstNVerses  = firstNVerses;
-	this.countVerses   = countVerses;
-	this.validate      = validate;
-	this.repair        = repair;
-	this.makeRange     = makeRange;
+	this.versification    = VERSIFICATION;
+	this.parse            = parse;
+	this.parseOrThrow     = parseOrThrow;
+	this.format           = format;
+	this.sort             = sort;
+	this.toVidx           = toVidx;
+	this.fromVidx         = fromVidx;
+	this.firstNVerses     = firstNVerses;
+	this.countVerses      = countVerses;
+	this.validate         = validate;
+	this.repair           = repair;
+	this.makeRange        = RangeManip.makeRange;
+	this.splitByBook      = RangeManip.splitByBook;
+	this.splitByChapter   = RangeManip.splitByChapter;
+	this.splitByVerse     = RangeManip.splitByVerse;
+	this.iterateByBook    = RangeManip.iterateByBook;
+	this.iterateByChapter = RangeManip.iterateByChapter;
+	this.iterateByVerse   = RangeManip.iterateByVerse;
+	this.combineRanges    = RangeManip.combineRanges;
 	return this;
 };
-constructFunc.versification = VERSIFICATION;
-constructFunc.parse         = parse.bind(constructFunc);
-constructFunc.parseOrThrow  = parseOrThrow.bind(constructFunc);
-constructFunc.format        = format.bind(constructFunc);
-constructFunc.sort          = sort.bind(constructFunc);
-constructFunc.toVidx        = toVidx.bind(constructFunc);
-constructFunc.fromVidx      = fromVidx.bind(constructFunc);
-constructFunc.firstNVerses  = firstNVerses.bind(constructFunc);
-constructFunc.countVerses   = countVerses.bind(constructFunc);
-constructFunc.validate      = validate.bind(constructFunc);
-constructFunc.repair        = repair.bind(constructFunc);
-constructFunc.makeRange     = makeRange.bind(constructFunc);
+
+// Allow calling of all methods statically, with the default Versification scheme used
+constructFunc.versification    = VERSIFICATION;
+constructFunc.parse            = parse.bind(constructFunc);
+constructFunc.parseOrThrow     = parseOrThrow.bind(constructFunc);
+constructFunc.format           = format.bind(constructFunc);
+constructFunc.sort             = sort.bind(constructFunc);
+constructFunc.toVidx           = toVidx.bind(constructFunc);
+constructFunc.fromVidx         = fromVidx.bind(constructFunc);
+constructFunc.firstNVerses     = firstNVerses.bind(constructFunc);
+constructFunc.countVerses      = countVerses.bind(constructFunc);
+constructFunc.validate         = validate.bind(constructFunc);
+constructFunc.repair           = repair.bind(constructFunc);
+constructFunc.makeRange        = RangeManip.makeRange.bind(constructFunc);
+constructFunc.splitByBook      = RangeManip.splitByBook.bind(constructFunc);
+constructFunc.splitByChapter   = RangeManip.splitByChapter.bind(constructFunc);
+constructFunc.splitByVerse     = RangeManip.splitByVerse.bind(constructFunc);
+constructFunc.iterateByBook    = RangeManip.iterateByBook.bind(constructFunc);
+constructFunc.iterateByChapter = RangeManip.iterateByChapter.bind(constructFunc);
+constructFunc.iterateByVerse   = RangeManip.iterateByVerse.bind(constructFunc);
+constructFunc.combineRanges    = RangeManip.combineRanges.bind(constructFunc);
 
 export default constructFunc;

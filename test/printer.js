@@ -226,6 +226,11 @@ describe("printer", () => {
   });
 
   describe('formatBibleRefList', () => {
+    it('Edge cases', () => {
+      expect(formatBibleRefList(v, [])).is.deep.equal('');
+    });
+
+
     it('Non-connected list', () => {
       expect(formatBibleRefList(v, [{ book: 'GEN', chapter: 3, verse:  8 }]))
         .is.deep.equal('Genesis 3:8');
@@ -303,5 +308,19 @@ describe("printer", () => {
       expect(formatBibleRefList(v, reflist))
         .is.deep.equal('Genesis 3:2,5-7; Exodus 5:20 - 6:3; Leviticus 6:10,12');
     });
+  });
+
+  it('Combine ranges', () => {
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], {})).to.deep.equal('Genesis 3:2,3,4');
+
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], { combine_ranges: true })).to.deep.equal('Genesis 3:2-4');
   });
 });
