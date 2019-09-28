@@ -160,7 +160,7 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 	if(xs.length == 0){ return ""; }
 	let opts : FormatOptions = { ...DEFAULT_OPTS, ...(arg_opts ? arg_opts : {}) };
 
-	if(opts.combine_ranges){ xs = combineRanges(v, xs); }
+	if(opts.combine_ranges){ xs = combineRanges.bind({ versification: v })(xs); }
 
 	let cur_book  : string | null = null;
 	let cur_chpt  : number | null = null;
