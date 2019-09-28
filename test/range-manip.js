@@ -8,24 +8,25 @@ const Rm = require('../src/index.ts').default;
 const v = require('../src/Versification.ts').default;
 
 describe('range-manip', () => {
-  let input = [ { is_range: true,
-                  start: { book: 'GEN', chapter: 1, verse: 8 },
-                  end  : { book: 'GEN', chapter: 4, verse: 9 },
-                }
-              ];
-
-  it('iterateBookRanges', () => {
+  it('splitByBook', () => {
     // single verse is no-op
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { book: 'GEN', chapter: 4, verse: 9 },
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
+      { book: 'GEN', chapter: 4, verse: 9 },
+    ]);
+
+    // can pass in single element without array wrapper
+    expect(Rm.splitByBook(
+      { book: 'GEN', chapter: 4, verse: 9 },
+    )).is.deep.equal([
       { book: 'GEN', chapter: 4, verse: 9 },
     ]);
 
     // single verse is expanded to range of 1, if flag is set
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { book: 'GEN', chapter: 4, verse: 9 },
-    ], true))).is.deep.equal([
+    ], true)).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 4, verse: 9 },
         end  : { book: 'GEN', chapter: 4, verse: 9 },
@@ -33,12 +34,12 @@ describe('range-manip', () => {
     ]);
 
     // in book range is not split
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse: 8 },
         end  : { book: 'GEN', chapter: 4, verse: 9 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse: 8 },
         end  : { book: 'GEN', chapter: 4, verse: 9 },
@@ -46,12 +47,12 @@ describe('range-manip', () => {
     ]);
 
     // cross book range is split
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'EXO', chapter:  2, verse:  6 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'GEN', chapter: 50, verse: 26 },
@@ -63,12 +64,12 @@ describe('range-manip', () => {
     ]);
 
     // long cross book range is split
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'LEV', chapter: 17, verse:  9 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'GEN', chapter: 50, verse: 26 },
@@ -85,7 +86,7 @@ describe('range-manip', () => {
 
 
     // multi input is iterated fully
-    expect(Array.from(Rm.iterateByBook([
+    expect(Rm.splitByBook([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'LEV', chapter: 17, verse:  9 },
@@ -95,7 +96,7 @@ describe('range-manip', () => {
         start: { book: 'RUT', chapter:  2, verse:  3 },
         end  : { book: 'RUT', chapter:  3, verse:  5 },
       },
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'GEN', chapter: 50, verse: 26 },
@@ -114,21 +115,28 @@ describe('range-manip', () => {
         end  : { book: 'RUT', chapter:  3, verse:  5 },
       },
     ]);
-  }); // end of iterateBookRanges
+  }); // end of splitByBook
 
 
-    it('iterateChapterkRanges', () => {
+  it('splitByChapter', () => {
     // single verse is no-op
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { book: 'GEN', chapter: 4, verse: 9 },
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
+      { book: 'GEN', chapter: 4, verse: 9 },
+    ]);
+
+    // can pass in single element without array wrapper
+    expect(Rm.splitByChapter([
+      { book: 'GEN', chapter: 4, verse: 9 },
+    ])).is.deep.equal([
       { book: 'GEN', chapter: 4, verse: 9 },
     ]);
 
     // single verse is expanded to range of 1, if flag is set
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { book: 'GEN', chapter: 4, verse: 9 },
-    ], true))).is.deep.equal([
+    ], true)).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 4, verse: 9 },
         end  : { book: 'GEN', chapter: 4, verse: 9 },
@@ -136,12 +144,12 @@ describe('range-manip', () => {
     ]);
 
     // in-chapter range is not split
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse:  8 },
         end  : { book: 'GEN', chapter: 1, verse: 13 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse:  8 },
         end  : { book: 'GEN', chapter: 1, verse: 13 },
@@ -149,12 +157,12 @@ describe('range-manip', () => {
     ]);
 
     // cross chapter range is split
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse: 8 },
         end  : { book: 'GEN', chapter: 4, verse: 9 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 1, verse:  8 },
         end  : { book: 'GEN', chapter: 1, verse: 31 },
@@ -174,12 +182,12 @@ describe('range-manip', () => {
     ]);
 
     // cross book range is split into chapters
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'EXO', chapter:  2, verse:  6 },
       }
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'GEN', chapter: 49, verse: 33 },
@@ -199,7 +207,7 @@ describe('range-manip', () => {
     ]);
 
     // multi input is iterated fully
-    expect(Array.from(Rm.iterateByChapter([
+    expect(Rm.splitByChapter([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'EXO', chapter:  2, verse:  6 },
@@ -209,7 +217,7 @@ describe('range-manip', () => {
         start: { book: 'RUT', chapter:  2, verse:  3 },
         end  : { book: 'RUT', chapter:  3, verse:  5 },
       },
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { is_range: true,
         start: { book: 'GEN', chapter: 49, verse: 10 },
         end  : { book: 'GEN', chapter: 49, verse: 33 },
@@ -236,23 +244,30 @@ describe('range-manip', () => {
         end  : { book: 'RUT', chapter:  3, verse:  5 },
       },
     ]);
-    }); // end ofs iterateChapterRanges
+    }); // end of splitByChapter
 
 
-  it('iterateVerses', () => {
+  it('splitByVerse', () => {
     // single verse is no-op
-    expect(Array.from(Rm.iterateByVerse([
+    expect(Rm.splitByVerse([
       { book: 'GEN', chapter: 2, verse: 8 },
-    ]))).is.deep.equal([
+    ])).is.deep.equal([
       { book: 'GEN', chapter: 2, verse: 8 },
     ]);
 
+    // can pass in single element without array wrapper
+    expect(Rm.splitByVerse([
+      { book: 'GEN', chapter: 4, verse: 9 },
+    ])).is.deep.equal([
+      { book: 'GEN', chapter: 4, verse: 9 },
+    ]);
+
     // intra-chapter range
-    expect(Array.from(Rm.iterateByVerse([{
+    expect(Rm.splitByVerse([{
       is_range: true,
       start : { book: 'GEN', chapter: 2, verse:  8 },
       end   : { book: 'GEN', chapter: 2, verse: 12 },
-    }]))).is.deep.equal([
+    }])).is.deep.equal([
       { book: 'GEN', chapter: 2, verse:  8 },
       { book: 'GEN', chapter: 2, verse:  9 },
       { book: 'GEN', chapter: 2, verse: 10 },
@@ -261,11 +276,11 @@ describe('range-manip', () => {
     ]);
 
     // cross chapter range
-    expect(Array.from(Rm.iterateByVerse([{
+    expect(Rm.splitByVerse([{
       is_range: true,
       start : { book: 'PRO', chapter: 18, verse: 21 },
       end   : { book: 'PRO', chapter: 19, verse:  3 },
-    }]))).is.deep.equal([
+    }])).is.deep.equal([
       { book: 'PRO', chapter: 18, verse: 21 },
       { book: 'PRO', chapter: 18, verse: 22 },
       { book: 'PRO', chapter: 18, verse: 23 },
@@ -276,11 +291,11 @@ describe('range-manip', () => {
     ]);
 
     // cross book range
-    expect(Array.from(Rm.iterateByVerse([{
+    expect(Rm.splitByVerse([{
       is_range: true,
       start : { book: 'EST', chapter: 10, verse:  2 },
       end   : { book: 'JOB', chapter:  1, verse:  5 },
-    }]))).is.deep.equal([
+    }])).is.deep.equal([
       { book: 'EST', chapter: 10, verse:  2 },
       { book: 'EST', chapter: 10, verse:  3 },
       { book: 'JOB', chapter:  1, verse:  1 },
@@ -291,7 +306,7 @@ describe('range-manip', () => {
     ]);
 
     // multi-input set iterated fully
-    expect(Array.from(Rm.iterateByVerse([{
+    expect(Rm.splitByVerse([{
       is_range: true,
       start : { book: 'PRO', chapter: 18, verse: 21 },
       end   : { book: 'PRO', chapter: 19, verse:  3 },
@@ -303,7 +318,7 @@ describe('range-manip', () => {
       is_range: true,
       start : { book: 'EST', chapter: 10, verse:  2 },
       end   : { book: 'JOB', chapter:  1, verse:  5 },
-    }]))).is.deep.equal([
+    }])).is.deep.equal([
       { book: 'PRO', chapter: 18, verse: 21 },
       { book: 'PRO', chapter: 18, verse: 22 },
       { book: 'PRO', chapter: 18, verse: 23 },
@@ -324,7 +339,7 @@ describe('range-manip', () => {
       { book: 'JOB', chapter:  1, verse:  4 },
       { book: 'JOB', chapter:  1, verse:  5 },
     ]);
-  });
+  }); // end of splitByVerse
 
   it('combineRanges', () => {
     // empty input is no-up
