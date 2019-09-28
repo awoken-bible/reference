@@ -31,8 +31,7 @@ export function makeRange(v: Versification, book : string, chapter? : number) : 
 	}
 }
 
-
-export function* iterateBookRanges(v: Versification, refs: BibleRef[], verse_as_range: boolean) {
+export function* iterateBookRanges(v: Versification, refs: BibleRef[], verse_as_range: boolean) : Iterable<BibleRef> {
 	for(let cur of refs){
 		if(!cur.is_range){
 			// single verse
@@ -74,7 +73,7 @@ export function* iterateBookRanges(v: Versification, refs: BibleRef[], verse_as_
 }
 
 
-export function* iterateChapterRanges(v: Versification, refs: BibleRef[], verse_as_range: boolean) {
+export function* iterateChapterRanges(v: Versification, refs: BibleRef[], verse_as_range: boolean) : Iterable<BibleRef> {
 	for(let cur of iterateBookRanges(v, refs, verse_as_range)){
 		if(!cur.is_range){
 			yield cur;
@@ -111,7 +110,7 @@ export function* iterateChapterRanges(v: Versification, refs: BibleRef[], verse_
 	}
 }
 
-export function* iterateVerses(v: Versification, refs: BibleRef[]){
+export function* iterateVerses(v: Versification, refs: BibleRef[]) : Iterable<BibleVerse> {
 	for(let cur of iterateChapterRanges(v, refs, false)){
 		if(cur.is_range){
 			for(let v = cur.start.verse; v <= cur.end.verse; ++v){

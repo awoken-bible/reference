@@ -73,22 +73,55 @@ export interface BibleRefLib {
 	firstNVerses(refs : BibleRef | BibleRef[], n : number) : BibleRef[];
 
 	/**
-	 * Expands a set of Ranges to more explict objects that can be more easily
-	 * iterated over.
-	 * By default returns a list of BibleVerse objects, such that the length of
-	 * the returned list is equal to calling countVerses on the same input.
-	 * If `collate_chapters` is set then the output may contain ranges within
-	 * the same chapter of the same book - however cross chapter or cross book
-	 * ranges will still be split into smaller objects
+	 * Splits an array of ranges such that any input range spanning multiple
+	 * books is subdivided into multiple smaller ranges, one for each book
+	 * @param refs - The list of refs to be split
+	 * @param expand_verses - If set then even single verses will be represented
+	 * as ranges of length 1, ensuring all returned objects have the same schema
+	 * Default to true
 	 */
-	//expandRanges(refs: BibleRef | BibleRef[], collate_chapters?: boolean) : BibleRef[];
+	splitByBook(refs: BibleRef | BibleRef[], expand_verses?: boolean) : BibleRef[];
+
+	/**
+	 * Splits an array of ranges such that any input range spanning multiple
+	 * chapters is subdivided into multiple smaller ranges, one for each chapter
+	 * @param refs - The list of refs to be split
+	 * @param expand_verses - If set then even single verses will be represented
+	 * as ranges of length 1, ensuring all returned objects have the same schema.
+	 * Defaults to true
+	 */
+	splitByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean) : BibleRef[];
+
+	/**
+	 * Splits an array of ranges to form an array of individual verses
+	 * @param refs - The list of refs to be split
+	 */
+	splitByVerse(refs: BibleRef | BibleRef[]) : BibleVerse[];
+
+	/**
+	 * Returns an iterator that traverses over the objects that would have been
+	 * returned by `splitByBook`
+	 */
+	iterateByBook   (refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
+
+	/**
+	 * Returns an iterator that traverses over the objects that would have been
+	 * returned by `splitByChapter`
+	 */
+	iterateByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
+
+	/**
+	 * Returns an iterator that traverses over the objects that would have been
+	 * returned by `splitByVerse`
+	 */
+	iterateByVerse  (refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleVerse>;
 
 	/**
 	 * Generates the most compressed representation possible of some set of
 	 * verses/ranges by combining adjacent or overlapping ranges into
 	 * single larger ones
 	 */
-	//compressRanges(refs: BibleRef | BibleRef[]) : BibleRef[];
+	combineRanges(refs: BibleRef[]) : BibleRef[];
 
 	/**
 	 * Counts the total number of verses represented by a single BibleRef
@@ -200,6 +233,45 @@ function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleR
 	return RangeManip.makeRange(this.versification, book, chapter);
 }
 
+function splitByBook(this: BibleRefLib,
+										 refs: BibleRef | BibleRef[],
+										 expand_verses?: boolean
+										) : BibleRef[] {
+
+	return Array.from(this.iterateByBook(refs, expand_verses));
+}
+
+function splitByChapter(this: BibleRefLib,
+												refs: BibleRef | BibleRef[],
+												expand_verses?: boolean) : BibleRef[]{
+	return Array.from(this.iterateByChapter(refs, expand_verses));
+}
+
+function splitByVerse(this: BibleRefLib, refs: BibleRef | BibleRef[]) : BibleVerse[]{
+	return Array.from(this.iterateByVerse(refs));
+}
+
+function iterateByBook(this: BibleRefLib, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
+	if(expand_verses === undefined){ expand_verses = true; }
+	if(!('length' in refs)){ refs = [refs]; }
+	return RangeManip.iterateBookRanges(this.versification, refs, expand_verses)
+}
+
+function iterateByChapter(this: BibleRefLib, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
+	if(expand_verses === undefined){ expand_verses = true; }
+	if(!('length' in refs)){ refs = [refs]; }
+	return Array.from(RangeManip.iterateChapterRanges(this.versification, refs, expand_verses));
+}
+
+function iterateByVerse(this: BibleRefLib, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleVerse> {
+	if(!('length' in refs)){ refs = [refs]; }
+	return RangeManip.iterateVerses(this.versification, refs);
+}
+
+function combineRanges(this: BibleRefLib, refs: BibleRef[]) : BibleRef[]{
+	return RangeManip.combineRanges(this.versification, refs);
+}
+
 
 /**
  * Constructor interface
@@ -212,31 +284,45 @@ function makeRange(this: BibleRefLib, book : string, chapter? : number) : BibleR
 type BibleRefLibConstructor =	(this: BibleRefLib) => BibleRefLib;
 
 const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib) : BibleRefLib {
-	this.versification = VERSIFICATION;
-	this.parse         = parse;
-	this.parseOrThrow  = parseOrThrow;
-	this.format        = format;
-	this.sort          = sort;
-	this.toVidx        = toVidx;
-	this.fromVidx      = fromVidx;
-	this.firstNVerses  = firstNVerses;
-	this.countVerses   = countVerses;
-	this.validate      = validate;
-	this.repair        = repair;
-	this.makeRange     = makeRange;
+	this.versification    = VERSIFICATION;
+	this.parse            = parse;
+	this.parseOrThrow     = parseOrThrow;
+	this.format           = format;
+	this.sort             = sort;
+	this.toVidx           = toVidx;
+	this.fromVidx         = fromVidx;
+	this.firstNVerses     = firstNVerses;
+	this.countVerses      = countVerses;
+	this.validate         = validate;
+	this.repair           = repair;
+	this.makeRange        = makeRange;
+	this.splitByBook      = splitByBook;
+	this.splitByChapter   = splitByChapter;
+	this.splitByVerse     = splitByVerse;
+	this.iterateByBook    = iterateByBook;
+	this.iterateByChapter = iterateByChapter;
+	this.iterateByVerse   = iterateByVerse;
+	this.combineRanges    = combineRanges;
 	return this;
 };
-constructFunc.versification = VERSIFICATION;
-constructFunc.parse         = parse.bind(constructFunc);
-constructFunc.parseOrThrow  = parseOrThrow.bind(constructFunc);
-constructFunc.format        = format.bind(constructFunc);
-constructFunc.sort          = sort.bind(constructFunc);
-constructFunc.toVidx        = toVidx.bind(constructFunc);
-constructFunc.fromVidx      = fromVidx.bind(constructFunc);
-constructFunc.firstNVerses  = firstNVerses.bind(constructFunc);
-constructFunc.countVerses   = countVerses.bind(constructFunc);
-constructFunc.validate      = validate.bind(constructFunc);
-constructFunc.repair        = repair.bind(constructFunc);
-constructFunc.makeRange     = makeRange.bind(constructFunc);
+constructFunc.versification    = VERSIFICATION;
+constructFunc.parse            = parse.bind(constructFunc);
+constructFunc.parseOrThrow     = parseOrThrow.bind(constructFunc);
+constructFunc.format           = format.bind(constructFunc);
+constructFunc.sort             = sort.bind(constructFunc);
+constructFunc.toVidx           = toVidx.bind(constructFunc);
+constructFunc.fromVidx         = fromVidx.bind(constructFunc);
+constructFunc.firstNVerses     = firstNVerses.bind(constructFunc);
+constructFunc.countVerses      = countVerses.bind(constructFunc);
+constructFunc.validate         = validate.bind(constructFunc);
+constructFunc.repair           = repair.bind(constructFunc);
+constructFunc.makeRange        = makeRange.bind(constructFunc);
+constructFunc.splitByBook      = splitByBook.bind(constructFunc);
+constructFunc.splitByChapter   = splitByChapter.bind(constructFunc);
+constructFunc.splitByVerse     = splitByVerse.bind(constructFunc);
+constructFunc.iterateByBook    = iterateByBook.bind(constructFunc);
+constructFunc.iterateByChapter = iterateByChapter.bind(constructFunc);
+constructFunc.iterateByVerse   = iterateByVerse.bind(constructFunc);
+constructFunc.combineRanges    = combineRanges.bind(constructFunc);
 
 export default constructFunc;
