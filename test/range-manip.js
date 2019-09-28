@@ -127,9 +127,9 @@ describe('range-manip', () => {
     ]);
 
     // can pass in single element without array wrapper
-    expect(Rm.splitByChapter([
+    expect(Rm.splitByChapter(
       { book: 'GEN', chapter: 4, verse: 9 },
-    ])).is.deep.equal([
+    )).is.deep.equal([
       { book: 'GEN', chapter: 4, verse: 9 },
     ]);
 
@@ -256,9 +256,9 @@ describe('range-manip', () => {
     ]);
 
     // can pass in single element without array wrapper
-    expect(Rm.splitByVerse([
+    expect(Rm.splitByVerse(
       { book: 'GEN', chapter: 4, verse: 9 },
-    ])).is.deep.equal([
+    )).is.deep.equal([
       { book: 'GEN', chapter: 4, verse: 9 },
     ]);
 
