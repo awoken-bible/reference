@@ -63,6 +63,36 @@ export interface RangeManipFunctions {
 	 * valid book ID, or if the specified chapter is too high
 	 */
 	makeRange(book : string, chapter?: number) : BibleRange;
+
+	/**
+   * Given a BibleRef, returns a new BibleRef which represents the next chapter
+	 * after the last verse in the input ref.
+	 * @param constrain_book - If true, will not cross book boundaries to find another chapter
+	 * @return BibleRef or null if there is no next chapter
+	 */
+	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
+
+	/**
+	 * Returns BibleRef representing the range of verses making up the chapter
+	 * BEFORE the first verse of the input ref
+	 * @param constrain_book - If true, will not cross book boundaries to find another chapter
+	 * @return BibleRef or null if there is no previous chapter
+	 */
+	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
+
+	/**
+   * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
+	 * the next book after the book containing the last verse in the input range
+	 * @return BibleRef or null if there is no next book (IE: input is revelation)
+	 */
+	nextBook(ref: BibleRef) : BibleRange | null;
+
+	/**
+   * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
+	 * the book before the book containing the first verse in the input range
+	 * @return BibleRef or null if there is no previous book (IE: input is genesis)
+	 */
+	previousBook(ref: BibleRef) : BibleRange | null;
 };
 
 
@@ -153,6 +183,69 @@ export function iterateByChapter(this: _Self, refs: BibleRef | BibleRef[], expan
 export function iterateByVerse(this: _Self, refs: BibleRef | BibleRef[]): Iterable<BibleVerse> {
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateVerses(this.versification, refs);
+}
+
+export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null {
+	let r : BibleVerse = ref.is_range ? ref.start : ref;
+
+	let cur_book = this.versification.book[r.book];
+	if(cur_book === undefined){
+		throw new Error("Invalid input reference!");
+	}
+
+	if(r.chapter < cur_book.chapters.length){
+		return _makeRange(this.versification, r.book, r.chapter + 1);
+	} else {
+		if(constrain_book){ return null; }
+		if(cur_book.index < this.versification.order.length){
+			return _makeRange(this.versification, this.versification.order[cur_book.index+1].id, 1);
+		} else {
+			return null;
+		}
+	}
+}
+
+export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
+	let r : BibleVerse = ref.is_range ? ref.start : ref;
+
+	let new_book_id = r.book;
+	let new_chapter = 0;
+
+	if(r.chapter <= 1){
+		if(constrain_book){ return null; }
+		let old_book = this.versification.book[r.book];
+		if(old_book === undefined){ throw new Error("Invalid input reference"); }
+		if(old_book.index === 0){ return null; }
+		let new_book = this.versification.order[old_book.index-1];
+		new_book_id = new_book.id;
+		new_chapter = new_book.chapters.length;
+	} else {
+		new_chapter = r.chapter - 1;
+	}
+
+	return _makeRange(this.versification, new_book_id, new_chapter);
+}
+
+export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
+	let r : BibleVerse = ref.is_range ? ref.start : ref;
+
+	let cur_book = this.versification.book[r.book];
+	if(cur_book.index < this.versification.order.length){
+		return _makeRange(this.versification, this.versification.order[cur_book.index+1].id);
+	} else {
+		return null;
+	}
+}
+
+export function previousBook(this: _Self, ref: BibleRef) : BibleRange | null {
+	let r : BibleVerse = ref.is_range ? ref.start : ref;
+
+	let cur_book = this.versification.book[r.book];
+	if(cur_book.index > 0){
+		return _makeRange(this.versification, this.versification.order[cur_book.index-1].id);
+	} else {
+		return null;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
