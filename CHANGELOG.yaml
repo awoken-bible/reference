@@ -1,3 +1,14 @@
+- v1.5.0:
+  date: '2020-04-08'
+  name: 'Sequential Jumps'
+  features:
+    - Add function to generate a BibleRange represent next/previous book/chapter given a BibleRef
+  fixes:
+    - Fix error in verse count of Revelation 22 using default versification data
+    - Fix parsing of 'Song of Songs' to book id 'SNG'
+    - Fix travis build config, add tests using node 12
+    - Update package dependencies, resolving issues identified by NPM audit
+
 - v1.4.0:
   date: '2019-09-28'
   name: 'Range Manipulation'
