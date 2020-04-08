@@ -186,7 +186,7 @@ export function iterateByVerse(this: _Self, refs: BibleRef | BibleRef[]): Iterab
 }
 
 export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null {
-	let r : BibleVerse = ref.is_range ? ref.start : ref;
+	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
 	let cur_book = this.versification.book[r.book];
 	if(cur_book === undefined){
@@ -197,7 +197,7 @@ export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean
 		return _makeRange(this.versification, r.book, r.chapter + 1);
 	} else {
 		if(constrain_book){ return null; }
-		if(cur_book.index < this.versification.order.length){
+		if(cur_book.index+1 < this.versification.order.length){
 			return _makeRange(this.versification, this.versification.order[cur_book.index+1].id, 1);
 		} else {
 			return null;
@@ -227,10 +227,10 @@ export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boo
 }
 
 export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
-	let r : BibleVerse = ref.is_range ? ref.start : ref;
+	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
 	let cur_book = this.versification.book[r.book];
-	if(cur_book.index < this.versification.order.length){
+	if(cur_book.index+1 < this.versification.order.length){
 		return _makeRange(this.versification, this.versification.order[cur_book.index+1].id);
 	} else {
 		return null;
