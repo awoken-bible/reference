@@ -201,6 +201,10 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.iterateByChapter = RangeManip.iterateByChapter;
 	this.iterateByVerse   = RangeManip.iterateByVerse;
 	this.combineRanges    = RangeManip.combineRanges;
+	this.nextChapter      = RangeManip.nextChapter;
+	this.previousChapter  = RangeManip.previousChapter;
+	this.nextBook         = RangeManip.nextBook;
+	this.previousBook     = RangeManip.previousBook;
 	return this;
 };
 
@@ -224,5 +228,9 @@ constructFunc.iterateByBook    = RangeManip.iterateByBook.bind(constructFunc);
 constructFunc.iterateByChapter = RangeManip.iterateByChapter.bind(constructFunc);
 constructFunc.iterateByVerse   = RangeManip.iterateByVerse.bind(constructFunc);
 constructFunc.combineRanges    = RangeManip.combineRanges.bind(constructFunc);
+constructFunc.nextChapter      = RangeManip.nextChapter.bind(constructFunc);
+constructFunc.previousChapter  = RangeManip.previousChapter.bind(constructFunc);
+constructFunc.nextBook         = RangeManip.nextBook.bind(constructFunc);
+constructFunc.previousBook     = RangeManip.previousBook.bind(constructFunc);
 
 export default constructFunc;

@@ -454,4 +454,136 @@ describe('range-manip', () => {
 
 
   });
+
+  it('nextChapter', () => {
+    expect(Rm.nextChapter({
+      book: 'GEN', chapter: 1, verse: 1
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'GEN', chapter:  2, verse:  1 },
+      end:   { book: 'GEN', chapter:  2, verse: 25 },
+    });
+
+    expect(Rm.nextChapter({
+      is_range: true,
+      start: { book: 'REV', chapter: 20, verse: 10 },
+      end:   { book: 'REV', chapter: 21, verse:  6 },
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'REV', chapter: 22, verse:  1 },
+      end:   { book: 'REV', chapter: 22, verse: 21 },
+    });
+
+    expect(Rm.nextChapter({
+      is_range: true,
+      start: { book: 'REV', chapter: 22, verse:  7 },
+      end:   { book: 'REV', chapter: 22, verse:  9 },
+    })).to.deep.equal(null);
+
+    expect(Rm.nextChapter({
+      is_range: true,
+      start: { book: '2TH', chapter:  2, verse:  6 },
+      end:   { book: 'TIT', chapter:  3, verse: 15 },
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'PHM', chapter:  1, verse:  1 },
+      end:   { book: 'PHM', chapter:  1, verse: 25 },
+    });
+    expect(Rm.nextChapter({
+      is_range: true,
+      start: { book: '2TH', chapter:  2, verse:  6 },
+      end:   { book: 'TIT', chapter:  3, verse: 15 },
+    }, true)).to.deep.equal(null);
+
+    expect(() => Rm.nextChapter({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+  });
+
+  it('previousChapter', () => {
+    expect(      Rm.previousChapter({ book: 'GEN', chapter: 1, verse: 1 })).to.deep.equal(null);
+
+    expect(      Rm.previousChapter({
+      book: 'EXO', chapter: 1, verse: 1
+    })).to.deep.equal({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 50, verse:  1 },
+      end      : { book: 'GEN', chapter: 50, verse: 26 },
+    });
+    expect(      Rm.previousChapter({
+      book: 'EXO', chapter: 1, verse: 1
+    }, true)).to.deep.equal(null);
+
+    expect(      Rm.previousChapter({
+      is_range : true,
+      start    : { book: 'RUT', chapter:  3, verse:  8 },
+      end      : { book: '1SA', chapter: 17, verse: 24 },
+    })).to.deep.equal({
+      is_range : true,
+      start    : { book: 'RUT', chapter: 2, verse:  1 },
+      end      : { book: 'RUT', chapter: 2, verse: 23 },
+    });
+
+    expect(      Rm.previousChapter({ book: 'GEN', chapter: 1, verse: 1 })).to.deep.equal(null);
+    expect(() => Rm.previousChapter({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+  });
+
+  it('nextBook', () => {
+    expect(Rm.nextBook({
+      book: 'GEN', chapter: 1, verse: 1
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'EXO', chapter:  1, verse:  1 },
+      end:   { book: 'EXO', chapter: 40, verse: 38 },
+    });
+
+    expect(Rm.nextBook({
+      book: 'JOS', chapter: 24, verse: 33
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'JDG', chapter:  1, verse:  1 },
+      end:   { book: 'JDG', chapter: 21, verse: 25 },
+    });
+
+    expect(Rm.nextBook({
+      is_range: true,
+      start: { book: 'REV', chapter: 12, verse: 3},
+      end  : { book: 'REV', chapter: 12, verse: 8},
+    })).to.deep.equal(null);
+
+    expect(() => Rm.nextBook({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+  });
+
+  it('previousBook', () => {
+    expect(Rm.previousBook({
+      book: 'MIC', chapter: 1, verse: 1
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'JON', chapter:  1, verse:  1 },
+      end:   { book: 'JON', chapter:  4, verse: 11 },
+    });
+
+    expect(Rm.previousBook({
+      is_range: true,
+      start: { book: 'MAT', chapter:  2, verse: 10 },
+      end:   { book: 'MAT', chapter:  9, verse:  4 },
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'MAL', chapter:  1, verse:  1 },
+      end:   { book: 'MAL', chapter:  4, verse:  6 },
+    });
+
+    expect(Rm.previousBook({
+      is_range: true,
+      start: { book: 'ACT', chapter:  7, verse:  8 },
+      end:   { book: 'ROM', chapter:  3, verse:  5 },
+    })).to.deep.equal({
+      is_range: true,
+      start: { book: 'JHN', chapter:  1, verse:  1 },
+      end:   { book: 'JHN', chapter: 21, verse: 25 },
+    });
+
+    expect(Rm.previousBook({
+      book: 'GEN', chapter: 50, verse: 26,
+    })).to.deep.equal(null);
+    expect(() => Rm.previousBook({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+  });
 });

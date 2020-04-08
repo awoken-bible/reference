@@ -5,7 +5,6 @@
 
 # Node generated
 **/node_modules/
-**/package-lock.json
 
 # Generated output
 /dist

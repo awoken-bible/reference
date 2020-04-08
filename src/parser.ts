@@ -50,10 +50,7 @@ const pBookPrefixNumber : P.Parser<number> = P.alt(
 
 const pBookName : P.Parser<string> = P.alt(
 	// Multiword book names
-	P.string("Song of Solomon").chain(x => P.succeed("SNG")),
-	P.string("song of solomon").chain(x => P.succeed("SNG")),
-	P.string("Song of songs"  ).chain(x => P.succeed("SNG")),
-	P.string("song of songs"  ).chain(x => P.succeed("SNG")),
+	P.regexp(/[Ss]ong\sof\s[Ss](ongs|olomon)/).chain(x => P.succeed("SNG")),
 
 	// Number followed by single word (eg: 1 Kings)
 	P.seq(pBookPrefixNumber, pAnySpace, P.letters).chain(x => {

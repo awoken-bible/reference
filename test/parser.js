@@ -59,7 +59,9 @@ describe("parser internals", () => {
     expect(      pBookName.tryParse("2nd Samuel"     )).to.equal("2SA");
     expect(      pBookName.tryParse("2nd Sam"        )).to.equal("2SA");
     expect(      pBookName.tryParse("song of solomon")).to.equal("SNG");
+    expect(      pBookName.tryParse("Song of Solomon")).to.equal("SNG");
     expect(      pBookName.tryParse("song of songs"  )).to.equal("SNG");
+    expect(      pBookName.tryParse("Song of Songs"  )).to.equal("SNG");
     expect(      pBookName.tryParse("SongofSolomon"  )).to.equal("SNG");
     expect(      pBookName.tryParse("sos"            )).to.equal("SNG");
 
