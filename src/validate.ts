@@ -5,6 +5,9 @@
 import { BibleRef, BibleVerse, BibleRange }    from './BibleRef';
 import { Versification, BookMeta } from './Versification'
 
+/**
+ * Enumeration of the different sorts of validation error
+ */
 export enum ErrKind {
 	/** The specified book does not exist */
 	BadBook = "BADBOOK",
@@ -25,6 +28,9 @@ export enum ErrKind {
 	RangeOfOne = "RANGEOFONE",
 };
 
+/**
+ * Represents an error which was detected during validation
+ */
 export type ValidationError = {
 	kind: ErrKind.BadBook,
 	is_warning: false,

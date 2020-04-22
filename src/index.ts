@@ -15,6 +15,10 @@ import { FormatOptions   } from './printer';
 import { ValidationError } from './validate';
 import { RangeManipFunctions } from './range-manip';
 
+/**
+ * Export types which should be visible to users of the library
+ */
+export { BibleRef, BibleVerse, BibleRange } from './BibleRef';
 export { Versification }   from './Versification';
 export { FormatOptions }   from './printer';
 export { ValidationError } from './validate';
@@ -93,16 +97,41 @@ export type BibleRefLib = {
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
 } & RangeManipFunctions;
 
-function parse(this: BibleRefLib, str: string) : ParseResult{
+/**
+ * Parses a string which may (or may not) represent a [[BibleRef]]
+ * and returns a [[ParseResult]] representing whether the parse was successful,
+ * and if so what value was obtained.
+ *
+ * Examples of valid input strings include:
+ * - Genesis 1
+ *
+ * @public
+ * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
+ * @param str  - The string to parse
+ */
+function parse(this: BibleRefLib, str: string) : ParseResult {
 	return Parsers.BibleRef.parse(str);
 }
 
+/**
+ * As with [[parse]], but throws error if the input string is not a valid representation
+ * of a [[BibleRef]]
+ *
+ * @public
+ * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
+ * @param str  - The string to parse
+ */
 function parseOrThrow(this: BibleRefLib, str: string) : BibleRef[]{
 	let result = this.parse(str);
 	if(result.status === true){ return result.value; }
 	throw result;
 }
 
+/**
+ * Converts a JSON [[BibleRef]] (or array thereof) into a human readable string
+ *
+ * The output format is fairly flexible, see [[FormatOptions]] for details
+ */
 function format(this: BibleRefLib, b : BibleRef | BibleRef[], opts?: FormatOptions) : string{
 	if('length' in b){
 		return Printer.formatBibleRefList(this.versification, b, opts);
@@ -115,6 +144,13 @@ function format(this: BibleRefLib, b : BibleRef | BibleRef[], opts?: FormatOptio
 	}
 }
 
+/**
+ * Takes an array of [[BibleRef]] instances and sorts them into
+ * order as per the versification scheme in use, from the BibleRef
+ * which appears first, to the one which apears last
+ *
+ * @note [[BibleRanges]] are compared based on their `start` value
+ */
 function sort(this: BibleRefLib, refs: BibleRef[]) : BibleRef[] {
 	return refs.sort((a : BibleRef, b : BibleRef) => {
 		let start = a.is_range ? a.start : a;
@@ -131,20 +167,42 @@ function sort(this: BibleRefLib, refs: BibleRef[]) : BibleRef[] {
 	});
 }
 
+/**
+ * Converts a [[BibleVerse]] into a "Verse Index", IE: number between 0 and ~33K
+ * Where 0 is the first verse of the Bible, and max value is the last verse of the Bible
+ */
 function toVidx(this: BibleRefLib, verse : BibleVerse): number {
 	return Vidx.toVidx(this.versification, verse);
 }
 
-
+/**
+ * Converts a "Verse Index" produced by [[toVidex]] back into a JSON [[BibleVerse]]
+ *
+ * @note You should ensure the versification scheme used is the same in both directions, else
+ * unexpected results are likely to occur
+ */
 function fromVidx(this: BibleRefLib, vidx : number): BibleVerse {
 	return Vidx.fromVidx(this.versification, vidx);;
 }
 
+/**
+ * Given a [[BibleRef]] instance, or array thereof, returns a new array of [[BibleRef]] instances
+ * which contains at most `n` verses. The final [[BibleRange]] in input list may be split if its
+ * length is too great
+ *
+ * @param refs - List of references to consider
+ * @param n    - Maximum number of verses to include in output set
+ *
+ * @note This is a no-op if `countVerses(refs) < n`
+ */
 function firstNVerses(this: BibleRefLib, refs: BibleRef | BibleRef[], n : number) : BibleRef[] {
 	let data : BibleRef[] = 'length' in refs ? refs : [refs];
 	return Vidx.firstNVerses(this.versification, data, n);
 }
 
+/**
+ * Computes the total number of verses in the input [[BibleRef]] (or list thereof)
+ */
 function countVerses(this: BibleRefLib, refs: BibleRef | BibleRef[]) : number {
 	if('length' in refs){
 		return refs
@@ -155,6 +213,10 @@ function countVerses(this: BibleRefLib, refs: BibleRef | BibleRef[]) : number {
 	}
 }
 
+/**
+ * Checks for issues with a [[BibleRef]] JSON object, such as the chapter or verse count
+ * being out of bounds
+ */
 function validate(this: BibleRefLib,
 									refs: BibleRef | BibleRef[],
 									include_warnings?: boolean) {
@@ -167,6 +229,10 @@ function validate(this: BibleRefLib,
 	}
 }
 
+/**
+ * Attempts to fix issues identified by [[Validate]], for example by reducing the verse/chapter
+ * number if it is too high
+ */
 function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : BibleRef {
 	return Validate.repair(this.versification, ref, include_warnings);
 }

@@ -244,14 +244,50 @@ const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
 	.sepBy1(pAnySpace.then(P.oneOf(';_')).then(pAnySpace))
 	.map((list) => list.reduce((acc, x) => acc.concat(x), []));
 
-export type ParseResult = {
-	status: true,
-	value: BibleRef[],
-} | {
+/**
+ * Represents the result of a successful attempt to parse a string representing a [[BibleRef]]
+ */
+interface ParseResultSuccess {
+	/**
+	 * Whether the parsing was successful - `true` for a [[ParseResultSuccess]]
+	 */
+	status : true;
+
+	/**
+	 * The array of [[BibleRef]]s which were parsed
+	 * An array is used since input string may include multiple non-contigious blocks, for example:
+	 * - Genesis 1 v5,8
+	 * - Genesis 1:1 ; Exodus 1:1
+	 */
+	value  : BibleRef[];
+}
+
+/**
+ * Represents the result of an unsuccessful attempt to parse a string representing a [[BibleRef]]
+ */
+interface ParseResultFailure {
+	/**
+	 * Whether the parsing was successful - `false` for a [[ParseResultFailure]]
+	 */
 	status: false,
+
+	/**
+	 * List of possible tokens/characters at the indicated location
+	 */
 	expected: string[],
+
+	/**
+	 * Location within input string where an unexpected token was encountered
+	 */
 	index: { column: number, line: number, offset: number },
 };
+
+/**
+ * Represents the output of attempting to parse a string containing a Bible reference
+ * Check the `status` field to see if the parse succeeded, and then utalize the fields
+ * of [[ParseResultSuccess]] and [[ParseResultFailure]] as appropriate
+ */
+export type ParseResult = ParseResultSuccess | ParseResultFailure;
 
 const Parsers = {
 	Book     : pBook,

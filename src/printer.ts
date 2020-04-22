@@ -7,6 +7,9 @@ import { Versification } from './Versification';
 import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
 import { combineRanges } from './range-manip';
 
+/**
+ * Set of optional flags which can be passed to the format function
+ */
 export interface FormatOptions {
 	/**
 	 * If set then the 3 character book id will be used rather than the full
@@ -122,6 +125,7 @@ function _generateFormatOpts(arg_opts?: FormatOptions) : FormatOptions{
 
 /**
  * Format a single BibleVerse to a string
+ * @private
  */
 export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : FormatOptions) : string {
 	let opts = _generateFormatOpts(arg_opts);
@@ -132,6 +136,7 @@ export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : F
 
 /**
  * Format a single BibleRange to a string
+ * @private
  */
 export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : FormatOptions) : string{
 	let opts = _generateFormatOpts(arg_opts);
@@ -204,8 +209,8 @@ export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : Fo
  * ]
  * would produce "Genesis 1:1" and "Genesis 1:2"
  * By using this function we instead get the more compact "Genesis 1:1,2"
+ * @private
  */
-
 export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatOptions) : string {
 	if(xs.length == 0){ return ""; }
 	let opts = _generateFormatOpts(arg_opts);
