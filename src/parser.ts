@@ -241,7 +241,7 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 );
 
 const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
-	.sepBy1(pAnySpace.then(P.oneOf(';')).then(pAnySpace))
+	.sepBy1(pAnySpace.then(P.oneOf(';_')).then(pAnySpace))
 	.map((list) => list.reduce((acc, x) => acc.concat(x), []));
 
 export type ParseResult = {
