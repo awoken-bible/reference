@@ -1,3 +1,10 @@
+- v1.6.0:
+  date: '2020-04-22'
+  name: 'Url Encodable Strings'
+  features:
+    - Add flags to `format` function to generate strings representing BibleRef objects which can be used in URLs
+    - Update parser to be able to read URL formatted BibleRef strings (IE: add '_' as permissible reference seperator)
+
 - v1.5.0:
   date: '2020-04-08'
   name: 'Sequential Jumps'
