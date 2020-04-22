@@ -3,6 +3,7 @@
   "version": "1.6.0",
   "description": "Bible verse reference parser, generator and manipulator",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha test/ --reporter spec",
     "cover": "./node_modules/.bin/nyc ./node_modules/.bin/mocha && ./node_modules/.bin/nyc report --reporter lcov --reporter html",
