@@ -78,6 +78,13 @@ describe("printer", () => {
     it('Exception Tests', () => {
       expect(() => formatBibleVerse(v,{ book: 'BAD', chapter: 1, verse: 1 })).to.throw();
     });
+
+    it('Lowercase', () => {
+      expect(formatBibleVerse(v, { book: 'GEN', chapter: 1, verse: 1 }, { lowercase: true }))
+        .is.deep.equal('genesis 1:1');
+      expect(formatBibleVerse(v, { book: 'GEN', chapter: 1, verse: 1 }, { lowercase: true, use_book_id: true }))
+        .is.deep.equal('gen 1:1');
+    });
   });
 
   describe('formatBibleRange', () => {
@@ -322,5 +329,30 @@ describe("printer", () => {
       { book: 'GEN', chapter: 3, verse:  3 },
       { book: 'GEN', chapter: 3, verse:  4 },
     ], { combine_ranges: true })).to.deep.equal('Genesis 3:2-4');
+  });
+
+  it('URL', () => {
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], { url: true})).to.deep.equal('gen3v2,3,4');
+
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], { url: true, combine_ranges: true})).to.deep.equal('gen3v2-4');
+
+    expect(formatBibleRefList(v, [
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 1, verse:  2 },
+        end      : { book: 'GEN', chapter: 1, verse: 10 },
+      },
+      { is_range : true,
+        start    : { book: 'EXO', chapter: 5, verse:  3 },
+        end      : { book: 'EXO', chapter: 6, verse:  4 },
+      },
+    ], { url: true, combine_ranges: true})).to.deep.equal('gen1v2-10_exo5v3-6v4');
   });
 });
