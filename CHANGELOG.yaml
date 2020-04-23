@@ -1,3 +1,12 @@
+- v1.6.1:
+  date: '2020-04-23'
+  name: 'Typedoc and Typescript fixes'
+  other:
+    - Move repo into awoken-bible github organization
+  fixes:
+    - Fix package.json such that other typescript projects can use the types exported by this module
+    - Greatly impove typedoc comments, and deploy to github pages
+
 - v1.6.0:
   date: '2020-04-22'
   name: 'Url Encodable Strings'
