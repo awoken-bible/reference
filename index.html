@@ -1,0 +1,324 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>awoken-bible-reference</title>
+	<meta name="description" content="Documentation for awoken-bible-reference">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">awoken-bible-reference</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>awoken-bible-reference</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#awoken-bible-reference--" id="awoken-bible-reference--" style="color: inherit; text-decoration: none;">
+					<h1>Awoken Bible Reference <a href="https://travis-ci.org/jnterry/awoken-bible-reference"><img src="https://travis-ci.org/jnterry/awoken-bible-reference.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/jnterry/awoken-bible-reference?branch=master"><img src="https://coveralls.io/repos/github/jnterry/awoken-bible-reference/badge.svg?branch=master" alt="Coverage Status"></a></h1>
+				</a>
+				<p><em>Bible verse reference parsing, formating and meta data</em></p>
+				<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
+					<h2>Overview</h2>
+				</a>
+				<p>The most basic usage of <code>awoken-bible-reference</code> is to simply deal with the conversion between the following representations of bible verse references:</p>
+				<table>
+					<tr>
+						<th>What</th>
+						<th>Typescript Type</th>
+						<th>Example 1</th>
+						<th>Example 2</th>
+					</tr>
+					<tr>
+						<td>Human readable string</td>
+						<td>string</td>
+						<td>Genesis 1:1</td>
+						<td>Revelation 22:21</td>
+					</tr>
+					<tr>
+						<td>Verse Index</td>
+						<td>number</td>
+						<td>0</td>
+						<td>33021</td>
+					</tr>
+					<tr>
+						<td>JSON</td>
+						<td>
+							<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> BibleVerse {
+  book    : <span class="hljs-built_in">string</span>,
+  chapter : <span class="hljs-built_in">number</span>,
+  verse   : <span class="hljs-built_in">number</span>,
+}</code></pre>
+						</td>
+						<td>
+							<pre><code class="language-json">{
+  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"GEN"</span>,
+  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">1</span>,
+  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">1</span>,
+}</code></pre>
+						</td>
+						<td>
+							<pre><code class="language-json">{
+  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"REV"</span>,
+  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">22</span>,
+  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">21</span>,
+}</code></pre>
+						</td>
+					</tr>
+				</table>
+				<blockquote>
+					<p>Note that the verse index representation should be avoided unless you are sure that all translations you care about utalize the exact same <a href="https://en.wikipedia.org/wiki/Chapters_and_verses_of_the_Bible">versification scheme</a>. While it is useful for assigning unique IDs and computing offsets etc, it should probably not be used as a portable data exchange format.</p>
+				</blockquote>
+				<p>Additionally the library supports more interesting operations such as:</p>
+				<ul>
+					<li>Parsing partial references, ranges, and comma seperated lists there of:<ul>
+							<li><code>Genesis 1:1-10,12, 2:14</code></li>
+							<li><code>EXO 3:1 - DEU 4:1</code></li>
+							<li><code>Matt 1; Luke3.16; Mark 1 v 2-3,5</code></li>
+						</ul>
+					</li>
+					<li>Generating verbose human readable reference strings, and compact URL encodable equivalents<ul>
+							<li><code>Genesis 10 v6-10</code> vs <code>GEN10:6-10</code></li>
+							<li><code>Song of Solomon</code> vs <code>SNG</code></li>
+						</ul>
+					</li>
+					<li>Validation and fixing of references, including out of range chapters and verses, and inverted ranges<ul>
+							<li><code>validate({book: &#39;GEN&#39;, chapter: 51, verse: 1})</code><br/>
+								becomes<br/>
+							<code>{ message: &quot;Genesis has only 50 chapters&quot;, got: 51, max_value: 50, ... }</code></li>
+							<li><code>fixErrors({book: &#39;GEN&#39;, chapter: 51, verse: 1})</code><br/>
+								becomes<br/>
+							<code>{book: &#39;GEN&#39;, chapter: 50, verse: 26}</code></li>
+						</ul>
+					</li>
+					<li>Sorting a list of references</li>
+					<li>Counting the number of verses in a set of ranges</li>
+					<li>Iterating by book/chapter/verse</li>
+					<li>Truncating a list of ranges to a new list of ranges containing the first N verses (useful for pagination, or short previews of a longer text)</li>
+				</ul>
+				<a href="#data-types" id="data-types" style="color: inherit; text-decoration: none;">
+					<h2>Data Types</h2>
+				</a>
+				<p>The following data types are exported:</p>
+				<pre><code class="language-typescript"><span class="hljs-comment">/** Representation of single verse */</span>
+<span class="hljs-keyword">interface</span> BibleVerse {
+  book    : <span class="hljs-built_in">string</span>,
+  chapter : <span class="hljs-built_in">number</span>,
+  verse   : <span class="hljs-built_in">number</span>,
+}
+
+<span class="hljs-comment">/** Representation of continous block of verses */</span>
+<span class="hljs-keyword">interface</span> BibleRange {
+    is_range : <span class="hljs-literal">true</span>,
+    start    : BibleVerse,
+    end      : BibleVerse,
+};
+
+<span class="hljs-comment">/** Generic reference to verse or range */</span>
+<span class="hljs-keyword">type</span> BibleRef = BibleVerse | BibleRange;</code></pre>
+				<p>Most functions take <code>BibleRef</code>s as arguments and/or produce them as output, thus the <code>is_range</code> field can be used to distinguish the types from one another.</p>
+				<p>The <code>BibleVerse.book</code> string is always a 3 character mix of upper case letters and digits, as per the <a href="https://ubsicap.github.io/usfm/identification/books.html">USFM specification</a>.</p>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<pre><code class="language-typescript"><span class="hljs-keyword">type</span> ParseResult = {
+    status: <span class="hljs-literal">true</span>,
+    value: BibleRef[],
+} | {
+    status: <span class="hljs-literal">false</span>,
+    expected: <span class="hljs-built_in">string</span>[],
+    index: { column: <span class="hljs-built_in">number</span>, line: <span class="hljs-built_in">number</span>, offset: <span class="hljs-built_in">number</span> },
+};
+parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
+				<p>Parses a human readable or compact string representing a bible reference, returning an array of references when the reference string contains multiple non-continous blocks, for example <code>Genesis ; Leviticus</code>, <code>Genesis 1, 10</code>, <code>Genesis 1:1,10</code></p>
+				<pre><code class="language-typescript">parseOrThrow(str: <span class="hljs-built_in">string</span>) : BibleRef[]</code></pre>
+				<p>As with <code>parse</code>, but returns the resultant object directly throwing if an error occurs.</p>
+				<pre><code class="language-typescript">format(ref: BibleRef[] | BibleVerse | BibleRange, opts? : FormatOptions) : <span class="hljs-built_in">string</span></code></pre>
+				<p>Formats any type of reference as a string, with opts allowing you to control verbosity.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/errkind.html" class="tsd-kind-icon">Err<wbr>Kind</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/formatoptions.html" class="tsd-kind-icon">Format<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/parseresultfailure.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Failure</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/parseresultsuccess.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Success</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#biblereflib" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#parseresult" class="tsd-kind-icon">Parse<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createversification" class="tsd-kind-icon">create<wbr>Versification</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#firstnverses" class="tsd-kind-icon">firstNVerses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#format" class="tsd-kind-icon">format</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebychapter" class="tsd-kind-icon">iterate<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebyverse" class="tsd-kind-icon">iterate<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#makerange" class="tsd-kind-icon">make<wbr>Range</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#nextbook" class="tsd-kind-icon">next<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#nextchapter" class="tsd-kind-icon">next<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parseorthrow" class="tsd-kind-icon">parse<wbr>OrThrow</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#previousbook" class="tsd-kind-icon">previous<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#previouschapter" class="tsd-kind-icon">previous<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#repair" class="tsd-kind-icon">repair</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sort" class="tsd-kind-icon">sort</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbybook" class="tsd-kind-icon">split<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbychapter" class="tsd-kind-icon">split<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbyverse" class="tsd-kind-icon">split<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tovidx" class="tsd-kind-icon">to<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#validate" class="tsd-kind-icon">validate</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

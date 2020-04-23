@@ -1,0 +1,327 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>BibleVerse | awoken-bible-reference</title>
+	<meta name="description" content="Documentation for awoken-bible-reference">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">awoken-bible-reference</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="bibleverse.html">BibleVerse</a>
+				</li>
+			</ul>
+			<h1>Interface BibleVerse</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Represents a single verse of the Bible, by storing the USFM book id, as well
+						as the chapter and verse number.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">BibleVerse</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bibleverse.html#book" class="tsd-kind-icon">book</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bibleverse.html#chapter" class="tsd-kind-icon">chapter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bibleverse.html#is_range" class="tsd-kind-icon">is_<wbr>range</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="bibleverse.html#verse" class="tsd-kind-icon">verse</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="book" class="tsd-anchor"></a>
+					<h3>book</h3>
+					<div class="tsd-signature tsd-kind-icon">book<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/BibleRef.ts#L18">BibleRef.ts:18</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The 3 character book id</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="chapter" class="tsd-anchor"></a>
+					<h3>chapter</h3>
+					<div class="tsd-signature tsd-kind-icon">chapter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/BibleRef.ts#L24">BibleRef.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The chapter number within the book</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>note</dt>
+							<dd><p>First chapter in a book has the value 1, not 0!</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="is_range" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is_<wbr>range</h3>
+					<div class="tsd-signature tsd-kind-icon">is_<wbr>range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/BibleRef.ts#L13">BibleRef.ts:13</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Field that allows us to distingish a <a href="biblerange.html">BibleRange</a> from a <a href="bibleverse.html">BibleVerse</a></p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="verse" class="tsd-anchor"></a>
+					<h3>verse</h3>
+					<div class="tsd-signature tsd-kind-icon">verse<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/BibleRef.ts#L30">BibleRef.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The number of the referenced verse</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>note</dt>
+							<dd><p>First verse in a chapter has the value 1, not 0!</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="../enums/errkind.html" class="tsd-kind-icon">Err<wbr>Kind</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
+						<a href="bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bibleverse.html#book" class="tsd-kind-icon">book</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bibleverse.html#chapter" class="tsd-kind-icon">chapter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bibleverse.html#is_range" class="tsd-kind-icon">is_<wbr>range</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="bibleverse.html#verse" class="tsd-kind-icon">verse</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface">
+						<a href="formatoptions.html" class="tsd-kind-icon">Format<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="parseresultfailure.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Failure</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="parseresultsuccess.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Success</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#biblereflib" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#parseresult" class="tsd-kind-icon">Parse<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../globals.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#createversification" class="tsd-kind-icon">create<wbr>Versification</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#firstnverses" class="tsd-kind-icon">firstNVerses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#format" class="tsd-kind-icon">format</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#iteratebychapter" class="tsd-kind-icon">iterate<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#iteratebyverse" class="tsd-kind-icon">iterate<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#makerange" class="tsd-kind-icon">make<wbr>Range</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#nextbook" class="tsd-kind-icon">next<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#nextchapter" class="tsd-kind-icon">next<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#parseorthrow" class="tsd-kind-icon">parse<wbr>OrThrow</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#previousbook" class="tsd-kind-icon">previous<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#previouschapter" class="tsd-kind-icon">previous<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#repair" class="tsd-kind-icon">repair</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#sort" class="tsd-kind-icon">sort</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#splitbybook" class="tsd-kind-icon">split<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#splitbychapter" class="tsd-kind-icon">split<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#splitbyverse" class="tsd-kind-icon">split<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#tovidx" class="tsd-kind-icon">to<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#validate" class="tsd-kind-icon">validate</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
