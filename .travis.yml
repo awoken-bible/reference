@@ -31,9 +31,20 @@ deploy:
   # Make a github release
   - provider: releases
     api_key:
-      secure: TEcRk+p5Q1TVRZsAgJe16ATjXv8nllRP/gvuZqwKmscCxRWnihUS1pA96S6hqXVZVAoxa4yOPJ/haZFFMWIHle+Kms0rILjH+ONSlF/aXfHu3rYA3EW2l3w1vENiu5AqhQ8xjArNar3uvLj/WdudII6O+YEzYp8j/vUKbunAbmkAOlj6U9TmbtlazdSiSwL42RFVZHUx/f5qINXVM0HEzEbGQk26RIlSzGMi0h8NCbTQGpw2+51Mn12W7nOoZfhTtkg3DfhtaFlHh8AFZjkOtXrLXMbVnhf8TjoU31hBlrKZ3Nn3bUV1OUHR4mKxEDfrpnMQ20TglK4d3O17sdiNxzpTVzwXlOUe0lcBkYR0UCAvlaeVbE1caSZko3naJ0DFWj94H/Z2bShsK244VHsWDtGLmLBX3mMrNR59C+LslVHIZqS89YdaARPNCN2ewcYuNAn87z+MeYMLkfAxt6QEnjqWmoKfBzkQfxrP9b+JK+G2Uy0cNn+iKrEfp0eQLPDlg6JHf6JmueYhzntZutShVGD4yJcep0MyHCuA8QOIfwr2CRV5zm6UiFmhhHlliXbAF/UjAjNfvAftYD1JGMr6Qso3XWrYsO69XpgHLJ19MKfjZMCfw43uQ8YWaeJOjhGK96KAePwWsndmqxGkHLzC6Bln+wu2VwUa2vuNzQbvv7I=
+      secure: "lTgqBbfOc67bYXT/FV8beJ4pFxk/zQcpfU0C/s+gyfRmeSJjLXrMLkgE9QBi3vE6KytvrGHf2XqcbaAFb4qGo0XByguCeIUnscgaBTUJFg+yYtqW06OhZy0Q8x07sryFVJNhg6Q9lQ5GdqqD1GFbrJQx1sn00Sscy7FSRuvJL78V+cpwRYyscVCf7g+/aASGIgiCYF66tUNuc1QxAMWB6JiNH8YP7SnfjOgGyzBd/hqeRVv1/Is155TR0i70YJAa4OlTlzvdPY+G9cA7qIwmGmcg2WGB3o5m5Z/mPCNuXghU0t4eOgOhqboddGiO2tcKxtY0B8Fznn8bBX6HuJaqhCHDcUTLRGhiVGJZZFRhKNROhbYmcPf9buK229mj8Pdh3V9mcPNlfPjXifng2yjdfvyFAcySiQg5kbq88iRjv3NSwO+eivvbpMkrw3a8VLtAGJGKgo+ncGbFYHrFTFy/Ibm88yWDcNZhGAwPZZI8dy/99f87hKjv7Ng0JvvG+yY2L5fZPYIUvxxyhIhGTp5hDO7MQxXrFBtlAweTPJdRopbQ5cF/MYku1m7ConHpQtGor/BLbFvuuyTONdRgi0ATN6pG//B4+tzCokbL3zUf5lVqd5QmelYrGFubjAf2LVkZcN3lEIedrQl/SJxGFZTikyeZpX1Fyg4jAOXu/m8Crng="
     file_glob: true
     file: 'awoken-bible-reference-*.tgz'
+    on:
+      tags: yes
+      branch: master
+
+  # Release to github pages
+  - provider: pages
+    skip_cleanup: true
+    github_token:
+      secure: "lTgqBbfOc67bYXT/FV8beJ4pFxk/zQcpfU0C/s+gyfRmeSJjLXrMLkgE9QBi3vE6KytvrGHf2XqcbaAFb4qGo0XByguCeIUnscgaBTUJFg+yYtqW06OhZy0Q8x07sryFVJNhg6Q9lQ5GdqqD1GFbrJQx1sn00Sscy7FSRuvJL78V+cpwRYyscVCf7g+/aASGIgiCYF66tUNuc1QxAMWB6JiNH8YP7SnfjOgGyzBd/hqeRVv1/Is155TR0i70YJAa4OlTlzvdPY+G9cA7qIwmGmcg2WGB3o5m5Z/mPCNuXghU0t4eOgOhqboddGiO2tcKxtY0B8Fznn8bBX6HuJaqhCHDcUTLRGhiVGJZZFRhKNROhbYmcPf9buK229mj8Pdh3V9mcPNlfPjXifng2yjdfvyFAcySiQg5kbq88iRjv3NSwO+eivvbpMkrw3a8VLtAGJGKgo+ncGbFYHrFTFy/Ibm88yWDcNZhGAwPZZI8dy/99f87hKjv7Ng0JvvG+yY2L5fZPYIUvxxyhIhGTp5hDO7MQxXrFBtlAweTPJdRopbQ5cF/MYku1m7ConHpQtGor/BLbFvuuyTONdRgi0ATN6pG//B4+tzCokbL3zUf5lVqd5QmelYrGFubjAf2LVkZcN3lEIedrQl/SJxGFZTikyeZpX1Fyg4jAOXu/m8Crng="
+    keep_history: true
+    local_dir: docs
     on:
       tags: yes
       branch: master
