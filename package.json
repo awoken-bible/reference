@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jnterry/awoken-reference.git"
+    "url": "git+ssh://git@github.com/awoken-bible/reference.git"
   },
   "keywords": [
     "bible",
