@@ -1,4 +1,4 @@
- # Awoken Bible Reference [![Build Status](https://travis-ci.org/jnterry/awoken-bible-reference.svg?branch=master)](https://travis-ci.org/jnterry/awoken-bible-reference) [![Coverage Status](https://coveralls.io/repos/github/jnterry/awoken-bible-reference/badge.svg?branch=master)](https://coveralls.io/github/jnterry/awoken-bible-reference?branch=master)
+ # Awoken Bible Reference [![Build Status](https://travis-ci.org/awoken-bible/reference.svg?branch=master)](https://travis-ci.org/awoken-bible/reference) [![Coverage Status](https://coveralls.io/repos/github/awoken-bible/reference/badge.svg?branch=master)](https://coveralls.io/github/awoken-bible/reference?branch=master)
 
 _Bible verse reference parsing, formating and meta data_
 
