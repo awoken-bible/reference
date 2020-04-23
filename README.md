@@ -2,6 +2,8 @@
 
 _Bible verse reference parsing, formating and meta data_
 
+[Click for public API reference docs](https://jnterry.github.io/awoken-bible-reference/index.html).
+
 ## Overview
 
 The most basic usage of `awoken-bible-reference` is to simply deal with the conversion between the following representations of bible verse references:
@@ -115,28 +117,4 @@ The `BibleVerse.book` string is always a 3 character mix of upper case letters a
 
 ## API
 
-```typescript
-type ParseResult = {
-	status: true,
-	value: BibleRef[],
-} | {
-	status: false,
-	expected: string[],
-	index: { column: number, line: number, offset: number },
-};
-parse(str: string) : ParseResult
-```
-
-Parses a human readable or compact string representing a bible reference, returning an array of references when the reference string contains multiple non-continous blocks, for example `Genesis ; Leviticus `, `Genesis 1, 10`, `Genesis 1:1,10`
-
-```typescript
-parseOrThrow(str: string) : BibleRef[]
-```
-
-As with `parse`, but returns the resultant object directly throwing if an error occurs.
-
-```typescript
-format(ref: BibleRef[] | BibleVerse | BibleRange, opts? : FormatOptions) : string
-```
-
-Formats any type of reference as a string, with opts allowing you to control verbosity.
+For a full list of the exported functions and data types, please see the [generated typedoc pages](https://jnterry.github.io/awoken-bible-reference/index.html).
