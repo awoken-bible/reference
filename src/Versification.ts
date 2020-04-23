@@ -7,6 +7,7 @@
 
 /**
  * Minimal data set used to create full BookMeta
+ * @private
  */
 export interface BookMetaRaw {
 	/**

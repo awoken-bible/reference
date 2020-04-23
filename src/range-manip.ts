@@ -7,91 +7,17 @@ import { Versification, BookMeta } from './Versification'
 import * as Vidx from './vidx';
 
 export interface RangeManipFunctions {
-	/**
-	 * Splits an array of ranges such that any input range spanning multiple
-	 * books is subdivided into multiple smaller ranges, one for each book
-	 * @param refs - The list of refs to be split
-	 * @param expand_verses - If set then even single verses will be represented
-	 * as ranges of length 1, ensuring all returned objects have the same schema
-	 */
 	splitByBook(refs: BibleRef | BibleRef[], expand_verses?: boolean) : BibleRef[];
-
-	/**
-	 * Splits an array of ranges such that any input range spanning multiple
-	 * chapters is subdivided into multiple smaller ranges, one for each chapter
-	 * @param refs - The list of refs to be split
-	 * @param expand_verses - If set then even single verses will be represented
-	 * as ranges of length 1, ensuring all returned objects have the same schema.
-	 */
 	splitByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean) : BibleRef[];
-
-	/**
-	 * Splits an array of ranges to form an array of individual verses
-	 * @param refs - The list of refs to be split
-	 */
 	splitByVerse(refs: BibleRef | BibleRef[]) : BibleVerse[];
-
-	/**
-	 * Returns an iterator that traverses over the objects that would have been
-	 * returned by `splitByBook`
-	 */
 	iterateByBook   (refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
-
-	/**
-	 * Returns an iterator that traverses over the objects that would have been
-	 * returned by `splitByChapter`
-	 */
 	iterateByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
-
-	/**
-	 * Returns an iterator that traverses over the objects that would have been
-	 * returned by `splitByVerse`
-	 */
 	iterateByVerse  (refs: BibleRef | BibleRef[]): Iterable<BibleVerse>;
-
-	/**
-	 * Generates the most compressed representation possible of some set of
-	 * verses/ranges by combining adjacent or overlapping ranges into
-	 * single larger ones
-	 */
 	combineRanges(refs: BibleRef[]) : BibleRef[];
-
-	/**
-	 * Creates a BibleRange representing either an entire book, or
-	 * an entire chapter
-	 * Note that this function will throw if the specified book is not a
-	 * valid book ID, or if the specified chapter is too high
-	 */
 	makeRange(book : string, chapter?: number) : BibleRange;
-
-	/**
-   * Given a BibleRef, returns a new BibleRef which represents the next chapter
-	 * after the last verse in the input ref.
-	 * @param constrain_book - If true, will not cross book boundaries to find another chapter
-	 * @return BibleRef or null if there is no next chapter
-	 */
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
-
-	/**
-	 * Returns BibleRef representing the range of verses making up the chapter
-	 * BEFORE the first verse of the input ref
-	 * @param constrain_book - If true, will not cross book boundaries to find another chapter
-	 * @return BibleRef or null if there is no previous chapter
-	 */
 	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
-
-	/**
-   * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
-	 * the next book after the book containing the last verse in the input range
-	 * @return BibleRef or null if there is no next book (IE: input is revelation)
-	 */
 	nextBook(ref: BibleRef) : BibleRange | null;
-
-	/**
-   * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
-	 * the book before the book containing the first verse in the input range
-	 * @return BibleRef or null if there is no previous book (IE: input is genesis)
-	 */
 	previousBook(ref: BibleRef) : BibleRange | null;
 };
 
@@ -100,11 +26,30 @@ interface _Self {
 	versification : Versification;
 };
 
+/**
+ * Creates a [[BibleRange]] representing either an entire book, or
+ * an entire chapter
+ * @note This function will throw if the specified book is not a
+ * valid book ID, or if the specified chapter is too high
+ *
+ * @param this - Any object with a `versification` field
+ */
 export function makeRange(this: _Self, book : string, chapter? : number) : BibleRange {
 	let v = this.versification;
 	return _makeRange(this.versification, book, chapter);
 }
 
+/**
+ * Generates the most compressed representation possible of some set of
+ * [[BibleVerse]]s/[[BibleRange]]s by combining adjacent or overlapping ranges into
+ * larger ones
+ *
+ * For example, an input list of "Gen 1", "Gen 2", "Gen 3", would produce a
+ * single [[BibleRange]] for "Gen 1-3"
+ *
+ * Order of input ranges in unimportant, since this functional will interally
+ * call [[sort]] first
+ */
 export function combineRanges(this: _Self, refs: BibleRef[]) : BibleRef[]{
 	let v = this.versification;
 
@@ -151,6 +96,13 @@ export function combineRanges(this: _Self, refs: BibleRef[]) : BibleRef[]{
 	});
 }
 
+/**
+ * Splits an array of ranges such that any input range spanning multiple
+ * books is subdivided into multiple smaller ranges, one for each book
+ * @param refs - The list of refs to be split
+ * @param expand_verses - If set then even single verses will be represented
+ * as ranges of length 1, ensuring all returned objects have the same schema
+ */
 export function splitByBook(this: _Self,
 										 refs: BibleRef | BibleRef[],
 										 expand_verses?: boolean
@@ -158,33 +110,63 @@ export function splitByBook(this: _Self,
 	return Array.from(iterateByBook.bind(this)(refs, expand_verses));
 }
 
+/**
+ * Splits an array of ranges such that any input range spanning multiple
+ * chapters is subdivided into multiple smaller ranges, one for each chapter
+ * @param refs - The list of refs to be split
+ * @param expand_verses - If set then even single verses will be represented
+ * as ranges of length 1, ensuring all returned objects have the same schema.
+ */
 export function splitByChapter(this: _Self,
 												refs: BibleRef | BibleRef[],
 												expand_verses?: boolean) : BibleRef[]{
 	return Array.from(iterateByChapter.bind(this)(refs, expand_verses));
 }
 
+/**
+ * Splits an array of ranges to form an array of individual verses
+ * @param refs - The list of refs to be split
+ */
 export function splitByVerse(this: _Self, refs: BibleRef | BibleRef[]) : BibleVerse[]{
 	return Array.from(iterateByVerse.bind(this)(refs));
 }
 
+/**
+ * Returns an iterator that traverses over the objects that would have been
+ * returned by `splitByBook`
+ */
 export function iterateByBook(this: _Self, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
 	if(expand_verses === undefined){ expand_verses = false; }
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateBookRanges(this.versification, refs, expand_verses)
 }
 
+
+/**
+ * Returns an iterator that traverses over the objects that would have been
+ * returned by `splitByChapter`
+ */
 export function iterateByChapter(this: _Self, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
 	if(expand_verses === undefined){ expand_verses = false; }
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateChapterRanges(this.versification, refs, expand_verses);
 }
 
+/**
+ * Returns an iterator that traverses over the objects that would have been
+ * returned by `splitByVerse`
+ */
 export function iterateByVerse(this: _Self, refs: BibleRef | BibleRef[]): Iterable<BibleVerse> {
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateVerses(this.versification, refs);
 }
 
+/**
+ * Given a BibleRef, returns a new BibleRef which represents the next chapter
+ * after the last verse in the input ref.
+ * @param constrain_book - If true, will not cross book boundaries to find another chapter
+ * @return BibleRef or null if there is no next chapter
+ */
 export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
@@ -205,6 +187,12 @@ export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean
 	}
 }
 
+/**
+ * Returns BibleRef representing the range of verses making up the chapter
+ * BEFORE the first verse of the input ref
+ * @param constrain_book - If true, will not cross book boundaries to find another chapter
+ * @return BibleRef or null if there is no previous chapter
+ */
 export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
 	let r : BibleVerse = ref.is_range ? ref.start : ref;
 
@@ -226,6 +214,11 @@ export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boo
 	return _makeRange(this.versification, new_book_id, new_chapter);
 }
 
+/**
+ * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
+ * the next book after the book containing the last verse in the input range
+ * @return BibleRef or null if there is no next book (IE: input is revelation)
+ */
 export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
@@ -237,6 +230,11 @@ export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
 	}
 }
 
+/**
+ * Given a BibleRef, returns a new BibleRef which represents the range of verses making up
+ * the book before the book containing the first verse in the input range
+ * @return BibleRef or null if there is no previous book (IE: input is genesis)
+ */
 export function previousBook(this: _Self, ref: BibleRef) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.start : ref;
 

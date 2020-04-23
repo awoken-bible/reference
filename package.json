@@ -3,11 +3,12 @@
   "version": "1.6.0",
   "description": "Bible verse reference parser, generator and manipulator",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha test/ --reporter spec",
     "cover": "./node_modules/.bin/nyc ./node_modules/.bin/mocha && ./node_modules/.bin/nyc report --reporter lcov --reporter html",
     "build": "tsc",
-    "docs": "./node_modules/.bin/typedoc --out docs",
+    "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludeNotDocumented --excludePrivate",
     "prepare": "git clean -Xf && npm run build"
   },
   "dependencies": {

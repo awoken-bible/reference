@@ -2,9 +2,13 @@
  * Includes base data types used by other modules
  */
 
+/**
+ * Represents a single verse of the Bible, by storing the USFM book id, as well
+ * as the chapter and verse number.
+ */
 export interface BibleVerse {
 	/**
-	 * Field that allows us to distingish a BibleRange from a BibleVerse
+	 * Field that allows us to distingish a [[BibleRange]] from a [[BibleVerse]]
 	 */
 	is_range? : undefined,
 
@@ -14,30 +18,41 @@ export interface BibleVerse {
 	book: string,
 
 	/**
-	 * The chapter number within the book, note, this is indexed from 1
-	 * rather than 0 as with arrays
+	 * The chapter number within the book
+	 * @note First chapter in a book has the value 1, not 0!
 	 */
 	chapter: number,
 
   /**
-   * The number of the references verse
-	 * @note This is index from 1 rather than 0!
+   * The number of the referenced verse
+	 * @note First verse in a chapter has the value 1, not 0!
 	 */
   verse: number,
 };
 
+/**
+ * Type which represents a continous block of Bible verses
+ */
 export interface BibleRange {
 	/**
-	 * Field that allows us to distingish a BibleRange from a BibleVerse
+	 * Field that allows us to distingish a [[BibleRange]] from a [[BibleVerse]]
 	 */
 	is_range: true,
+
+	/**
+	 * First verse in the range, inclusive
+	 */
 	start : BibleVerse,
+
+	/**
+	 * Last verse in the range, inclusive
+	 */
 	end   : BibleVerse,
 };
 
 /**
  * Union type that represents any continous section of bible, including
- * a single verse, to a span of text over multiple chapters
+ * a single verse, to a span of text over multiple chapters/books
  */
 export type BibleRef = BibleVerse | BibleRange;
 export default BibleRef;
