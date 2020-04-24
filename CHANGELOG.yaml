@@ -1,3 +1,11 @@
+- v1.6.2:
+  date: '2020-04-24'
+  name: 'README Patch'
+  other:
+    - Move repo into awoken-bible github organization
+  fixes:
+    - README.md and package.json URLs to project updated to point at awoken-bible github organization
+
 - v1.6.1:
   date: '2020-04-23'
   name: 'Typedoc and Typescript fixes'
