@@ -2,7 +2,7 @@
 
 _Bible verse reference parsing, formating and meta data_
 
-[Click for public API reference docs](https://jnterry.github.io/awoken-bible-reference/index.html).
+[Click for public API reference docs](https://awoken-bible.github.io/reference/index.html).
 
 ## Overview
 
@@ -117,4 +117,4 @@ The `BibleVerse.book` string is always a 3 character mix of upper case letters a
 
 ## API
 
-For a full list of the exported functions and data types, please see the [generated typedoc pages](https://jnterry.github.io/awoken-bible-reference/index.html).
+For a full list of the exported functions and data types, please see the [generated typedoc pages](https://awoken-bible.github.io/reference/index.html).

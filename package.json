@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/jnterry/awoken-bible-reference/issues"
   },
-  "homepage": "https://github.com/jnterry/awoken-bible-reference#readme",
+  "homepage": "https://awoken-bible.github.io/reference/index.html",
   "files": [
     "dist/**/*"
   ],
