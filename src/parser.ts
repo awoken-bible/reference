@@ -3,11 +3,14 @@ import BibleRef      from './BibleRef';
 import * as P from 'parsimmon';
 
 
-let book_name_to_id      : { [ index: string ] : string } = {};
+let book_name_to_id : { [ index: string ] : string } = {};
 for(let book of VERSIFICATION.order){
-	let ns = [ book.name, ...book.aliases ].map(n => n.toLowerCase());
-	for(let n of ns){
-		book_name_to_id[n] = book.id;
+	book_name_to_id[book.name.toLowerCase()] = book.id;
+
+	for(let n of book.aliases.map(x => x.toLowerCase())){
+		// We support aliases both with and without a trailing .
+		book_name_to_id[n      ] = book.id;
+		book_name_to_id[n + '.'] = book.id;
 	}
 
 	let name = book.name.toLowerCase();
