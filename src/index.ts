@@ -103,7 +103,31 @@ export type BibleRefLib = {
  * and if so what value was obtained.
  *
  * Examples of valid input strings include:
+ *
+ * Book references (returns (list of) range(s) representing entire book):
+ * - Genesis
+ * - Gen
+ * - GEN
+ * - Genesis; Revelation
+ *
+ * Chapter references (returns (list of) range(s) representing entire chapters):
  * - Genesis 1
+ * - GEN1
+ * - Genesis 1; Exodus 2; REV1
+ *
+ * Verse References (represents a single verse):
+ * - Genesis 1:1
+ * - Gen 1v1
+ * - GEN1.1
+ *
+ * Verse Ranges (continous blocks of verses, can cross chapter/book boundaries):
+ * - Genesis 1:1-4
+ * - Genesis 1:1 - 2:2
+ * - Genesis 50 - Exodus 2
+ *
+ * Complex sets/combinations:
+ * - Genesis 1:1, 2-4, 6
+ * - GEN1.1-2; EXO3:4 - DEU5v6,10; Revelation 22
  *
  * @public
  * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
