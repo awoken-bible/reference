@@ -63,6 +63,13 @@ describe("Geometry", () => {
         end  : { book: 'JDG', chapter: 2, verse: 23 },
       },
     ]);
+
+    expect(AwokenRef.getIntersection(p('Exo 1'), p('Genesis 1:1'))).to.deep.equal([]);
+    expect(AwokenRef.getIntersection(p('Exo 1:1'), p('Exo 1:2'))).to.deep.equal([]);
+    expect(AwokenRef.getIntersection(
+      p('Exo 1:1; Exo 1:3; Exo 1:5'),
+      p('Exo 1:2; Exo 1:4; Exo 1:6')
+    )).to.deep.equal([]);
   });
 
   it('intersects', () => {
