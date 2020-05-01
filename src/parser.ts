@@ -3,11 +3,14 @@ import BibleRef      from './BibleRef';
 import * as P from 'parsimmon';
 
 
-let book_name_to_id      : { [ index: string ] : string } = {};
+let book_name_to_id : { [ index: string ] : string } = {};
 for(let book of VERSIFICATION.order){
-	let ns = [ book.name, ...book.aliases ].map(n => n.toLowerCase());
-	for(let n of ns){
-		book_name_to_id[n] = book.id;
+	book_name_to_id[book.name.toLowerCase()] = book.id;
+
+	for(let n of book.aliases.map(x => x.toLowerCase())){
+		// We support aliases both with and without a trailing .
+		book_name_to_id[n      ] = book.id;
+		book_name_to_id[n + '.'] = book.id;
 	}
 
 	let name = book.name.toLowerCase();
@@ -30,9 +33,9 @@ const pInt : P.Parser<number> = P
 // Bible Book
 
 const pBookId : P.Parser<string> = P
-	.regex(/[0-9A-Z]{3}/i)
+	.regex(/([0-9A-Z]{3})\.?/i)
 	.chain(x => {
-		x = x.toUpperCase();
+		x = x.toUpperCase().substring(0,3);
 		if(VERSIFICATION.book[x]){
 			return P.succeed(x);
 		} else {
@@ -50,10 +53,10 @@ const pBookPrefixNumber : P.Parser<number> = P.alt(
 
 const pBookName : P.Parser<string> = P.alt(
 	// Multiword book names
-	P.regexp(/[Ss]ong\sof\s[Ss](ongs|olomon)/).chain(x => P.succeed("SNG")),
+	P.regexp(/[Ss]ong\sof\s[Ss](ongs|olomon|ol.?)/).chain(x => P.succeed("SNG")),
 
 	// Number followed by single word (eg: 1 Kings)
-	P.seq(pBookPrefixNumber, pAnySpace, P.letters).chain(x => {
+	P.seq(pBookPrefixNumber, pAnySpace, P.regexp(/[A-Z]+\.?/i)).chain(x => {
 		let name = x[0] + ' ' + x[2].toLowerCase();
 		let id   = book_name_to_id[name];
 		if(id){ return P.succeed(id); }
@@ -61,7 +64,7 @@ const pBookName : P.Parser<string> = P.alt(
 	}),
 
 	// Single word book names
-	P.letters.chain(x => {
+	P.regexp(/[A-Z]+\.?/i).chain(x => {
 		let id = book_name_to_id[x.toLowerCase()];
 		if(id){ return P.succeed(id); }
 		else  { return P.fail("Invalid book name: " + x); }
