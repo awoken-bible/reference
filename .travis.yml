@@ -42,7 +42,7 @@ jobs:
           branch: master
 
     - stage: Deploy
-      if: branch = master
+      if: tag =~ ^v
       node_js: lts/*
       script:
         - npm pack
