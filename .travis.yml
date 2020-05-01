@@ -30,13 +30,14 @@ jobs:
       node_js: lts/*
       script:
         - npm run docs
+      before_deploy:
+        - cd ${TRAVIS_BUILD_DIR}/docs
       deploy:
         strategy: git
         provider: pages
         token:
           secure: "lTgqBbfOc67bYXT/FV8beJ4pFxk/zQcpfU0C/s+gyfRmeSJjLXrMLkgE9QBi3vE6KytvrGHf2XqcbaAFb4qGo0XByguCeIUnscgaBTUJFg+yYtqW06OhZy0Q8x07sryFVJNhg6Q9lQ5GdqqD1GFbrJQx1sn00Sscy7FSRuvJL78V+cpwRYyscVCf7g+/aASGIgiCYF66tUNuc1QxAMWB6JiNH8YP7SnfjOgGyzBd/hqeRVv1/Is155TR0i70YJAa4OlTlzvdPY+G9cA7qIwmGmcg2WGB3o5m5Z/mPCNuXghU0t4eOgOhqboddGiO2tcKxtY0B8Fznn8bBX6HuJaqhCHDcUTLRGhiVGJZZFRhKNROhbYmcPf9buK229mj8Pdh3V9mcPNlfPjXifng2yjdfvyFAcySiQg5kbq88iRjv3NSwO+eivvbpMkrw3a8VLtAGJGKgo+ncGbFYHrFTFy/Ibm88yWDcNZhGAwPZZI8dy/99f87hKjv7Ng0JvvG+yY2L5fZPYIUvxxyhIhGTp5hDO7MQxXrFBtlAweTPJdRopbQ5cF/MYku1m7ConHpQtGor/BLbFvuuyTONdRgi0ATN6pG//B4+tzCokbL3zUf5lVqd5QmelYrGFubjAf2LVkZcN3lEIedrQl/SJxGFZTikyeZpX1Fyg4jAOXu/m8Crng="
         keep_history: true
-        local_dir: docs/
         on:
           branch: master
 
