@@ -122,6 +122,8 @@ export function createVersification(data: BookMetaRaw[]) : Versification {
  * Aliases contains common abbrevations for books compiled from various sources. Note that these
  * must be unique since the parser relies on them!
  * - Chicago Abbreviations: https://hbl.gcc.libguides.com/ld.php?content_id=13822328
+ *
+ * @private
  */
 let default_data : BookMetaRaw[] = [
 	{ id            : 'GEN',
