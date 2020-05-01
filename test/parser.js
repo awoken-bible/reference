@@ -382,9 +382,9 @@ describe("parse", () => {
   it("Chicago Book Abbreviation", () => {
     // Old testemant: https://hbl.gcc.libguides.com/ld.php?content_id=13822328
     expect(parse('Am       1:1').value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Chorn. 1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
+    expect(parse('1 Chron. 1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
     expect(parse('1 Chr    1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Chorn. 1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
+    expect(parse('2 Chron. 1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
     expect(parse('2 Chr    1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
     expect(parse('Dan.     1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
     expect(parse('Dn       1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
@@ -409,6 +409,7 @@ describe("parse", () => {
     expect(parse('Is       1:1').value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
     expect(parse('Jer.     1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
     expect(parse('Jer      1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
+    expect(parse('Job      1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
     expect(parse('Jb       1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
     expect(parse('Jl       1:1').value).to.deep.equal([ { book: 'JOL', chapter: 1, verse: 1 } ]);
     expect(parse('Jon.     1:1').value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
@@ -436,7 +437,7 @@ describe("parse", () => {
     expect(parse('Obad.    1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
     expect(parse('Ob       1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
     expect(parse('Prov.    1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
-    expect(parse('Prv      1:1').value).to.deep.equal([ { book: 'PRV', chapter: 1, verse: 1 } ]);
+    expect(parse('Prv      1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
     expect(parse('Ps.      1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
     expect(parse('Pss.     1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
     expect(parse('Ps       1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
@@ -455,7 +456,9 @@ describe("parse", () => {
 
 
     // New testemant: http://hbl.gcc.libguides.com/ld.php?content_id=13822330
+    expect(parse('Acts     1:1').value).to.deep.equal([ { book: 'ACT', chapter: 1, verse: 1 } ]);
     expect(parse('Apoc.    1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+    expect(parse('Col.     1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
     expect(parse('Col      1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
     expect(parse('1 Cor.   1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
     expect(parse('1 Cor    1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
