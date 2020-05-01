@@ -2,7 +2,7 @@
  * Various utility functions for manipulating (sets of) ranges
  */
 
-import { BibleRef, BibleVerse, BibleRange }    from './BibleRef';
+import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Versification, BookMeta } from './Versification'
 import * as Vidx from './vidx';
 
@@ -21,11 +21,6 @@ export interface RangeManipFunctions {
 	previousBook(ref: BibleRef) : BibleRange | null;
 };
 
-
-interface _Self {
-	versification : Versification;
-};
-
 /**
  * Creates a [[BibleRange]] representing either an entire book, or
  * an entire chapter
@@ -34,7 +29,7 @@ interface _Self {
  *
  * @param this - Any object with a `versification` field
  */
-export function makeRange(this: _Self, book : string, chapter? : number) : BibleRange {
+export function makeRange(this: BibleRefLibData, book : string, chapter? : number) : BibleRange {
 	let v = this.versification;
 	return _makeRange(this.versification, book, chapter);
 }
@@ -50,7 +45,7 @@ export function makeRange(this: _Self, book : string, chapter? : number) : Bible
  * Order of input ranges in unimportant, since this functional will interally
  * call [[sort]] first
  */
-export function combineRanges(this: _Self, refs: BibleRef[]) : BibleRef[]{
+export function combineRanges(this: BibleRefLibData, refs: BibleRef[]) : BibleRef[]{
 	let v = this.versification;
 
 	// Convert BibleRefs into vidx pairs representing the range
@@ -103,7 +98,7 @@ export function combineRanges(this: _Self, refs: BibleRef[]) : BibleRef[]{
  * @param expand_verses - If set then even single verses will be represented
  * as ranges of length 1, ensuring all returned objects have the same schema
  */
-export function splitByBook(this: _Self,
+export function splitByBook(this: BibleRefLibData,
 										 refs: BibleRef | BibleRef[],
 										 expand_verses?: boolean
 										) : BibleRef[] {
@@ -117,7 +112,7 @@ export function splitByBook(this: _Self,
  * @param expand_verses - If set then even single verses will be represented
  * as ranges of length 1, ensuring all returned objects have the same schema.
  */
-export function splitByChapter(this: _Self,
+export function splitByChapter(this: BibleRefLibData,
 												refs: BibleRef | BibleRef[],
 												expand_verses?: boolean) : BibleRef[]{
 	return Array.from(iterateByChapter.bind(this)(refs, expand_verses));
@@ -127,7 +122,7 @@ export function splitByChapter(this: _Self,
  * Splits an array of ranges to form an array of individual verses
  * @param refs - The list of refs to be split
  */
-export function splitByVerse(this: _Self, refs: BibleRef | BibleRef[]) : BibleVerse[]{
+export function splitByVerse(this: BibleRefLibData, refs: BibleRef | BibleRef[]) : BibleVerse[]{
 	return Array.from(iterateByVerse.bind(this)(refs));
 }
 
@@ -135,7 +130,7 @@ export function splitByVerse(this: _Self, refs: BibleRef | BibleRef[]) : BibleVe
  * Returns an iterator that traverses over the objects that would have been
  * returned by `splitByBook`
  */
-export function iterateByBook(this: _Self, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
+export function iterateByBook(this: BibleRefLibData, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
 	if(expand_verses === undefined){ expand_verses = false; }
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateBookRanges(this.versification, refs, expand_verses)
@@ -146,7 +141,7 @@ export function iterateByBook(this: _Self, refs: BibleRef | BibleRef[], expand_v
  * Returns an iterator that traverses over the objects that would have been
  * returned by `splitByChapter`
  */
-export function iterateByChapter(this: _Self, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
+export function iterateByChapter(this: BibleRefLibData, refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef> {
 	if(expand_verses === undefined){ expand_verses = false; }
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateChapterRanges(this.versification, refs, expand_verses);
@@ -156,7 +151,7 @@ export function iterateByChapter(this: _Self, refs: BibleRef | BibleRef[], expan
  * Returns an iterator that traverses over the objects that would have been
  * returned by `splitByVerse`
  */
-export function iterateByVerse(this: _Self, refs: BibleRef | BibleRef[]): Iterable<BibleVerse> {
+export function iterateByVerse(this: BibleRefLibData, refs: BibleRef | BibleRef[]): Iterable<BibleVerse> {
 	if(!('length' in refs)){ refs = [refs]; }
 	return _iterateVerses(this.versification, refs);
 }
@@ -167,7 +162,7 @@ export function iterateByVerse(this: _Self, refs: BibleRef | BibleRef[]): Iterab
  * @param constrain_book - If true, will not cross book boundaries to find another chapter
  * @return BibleRef or null if there is no next chapter
  */
-export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null {
+export function nextChapter(this: BibleRefLibData, ref: BibleRef, constrain_book?: boolean) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
 	let cur_book = this.versification.book[r.book];
@@ -193,7 +188,7 @@ export function nextChapter(this: _Self, ref: BibleRef, constrain_book?: boolean
  * @param constrain_book - If true, will not cross book boundaries to find another chapter
  * @return BibleRef or null if there is no previous chapter
  */
-export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
+export function	previousChapter(this: BibleRefLibData, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
 	let r : BibleVerse = ref.is_range ? ref.start : ref;
 
 	let new_book_id = r.book;
@@ -219,7 +214,7 @@ export function	previousChapter(this: _Self, ref: BibleRef, constrain_book?: boo
  * the next book after the book containing the last verse in the input range
  * @return BibleRef or null if there is no next book (IE: input is revelation)
  */
-export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
+export function nextBook(this: BibleRefLibData, ref: BibleRef) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.end : ref;
 
 	let cur_book = this.versification.book[r.book];
@@ -235,7 +230,7 @@ export function nextBook(this: _Self, ref: BibleRef) : BibleRange | null {
  * the book before the book containing the first verse in the input range
  * @return BibleRef or null if there is no previous book (IE: input is genesis)
  */
-export function previousBook(this: _Self, ref: BibleRef) : BibleRange | null {
+export function previousBook(this: BibleRefLibData, ref: BibleRef) : BibleRange | null {
 	let r : BibleVerse = ref.is_range ? ref.start : ref;
 
 	let cur_book = this.versification.book[r.book];

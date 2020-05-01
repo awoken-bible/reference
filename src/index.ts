@@ -2,18 +2,20 @@
  * Main file representing the full API of the library
  */
 
-import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
+import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Parsers, ParseResult } from './parser';
 import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
 import * as Vidx                from './vidx';
 import * as Validate            from './validate';
 import * as RangeManip          from './range-manip';
+import * as Geometry            from './geometry';
 
-import { Versification   } from './Versification';
-import { FormatOptions   } from './printer';
-import { ValidationError } from './validate';
-import { RangeManipFunctions } from './range-manip';
+import { Versification        } from './Versification';
+import { FormatOptions        } from './printer';
+import { ValidationError      } from './validate';
+import { RangeManipFunctions  } from './range-manip';
+import { GeometryFunctions    } from './geometry';
 
 /**
  * Export types which should be visible to users of the library
@@ -26,12 +28,7 @@ export { ValidationError } from './validate';
 /**
  * Publically exposed interface to this library
  */
-export type BibleRefLib = {
-	/**
-	 * Versification used by all methods
-	 */
-	versification : Versification;
-
+export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, GeometryFunctions {
 	/**
 	 * Parses a string containing a BibleRef
 	 */
@@ -95,7 +92,7 @@ export type BibleRefLib = {
 	 * repaired
 	 */
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
-} & RangeManipFunctions;
+};
 
 /**
  * Parses a string which may (or may not) represent a [[BibleRef]]
@@ -103,7 +100,31 @@ export type BibleRefLib = {
  * and if so what value was obtained.
  *
  * Examples of valid input strings include:
+ *
+ * Book references (returns (list of) range(s) representing entire book):
+ * - Genesis
+ * - Gen
+ * - GEN
+ * - Genesis; Revelation
+ *
+ * Chapter references (returns (list of) range(s) representing entire chapters):
  * - Genesis 1
+ * - GEN1
+ * - Genesis 1; Exodus 2; REV1
+ *
+ * Verse References (represents a single verse):
+ * - Genesis 1:1
+ * - Gen 1v1
+ * - GEN1.1
+ *
+ * Verse Ranges (continous blocks of verses, can cross chapter/book boundaries):
+ * - Genesis 1:1-4
+ * - Genesis 1:1 - 2:2
+ * - Genesis 50 - Exodus 2
+ *
+ * Complex sets/combinations:
+ * - Genesis 1:1, 2-4, 6
+ * - GEN1.1-2; EXO3:4 - DEU5v6,10; Revelation 22
  *
  * @public
  * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
@@ -245,10 +266,10 @@ function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : 
  * new instance with a non standard versification scheme and then call methods
  * of that
  */
-type BibleRefLibConstructor =	(this: BibleRefLib) => BibleRefLib;
+type BibleRefLibConstructor =	(v: Versification) => BibleRefLib;
 
-const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib) : BibleRefLib {
-	this.versification    = VERSIFICATION;
+const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib, v: Versification) : BibleRefLib {
+	this.versification    = v;
 	this.parse            = parse;
 	this.parseOrThrow     = parseOrThrow;
 	this.format           = format;
@@ -271,6 +292,10 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.previousChapter  = RangeManip.previousChapter;
 	this.nextBook         = RangeManip.nextBook;
 	this.previousBook     = RangeManip.previousBook;
+	this.getIntersection  = Geometry.getIntersection;
+	this.intersects       = Geometry.intersects;
+	this.getUnion         = Geometry.getUnion;
+	this.contains         = Geometry.contains;
 	return this;
 };
 
@@ -298,5 +323,9 @@ constructFunc.nextChapter      = RangeManip.nextChapter.bind(constructFunc);
 constructFunc.previousChapter  = RangeManip.previousChapter.bind(constructFunc);
 constructFunc.nextBook         = RangeManip.nextBook.bind(constructFunc);
 constructFunc.previousBook     = RangeManip.previousBook.bind(constructFunc);
+constructFunc.getIntersection  = Geometry.getIntersection.bind(constructFunc);
+constructFunc.intersects       = Geometry.intersects.bind(constructFunc);
+constructFunc.getUnion         = Geometry.getUnion.bind(constructFunc);
+constructFunc.contains         = Geometry.contains.bind(constructFunc);
 
 export default constructFunc;

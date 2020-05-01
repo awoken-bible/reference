@@ -2,6 +2,23 @@
  * Includes base data types used by other modules
  */
 
+import { Versification } from './Versification';
+
+/**
+ * Base data for an instance of the bible ref library
+ * We allow users of this library to instantiate their own copies
+ * with a custom versification as desired, eg to cope with apocrypha or
+ * non-standard translations
+ *
+ * @private
+ */
+export interface BibleRefLibData {
+	/**
+	 * The versification used by methods
+	 */
+	versification: Versification,
+};
+
 /**
  * Represents a single verse of the Bible, by storing the USFM book id, as well
  * as the chapter and verse number.
