@@ -78,8 +78,8 @@ describe("Geometry", () => {
   });
 
   it('getUnion', () => {
-    expect(AwokenRef.getUnion(p('Gen 1:5-10'), p('Genesis 1:7-12'))).to.deep.equal(p('Gen 1:5-12'));
-    expect(AwokenRef.getUnion(p('Gen 1:5   '), p('Genesis 1:7   '))).to.deep.equal(p('Gen 1:5; Gen 1:7'));
+    expect(AwokenRef.getUnion(p('Gen 1:5-10')[0], p('Genesis 1:7-12')[0])).to.deep.equal(p('Gen 1:5-12'));
+    expect(AwokenRef.getUnion(p('Gen 1:5   '),    p('Genesis 1:7   ')   )).to.deep.equal(p('Gen 1:5; Gen 1:7'));
 
     expect(AwokenRef.getUnion(
       p('Joshua 24:14 - Judges 2:10; Judges 2:20 - 3:10'),
@@ -90,5 +90,30 @@ describe("Geometry", () => {
         end      : { book: 'JDG', chapter:  3, verse: 10 },
       }
     ]);
+  });
+
+  it('contains', () => {
+    expect(AwokenRef.contains(p('Gen 1'  ), p('Gen 1:1'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1'), p('Gen 1'  ))).to.deep.equal(false);
+    expect(AwokenRef.contains(p('Gen 1'  ), p('Gen 1'  ))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1'), p('Gen 1:1'))).to.deep.equal(true);
+
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Exo 2:2; Deu 3:3'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Gen 1:1; Deu 3:3'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Gen 1:1; Exo 2:2'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Exo 2:2; Gen 1:1'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Gen 1:1'         ))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Exo 2:2'         ))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Deu 3:3'         ))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), [])).to.deep.equal(true);
+
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Deu 3:3; Gen 2:2'))).to.deep.equal(false);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Deu 3:3; Gen 2'  ))).to.deep.equal(false);
+    expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Rev'             ))).to.deep.equal(false);
+
+    expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Gen 1; Exo 2:14; Exo 3:1-10'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Exo 2:14; Exo 3:1-10; Gen 1'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Rev; Gen'                   ))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Exo 1:1; Ruth 1:1'))).to.deep.equal(false);
   });
 });

@@ -80,9 +80,27 @@ export function intersects(this: BibleRefLibData, a: BibleRef | BibleRef[], b: B
 /**
  * Determines whether `outer` fully contains all verses present within `inner`
  */
-export function contains(this: BibleRefLibData, a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]) : boolean {
-	let x = _toLineSegments(this, a);
-	let y = _toLineSegments(this, b);
+export function contains(this: BibleRefLibData, outer: BibleRef | BibleRef[], inner: BibleRef | BibleRef[]) : boolean {
+	let a = _toLineSegments(this, outer);
+	let b = _toLineSegments(this, inner);
+
+	let ai = 0, bi = 0;
+	while(bi < b.length){
+		// Consume head of a while segment is before start of head of b
+		while(a[ai].max < b[bi].min){
+			++ai;
+			if(ai >= a.length){ return false; }
+		}
+
+		// Check that b falls within the head of a
+		while(bi < b.length && b[bi].min <= a[ai].max){
+			if(a[ai].min > b[bi].min || b[bi].max > a[ai].max){
+				return false;
+			}
+			++bi;
+		}
+	}
+
 	return true;
 }
 
