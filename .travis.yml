@@ -28,6 +28,7 @@ jobs:
       # Test we can build the docs - note that we only deploy when on master branch
     - stage: Docs
       node_js: lts/*
+      skip_cleanup: true
       script:
         - npm run docs
       before_deploy:
@@ -44,6 +45,7 @@ jobs:
     - stage: Deploy
       if: branch = master
       node_js: lts/*
+      skip_cleanup: true
       script:
         - npm pack
       deploy:
