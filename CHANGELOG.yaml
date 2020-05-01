@@ -1,3 +1,14 @@
+- v1.8.0:
+  date: '2020-05-02'
+  name: 'Intersection, Union, and Range Contains'
+  features:
+    - Add functions for finding the intersection and union of two input arrays of BibleRefs
+    - Add function to test if some set of BibleRef's fully contains some other set
+  fixes:
+    - Update exported constructor to actually use passed Versification object
+  other:
+    - Update readme with quickstart code example
+
 - v1.7.0:
   date: '2020-05-01'
   name: 'Chicago Manual Style Book Abbreviations'
