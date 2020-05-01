@@ -15,7 +15,7 @@ let vref = AwokenRef.parseOrThrow('Genesis 1');
 if(AwokenRef.countVerses(vref) > 10)){
 	vref = AwokenRef.firstNVerses(vref, 10);
 }
-vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(GEN 1 v6,9-20'));
+vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow('GEN 1 v6,9-20'));
 
 // Print as human readable verse reference (IE: "Genesis 1:6,9-10")
 console.log(AwokenRef.format(vref));
@@ -40,7 +40,7 @@ import __AwokenRef__ from 'awoken-bible-reference';
 
 const AwokenRef = new __AwokenRef__(my_versificaton);
 
-let vref = RefLib.parse('MyBook 100:999');
+let vref = AwokenRef.parse('MyBook 100:999');
 ```
 
 The full list of methods on the `AwokenRef` object can be found in the [API docs](https://awoken-bible.github.io/reference/index.html).
