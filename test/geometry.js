@@ -93,10 +93,10 @@ describe("Geometry", () => {
   });
 
   it('contains', () => {
-    expect(AwokenRef.contains(p('Gen 1'  ), p('Gen 1:1'))).to.deep.equal(true);
-    expect(AwokenRef.contains(p('Gen 1:1'), p('Gen 1'  ))).to.deep.equal(false);
-    expect(AwokenRef.contains(p('Gen 1'  ), p('Gen 1'  ))).to.deep.equal(true);
-    expect(AwokenRef.contains(p('Gen 1:1'), p('Gen 1:1'))).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1'  )[0], p('Gen 1:1')[0])).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1')[0], p('Gen 1'  )[0])).to.deep.equal(false);
+    expect(AwokenRef.contains(p('Gen 1'  )[0], p('Gen 1'  )[0])).to.deep.equal(true);
+    expect(AwokenRef.contains(p('Gen 1:1')[0], p('Gen 1:1')[0])).to.deep.equal(true);
 
     expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Exo 2:2; Deu 3:3'))).to.deep.equal(true);
     expect(AwokenRef.contains(p('Gen 1:1; Exo 2:2; Deu 3:3'), p('Gen 1:1; Deu 3:3'))).to.deep.equal(true);
