@@ -20,7 +20,7 @@ describe("index", () => {
   });
 
   it('Can use static methods or new() interface', () => {
-    const bref = new BibleRef();
+    const bref = new BibleRef(BibleRef.versification);
 
     let str  = 'Genesis 1:10';
     let data = { book: 'GEN', chapter: 1, verse: 10 };
