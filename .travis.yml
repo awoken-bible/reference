@@ -28,12 +28,12 @@ jobs:
       # Test we can build the docs - note that we only deploy when on master branch
     - stage: Docs
       node_js: lts/*
-      skip_cleanup: true
       script:
         - npm run docs
       before_deploy:
         - cd ${TRAVIS_BUILD_DIR}/docs
       deploy:
+        skip_cleanup: true
         strategy: git
         provider: pages
         token:
@@ -45,11 +45,11 @@ jobs:
     - stage: Deploy
       if: branch = master
       node_js: lts/*
-      skip_cleanup: true
       script:
         - npm pack
       deploy:
         - provider: npm
+          skip_cleanup: true
           email: jamie-terry@outlook.com
           api_key:
             secure: "gtv4j5ifu5/wKVKpejl6hUMwhzWT1x6MxNlE3/K9zLfWlCB5hwUhx7+2i+oD2TKPLtnhF0hhVU5EYKH0iOwm4k+Ent+BmCwynI1slxZnv1eaQ+0ciuj2JJ869KZGAIVV53sfr9U6CfgSajwC5axzVK7KAO4xmHINZr/vtLa/tZWMcjOmJpsmlEhjwrohb838sGU2oNN3KUL2411r/k/Ya1QQIPgE0lFRGyKyciuzy7HNOU+L3E+Il0e0tkuTH3nTUToec2l0pTFUWnfdxLQyDUoS3eaPevVcRy8AofEsEVkpDYat9p872cAZAttkdopMB4FuckBki6HtXnXDtuGkzMKFdiuJIrFunUWTEq0nyepSKjADKWlzyewTH5k9kgBtnIXsm4mw3KS/vWqojY9mQOIbMN7QQj0YJTSK8R43kqdIGC8yJCL8d76yiVwl/5/G59Ymgv8uxvViaBSMT7sF98Lgnuu7/PyxtUtlhMYvqwbU+3jrzzu642ftjg8kgR7ojTfqrSZyqjLBxEXU0YJugpRUXB8Q6yhGzO1rR+nWS7HPe2X478T3KwWi696o6t2u/AdKbO0BQjz7hv9fZgfqBnpH3cA3FoGnhP85t8Ecg9g17z8zVK8xIhCiu111M8XNiVOnn/d69eTVJCFCKFtizL1ZWf2k5myzs+FpX7fCiDs="
@@ -57,6 +57,7 @@ jobs:
             tags: yes
             branch: master
         - provider: releases
+          skip_cleanup: true
           api_key:
             secure: "lTgqBbfOc67bYXT/FV8beJ4pFxk/zQcpfU0C/s+gyfRmeSJjLXrMLkgE9QBi3vE6KytvrGHf2XqcbaAFb4qGo0XByguCeIUnscgaBTUJFg+yYtqW06OhZy0Q8x07sryFVJNhg6Q9lQ5GdqqD1GFbrJQx1sn00Sscy7FSRuvJL78V+cpwRYyscVCf7g+/aASGIgiCYF66tUNuc1QxAMWB6JiNH8YP7SnfjOgGyzBd/hqeRVv1/Is155TR0i70YJAa4OlTlzvdPY+G9cA7qIwmGmcg2WGB3o5m5Z/mPCNuXghU0t4eOgOhqboddGiO2tcKxtY0B8Fznn8bBX6HuJaqhCHDcUTLRGhiVGJZZFRhKNROhbYmcPf9buK229mj8Pdh3V9mcPNlfPjXifng2yjdfvyFAcySiQg5kbq88iRjv3NSwO+eivvbpMkrw3a8VLtAGJGKgo+ncGbFYHrFTFy/Ibm88yWDcNZhGAwPZZI8dy/99f87hKjv7Ng0JvvG+yY2L5fZPYIUvxxyhIhGTp5hDO7MQxXrFBtlAweTPJdRopbQ5cF/MYku1m7ConHpQtGor/BLbFvuuyTONdRgi0ATN6pG//B4+tzCokbL3zUf5lVqd5QmelYrGFubjAf2LVkZcN3lEIedrQl/SJxGFZTikyeZpX1Fyg4jAOXu/m8Crng="
           file_glob: true
