@@ -2,7 +2,7 @@
  * Includes base data types used by other modules
  */
 
-import Versification from './Versification';
+import { Versification } from './Versification';
 
 /**
  * Base data for an instance of the bible ref library
