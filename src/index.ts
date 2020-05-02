@@ -296,6 +296,7 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.intersects       = Geometry.intersects;
 	this.getUnion         = Geometry.getUnion;
 	this.contains         = Geometry.contains;
+	this.indexOf          = Geometry.indexOf;
 	return this;
 };
 
@@ -327,5 +328,6 @@ constructFunc.getIntersection  = Geometry.getIntersection.bind(constructFunc);
 constructFunc.intersects       = Geometry.intersects.bind(constructFunc);
 constructFunc.getUnion         = Geometry.getUnion.bind(constructFunc);
 constructFunc.contains         = Geometry.contains.bind(constructFunc);
+constructFunc.indexOf          = Geometry.indexOf.bind(constructFunc);
 
 export default constructFunc;

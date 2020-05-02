@@ -116,4 +116,30 @@ describe("Geometry", () => {
     expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Rev; Gen'                   ))).to.deep.equal(true);
     expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Exo 1:1; Ruth 1:1'))).to.deep.equal(false);
   });
+
+  it('indexOf', () => {
+    let arr = p('Revelation 1:1; Exodus 1:2-4; Genesis 6:7');
+
+    expect(AwokenRef.indexOf(arr, { book: 'REV', chapter: 1, verse: 1 })).to.deep.equal(0);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter: 1, verse: 2 })).to.deep.equal(1);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter: 1, verse: 3 })).to.deep.equal(2);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter: 1, verse: 4 })).to.deep.equal(3);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 6, verse: 7 })).to.deep.equal(4);
+    expect(AwokenRef.indexOf(arr, { book: 'REV', chapter: 1, verse: 2 })).to.deep.equal(-1);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter: 1, verse: 1 })).to.deep.equal(-1);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter: 1, verse: 5 })).to.deep.equal(-1);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 6, verse: 6 })).to.deep.equal(-1);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 6, verse: 8 })).to.deep.equal(-1);
+
+    arr = {
+      is_range : true,
+      start    : { book: 'GEN', chapter:  1, verse:  1 },
+      end      : { book: 'GEN', chapter: 50, verse: 26 },
+    };
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter:  1, verse:  1})).to.deep.equal(   0);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter:  1, verse: 31})).to.deep.equal(  30);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter:  2, verse:  1})).to.deep.equal(  31);
+    expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 50, verse: 26})).to.deep.equal(1532);
+    expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter:  1, verse:  1})).to.deep.equal( -1 );
+  });
 });

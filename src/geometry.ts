@@ -13,6 +13,7 @@ export interface GeometryFunctions {
 	intersects(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): boolean,
 	contains(a: BibleRef, b: BibleRef): boolean,
 	getUnion(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
+	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
 };
 
 /**
@@ -115,13 +116,52 @@ export function getUnion(this: BibleRefLibData, a: BibleRef | BibleRef[], b: Bib
 }
 
 /**
- * Converts a set of [[BibleRef]]'s into a set of [[LineSegment]] instances
+ * Given a (potentially non-continous) set of [[BibleRef]]'s, computes the index of some
+ * [[BibleVerse]] within the set, or returns -1 if the verse is not within the set.
+ *
+ * For example, given the input set "Revelation 1:1; Exodus 1:2-4; Genesis 10:5" the following
+ * verses appear at each index:
+ * - 0: Revelation 1:1
+ * - 1: Exodus 1:2
+ * - 2: Exodus 1:3
+ * - 3: Exodus 1:4
+ * - 4: Genesis 10:5
+ *
+ * Note that if the same verse appears at multiple positions within the input array then only the
+ * first index is returned
+ */
+export function indexOf(this: BibleRefLibData, array: BibleRef | BibleRef[], verse: BibleVerse): number {
+	let blocks = _toLineSegmentsUnsorted(this, array);
+	let idx    = Vidx.toVidx(this.versification, verse);
+
+	let offset = 0;
+	for(let b of blocks){
+		if(idx >= b.min && idx <= b.max){
+			// then target verse falls within this
+			return offset + (idx - b.min);
+		} else {
+			offset += (b.max - b.min) + 1;
+		}
+	}
+
+	return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Private implementation methods below
+//
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Converts a set of [[BibleRef]]'s into a set of [[LineSegment]] instances. Returns set will not
+ * be sorted/combined
  *
  * @private
  */
-function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[]): LineSegment[] {
+function _toLineSegmentsUnsorted(lib: BibleRefLibData, input: BibleRef | BibleRef[]): LineSegment[] {
 	let in_arr : BibleRef[] = 'length' in input ? input : [input];
-	return combineRanges.bind(lib)(in_arr).map((x : BibleRef) => {
+	return in_arr.map((x : BibleRef) => {
 		if(x.is_range){
 			return { min: Vidx.toVidx(lib.versification, x.start), max: Vidx.toVidx(lib.versification, x.end) };
 		} else {
@@ -131,6 +171,24 @@ function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[]): Li
 	});
 }
 
+/**
+ * Converts a set of [[BibleRef]]'s into a set of [[LineSegment]] instances
+ *
+ * First calls combineRanges to ensure returned set is ordered and consists of the minimal number
+ * of segments
+ *
+ * @private
+ */
+function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[]): LineSegment[] {
+	let in_arr : BibleRef[] = 'length' in input ? input : [input];
+	return _toLineSegmentsUnsorted(lib, combineRanges.bind(lib)(in_arr));
+}
+
+/**
+ * Convertse a [[LineSegment]] instance back into a [[BibleRef]]
+ *
+ * @private
+ */
 function _fromLineSegment(lib: BibleRefLibData, line: LineSegment): BibleRef{
 	if(line.min === line.max){
 		return Vidx.fromVidx(lib.versification, line.min);
@@ -143,7 +201,8 @@ function _fromLineSegment(lib: BibleRefLibData, line: LineSegment): BibleRef{
 }
 
 /**
- * Finds the intersection between two 1d line segments, or returns null if there is no intersection
+ * Finds the intersection between two 1d [[LineSegment]] instances, or returns null if there is no
+ * intersection
  *
  * @private
  */
