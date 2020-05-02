@@ -1,3 +1,10 @@
+- v1.9.0:
+  date: '2020-05-02'
+  name: 'Array Operations'
+  features:
+    - Add function to get index of a verse within a virtual array of verses represented by BibleRef's
+    - Add function to get the verse at specified index within a virtual array of verses represented by BibleRef's
+
 - v1.8.0:
   date: '2020-05-02'
   name: 'Intersection, Union, and Range Contains'
