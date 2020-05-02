@@ -118,7 +118,7 @@ export function getUnion(this: BibleRefLibData, a: BibleRef | BibleRef[], b: Bib
 
 /**
  * Given a (potentially non-continous) set of [[BibleRef]]'s, computes the index of some
- * [[BibleVerse]] within the set, or returns -1 if the verse is not within the set.
+ * [[BibleVerse]] within the set.
  *
  * For example, given the input set "Revelation 1:1; Exodus 1:2-4; Genesis 10:5" the following
  * verses appear at each index:
@@ -128,8 +128,15 @@ export function getUnion(this: BibleRefLibData, a: BibleRef | BibleRef[], b: Bib
  * - 3: Exodus 1:4
  * - 4: Genesis 10:5
  *
- * Note that if the same verse appears at multiple positions within the input array then only the
+ * @param array - The array of input verses you wish to search (aka, the haystack)
+ * @param verse - The verse whose index you wish to determnine (aka, the needle)
+ * @return The zero based index at which `verse` can be found, or -1 if the `verse` does not appear
+ * within the input `array`
+ *
+ * @note If the same verse appears at multiple positions within the input array then only the
  * first index is returned
+ *
+ * @note The inverse of this function is [[verseAtIndex]]
  */
 export function indexOf(this: BibleRefLibData, array: BibleRef | BibleRef[], verse: BibleVerse): number {
 	let blocks = _toLineSegmentsUnsorted(this, array);
@@ -152,13 +159,15 @@ export function indexOf(this: BibleRefLibData, array: BibleRef | BibleRef[], ver
  * Given a (potentially non-continous) set of [[BibleRef]]'s, finds the [[BibleVerse]] at the
  * specified index. This is the inverse of [[indexOf]]
  *
+ * @param array - The set of [[BibleRef]] instances (or singular instance) to extract a verse from
+ * @param index - The zero based index of the verse you wish to extract from the input set
+ *
  * @return BibleVerse instance, or undefined if `index` is out of bounds
  *
  * @note Semantically, the call `AwokenRef.verseAtIndex(array, n)` is equivalent to
  * `AwokenRef.splitByVerse(array)[n]`, however this version is more efficent for a single call,
  * since it does not have build the full temporary array, but intead internally operates by
- * blocks verses represented by the input `array`. The function is also included as a convienience
- * to invert the operation performed by `indexOf`
+ * blocks of verses represented by the [[BibleRef]] instances in the input `array`
  */
 export function verseAtIndex(this: BibleRefLibData, array: BibleRef | BibleRef[], index: number): BibleVerse | undefined {
 	let blocks = _toLineSegmentsUnsorted(this, array);
