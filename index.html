@@ -65,13 +65,50 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<a href="#awoken-bible-reference--" id="awoken-bible-reference--" style="color: inherit; text-decoration: none;">
-					<h1>Awoken Bible Reference <a href="https://travis-ci.org/jnterry/awoken-bible-reference"><img src="https://travis-ci.org/jnterry/awoken-bible-reference.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/jnterry/awoken-bible-reference?branch=master"><img src="https://coveralls.io/repos/github/jnterry/awoken-bible-reference/badge.svg?branch=master" alt="Coverage Status"></a></h1>
+					<h1>Awoken Bible Reference <a href="https://travis-ci.org/awoken-bible/reference"><img src="https://travis-ci.org/awoken-bible/reference.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/awoken-bible/reference?branch=master"><img src="https://coveralls.io/repos/github/awoken-bible/reference/badge.svg?branch=master" alt="Coverage Status"></a></h1>
 				</a>
-				<p><em>Bible verse reference parsing, formating and meta data</em></p>
-				<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
-					<h2>Overview</h2>
+				<p><em>Bible verse reference parsing, formating and manipulation</em></p>
+				<p><a href="https://awoken-bible.github.io/reference/index.html">Click for public API reference docs</a>.</p>
+				<a href="#quick-start-guide" id="quick-start-guide" style="color: inherit; text-decoration: none;">
+					<h2>Quick Start Guide</h2>
 				</a>
-				<p>The most basic usage of <code>awoken-bible-reference</code> is to simply deal with the conversion between the following representations of bible verse references:</p>
+				<p>The simplest use case is to simply import the library and start calling API functions:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> AwokenRef <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
+
+<span class="hljs-keyword">let</span> vref = AwokenRef.parseOrThrow(<span class="hljs-string">'Genesis 1'</span>);
+<span class="hljs-keyword">if</span>(AwokenRef.countVerses(vref) &gt; <span class="hljs-number">10</span>)){
+    vref = AwokenRef.firstNVerses(vref, <span class="hljs-number">10</span>);
+}
+vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-string">'GEN 1 v6,9-20'</span>));
+
+<span class="hljs-comment">// Print as human readable verse reference (IE: "Genesis 1:6,9-10")</span>
+<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref));
+
+<span class="hljs-comment">// Print as url encodable reference (IE: "gen1v6,9-10")</span>
+<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref, { url: <span class="hljs-literal">true</span> }));
+
+<span class="hljs-comment">// Inspect the object, will yield:</span>
+<span class="hljs-comment">// [ { book: 'GEN', chapter: 1, verse: 6 },</span>
+<span class="hljs-comment">//   { is_range : true,</span>
+<span class="hljs-comment">//     start    : { book: 'GEN', chapter: 1, verse:  9 },</span>
+<span class="hljs-comment">//     end      : { book: 'GEN', chapter: 1, verse: 10 },</span>
+<span class="hljs-comment">//   }</span>
+<span class="hljs-comment">// ]</span>
+<span class="hljs-built_in">console</span>.dir(vref);</code></pre>
+				<p>Non-standard versification schemes can be used by instead creating an instance of the library. This allows support to be added for the Apocrypha, or translations that use a different split of verses per chapter.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> __AwokenRef__ <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
+
+<span class="hljs-keyword">const</span> AwokenRef = <span class="hljs-keyword">new</span> __AwokenRef__(my_versificaton);
+
+<span class="hljs-keyword">let</span> vref = AwokenRef.parse(<span class="hljs-string">'MyBook 100:999'</span>);</code></pre>
+				<p>The full list of methods on the <code>AwokenRef</code> object can be found in the <a href="https://awoken-bible.github.io/reference/index.html">API docs</a>.</p>
+				<a href="#type-representations" id="type-representations" style="color: inherit; text-decoration: none;">
+					<h1>Type Representations</h1>
+				</a>
+				<a href="#bible-verses" id="bible-verses" style="color: inherit; text-decoration: none;">
+					<h2>Bible Verses</h2>
+				</a>
+				<p><code>awoken-bible-reference</code> can represent (and convert between) the following representations of a Bible verse:</p>
 				<table>
 					<tr>
 						<th>What</th>
@@ -119,20 +156,41 @@
 				<blockquote>
 					<p>Note that the verse index representation should be avoided unless you are sure that all translations you care about utalize the exact same <a href="https://en.wikipedia.org/wiki/Chapters_and_verses_of_the_Bible">versification scheme</a>. While it is useful for assigning unique IDs and computing offsets etc, it should probably not be used as a portable data exchange format.</p>
 				</blockquote>
-				<p>Additionally the library supports more interesting operations such as:</p>
+				<p>The <code>book</code> field is always a 3 character mix of upper case letters and digits, as per the <a href="https://ubsicap.github.io/usfm/identification/books.html">USFM specification</a>.</p>
+				<a href="#bibleranges" id="bibleranges" style="color: inherit; text-decoration: none;">
+					<h2>BibleRanges</h2>
+				</a>
+				<p>BibleRanges are represented by an object of the form:</p>
+				<pre><code class="language-typescript"><span class="hljs-comment">/** Representation of continous block of verses */</span>
+<span class="hljs-keyword">interface</span> BibleRange {
+    is_range : <span class="hljs-literal">true</span>,
+    start    : BibleVerse,
+    end      : BibleVerse,
+};</code></pre>
+				<a href="#mixed-sets" id="mixed-sets" style="color: inherit; text-decoration: none;">
+					<h2>Mixed Sets</h2>
+				</a>
+				<p>Note that most API function can take either <code>BibleRange</code> or <code>BibleVerse</code> objects (or lists thereof), and thus the <code>is_range</code> field can be used to easily distinguish the types from one another.</p>
+				<p>The following union type is also exported for convenience:</p>
+				<pre><code class="language-typescript"><span class="hljs-comment">/** Generic reference to verse or range */</span>
+<span class="hljs-keyword">type</span> BibleRef = BibleVerse | BibleRange;</code></pre>
+				<a href="#overview-of-functionality" id="overview-of-functionality" style="color: inherit; text-decoration: none;">
+					<h1>Overview of Functionality</h1>
+				</a>
+				<p>API methods include functionality to:</p>
 				<ul>
-					<li>Parsing partial references, ranges, and comma seperated lists there of:<ul>
+					<li>Parse partial references, ranges, and comma separated lists there of:<ul>
 							<li><code>Genesis 1:1-10,12, 2:14</code></li>
 							<li><code>EXO 3:1 - DEU 4:1</code></li>
 							<li><code>Matt 1; Luke3.16; Mark 1 v 2-3,5</code></li>
 						</ul>
 					</li>
-					<li>Generating verbose human readable reference strings, and compact URL encodable equivalents<ul>
-							<li><code>Genesis 10 v6-10</code> vs <code>GEN10:6-10</code></li>
-							<li><code>Song of Solomon</code> vs <code>SNG</code></li>
+					<li>Generate verbose human readable reference strings, and compact URL encodable equivalents<ul>
+							<li><code>Genesis 10 v6-10</code> vs <code>gen10v6-10</code></li>
+							<li><code>Song of Solomon</code> vs <code>sng</code></li>
 						</ul>
 					</li>
-					<li>Validation and fixing of references, including out of range chapters and verses, and inverted ranges<ul>
+					<li>Validate and fix references, including out of range chapters and verses, and inverted ranges:<ul>
 							<li><code>validate({book: &#39;GEN&#39;, chapter: 51, verse: 1})</code><br/>
 								becomes<br/>
 							<code>{ message: &quot;Genesis has only 50 chapters&quot;, got: 51, max_value: 50, ... }</code></li>
@@ -142,49 +200,12 @@
 						</ul>
 					</li>
 					<li>Sorting a list of references</li>
-					<li>Counting the number of verses in a set of ranges</li>
-					<li>Iterating by book/chapter/verse</li>
-					<li>Truncating a list of ranges to a new list of ranges containing the first N verses (useful for pagination, or short previews of a longer text)</li>
+					<li>Counting the number of verses in a list of <code>BibleRef</code> instances</li>
+					<li>Iterating/Splitting by book/chapter/verse</li>
+					<li>Truncating a list of <code>BibleRef</code>s to contain only the first N verses (useful for pagination, or short previews of a longer text)</li>
+					<li>Combining/Simplifying ranges, as well as finding the intersection/union of ranges</li>
 				</ul>
-				<a href="#data-types" id="data-types" style="color: inherit; text-decoration: none;">
-					<h2>Data Types</h2>
-				</a>
-				<p>The following data types are exported:</p>
-				<pre><code class="language-typescript"><span class="hljs-comment">/** Representation of single verse */</span>
-<span class="hljs-keyword">interface</span> BibleVerse {
-  book    : <span class="hljs-built_in">string</span>,
-  chapter : <span class="hljs-built_in">number</span>,
-  verse   : <span class="hljs-built_in">number</span>,
-}
-
-<span class="hljs-comment">/** Representation of continous block of verses */</span>
-<span class="hljs-keyword">interface</span> BibleRange {
-    is_range : <span class="hljs-literal">true</span>,
-    start    : BibleVerse,
-    end      : BibleVerse,
-};
-
-<span class="hljs-comment">/** Generic reference to verse or range */</span>
-<span class="hljs-keyword">type</span> BibleRef = BibleVerse | BibleRange;</code></pre>
-				<p>Most functions take <code>BibleRef</code>s as arguments and/or produce them as output, thus the <code>is_range</code> field can be used to distinguish the types from one another.</p>
-				<p>The <code>BibleVerse.book</code> string is always a 3 character mix of upper case letters and digits, as per the <a href="https://ubsicap.github.io/usfm/identification/books.html">USFM specification</a>.</p>
-				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
-					<h2>API</h2>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">type</span> ParseResult = {
-    status: <span class="hljs-literal">true</span>,
-    value: BibleRef[],
-} | {
-    status: <span class="hljs-literal">false</span>,
-    expected: <span class="hljs-built_in">string</span>[],
-    index: { column: <span class="hljs-built_in">number</span>, line: <span class="hljs-built_in">number</span>, offset: <span class="hljs-built_in">number</span> },
-};
-parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
-				<p>Parses a human readable or compact string representing a bible reference, returning an array of references when the reference string contains multiple non-continous blocks, for example <code>Genesis ; Leviticus</code>, <code>Genesis 1, 10</code>, <code>Genesis 1:1,10</code></p>
-				<pre><code class="language-typescript">parseOrThrow(str: <span class="hljs-built_in">string</span>) : BibleRef[]</code></pre>
-				<p>As with <code>parse</code>, but returns the resultant object directly throwing if an error occurs.</p>
-				<pre><code class="language-typescript">format(ref: BibleRef[] | BibleVerse | BibleRange, opts? : FormatOptions) : <span class="hljs-built_in">string</span></code></pre>
-				<p>Formats any type of reference as a string, with opts allowing you to control verbosity.</p>
+				<p>For a full list of the exported functions and data types, see the <a href="https://awoken-bible.github.io/reference/index.html">generated typedoc API reference</a>.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -204,6 +225,9 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 						<a href="interfaces/biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/biblereflib.html" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -219,9 +243,6 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 						<a href="globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#biblereflib" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -232,6 +253,9 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#contains" class="tsd-kind-icon">contains</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
@@ -247,6 +271,18 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getintersection" class="tsd-kind-icon">get<wbr>Intersection</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getunion" class="tsd-kind-icon">get<wbr>Union</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#intersects" class="tsd-kind-icon">intersects</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a>
@@ -299,6 +335,9 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#validate" class="tsd-kind-icon">validate</a>
 					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#verseatindex" class="tsd-kind-icon">verse<wbr>AtIndex</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -310,6 +349,7 @@ parse(str: <span class="hljs-built_in">string</span>) : ParseResult</code></pre>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>

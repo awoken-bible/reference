@@ -77,6 +77,7 @@
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface"><a href="interfaces/biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/biblereflib.html" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/formatoptions.html" class="tsd-kind-icon">Format<wbr>Options</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/parseresultfailure.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Failure</a></li>
@@ -87,7 +88,6 @@
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias"><a href="globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a></li>
-								<li class="tsd-kind-type-alias"><a href="globals.html#biblereflib" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#parseresult" class="tsd-kind-icon">Parse<wbr>Result</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a></li>
@@ -97,11 +97,16 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function"><a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#createversification" class="tsd-kind-icon">create<wbr>Versification</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#firstnverses" class="tsd-kind-icon">firstNVerses</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#format" class="tsd-kind-icon">format</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#getintersection" class="tsd-kind-icon">get<wbr>Intersection</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#getunion" class="tsd-kind-icon">get<wbr>Union</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#indexof" class="tsd-kind-icon">index<wbr>Of</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#intersects" class="tsd-kind-icon">intersects</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#iteratebychapter" class="tsd-kind-icon">iterate<wbr>ByChapter</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#iteratebyverse" class="tsd-kind-icon">iterate<wbr>ByVerse</a></li>
@@ -119,6 +124,7 @@
 								<li class="tsd-kind-function"><a href="globals.html#splitbyverse" class="tsd-kind-icon">split<wbr>ByVerse</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#tovidx" class="tsd-kind-icon">to<wbr>Vidx</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#verseatindex" class="tsd-kind-icon">verse<wbr>AtIndex</a></li>
 							</ul>
 						</section>
 					</div>
@@ -132,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<span class="tsd-signature-symbol">:</span> <a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/BibleRef.ts#L57">BibleRef.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/BibleRef.ts#L74">BibleRef.ts:74</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -143,27 +149,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="biblereflib" class="tsd-anchor"></a>
-					<h3>Bible<wbr>Ref<wbr>Lib</h3>
-					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>versification<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Versification</span><span class="tsd-signature-symbol">; </span>countVerses<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>firstNVerses<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>fromVidx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>parse<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>parseOrThrow<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>repair<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>sort<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>toVidx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>validate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">RangeManipFunctions</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L29">index.ts:29</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Publically exposed interface to this library</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="biblereflibconstructor" class="tsd-anchor"></a>
 					<h3>Bible<wbr>Ref<wbr>Lib<wbr>Constructor</h3>
-					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></div>
+					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>v<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Versification</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L248">index.ts:248</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L269">index.ts:269</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -180,17 +171,17 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>v<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Versification</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+												<h5>v: <span class="tsd-signature-type">Versification</span></h5>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h4>
+										<h4 class="tsd-returns-title">Returns <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h4>
 									</li>
 								</ul>
 							</li>
@@ -203,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">Parse<wbr>Result<span class="tsd-signature-symbol">:</span> <a href="interfaces/parseresultsuccess.html" class="tsd-signature-type">ParseResultSuccess</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/parseresultfailure.html" class="tsd-signature-type">ParseResultFailure</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/parser.ts#L290">parser.ts:290</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/parser.ts#L293">parser.ts:293</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -220,7 +211,7 @@
 					<div class="tsd-signature tsd-kind-icon">Validation<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"book"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"chapter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"verse"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/validate.ts#L34">validate.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/validate.ts#L34">validate.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -236,13 +227,13 @@
 					<a name="combineranges" class="tsd-anchor"></a>
 					<h3>combine<wbr>Ranges</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">combine<wbr>Ranges<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">combine<wbr>Ranges<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L53">range-manip.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L48">range-manip.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -254,18 +245,52 @@
 								<p>For example, an input list of &quot;Gen 1&quot;, &quot;Gen 2&quot;, &quot;Gen 3&quot;, would produce a
 								single <a href="interfaces/biblerange.html">BibleRange</a> for &quot;Gen 1-3&quot;</p>
 								<p>Order of input ranges in unimportant, since this functional will interally
-								call [[sort]] first</p>
+								call <a href="interfaces/biblereflib.html#sort">sort</a> first</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="contains" class="tsd-anchor"></a>
+					<h3>contains</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">contains<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, outer<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, inner<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L85">geometry.ts:85</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines whether <code>outer</code> fully contains all verses present within <code>inner</code></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+								</li>
+								<li>
+									<h5>outer: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>inner: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -279,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/vidx.ts#L51">vidx.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/vidx.ts#L51">vidx.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +335,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/Versification.ts#L81">Versification.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/Versification.ts#L81">Versification.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -339,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/vidx.ts#L65">vidx.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/vidx.ts#L65">vidx.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -383,13 +408,13 @@
 					<a name="format" class="tsd-anchor"></a>
 					<h3>format</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a>, b<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, opts<span class="tsd-signature-symbol">?: </span><a href="interfaces/formatoptions.html" class="tsd-signature-type">FormatOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, b<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, opts<span class="tsd-signature-symbol">?: </span><a href="interfaces/formatoptions.html" class="tsd-signature-type">FormatOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L135">index.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L156">index.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -401,7 +426,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
 								</li>
 								<li>
 									<h5>b: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -418,13 +443,13 @@
 					<a name="fromvidx" class="tsd-anchor"></a>
 					<h3>from<wbr>Vidx</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">from<wbr>Vidx<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a>, vidx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a></li>
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Vidx<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, vidx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L184">index.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L205">index.ts:205</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -441,7 +466,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
 								</li>
 								<li>
 									<h5>vidx: <span class="tsd-signature-type">number</span></h5>
@@ -452,16 +477,191 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="iteratebybook" class="tsd-anchor"></a>
-					<h3>iterate<wbr>ByBook</h3>
+					<a name="getintersection" class="tsd-anchor"></a>
+					<h3>get<wbr>Intersection</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByBook<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Intersection<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, x<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, y<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L138">range-manip.ts:138</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L40">geometry.ts:40</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a new array of <a href="globals.html#bibleref">BibleRef</a>s which represents the intersection between two other sets</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Any object with a <code>versification</code> field</p>
+									</div>
+								</li>
+								<li>
+									<h5>x: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>First set of <a href="globals.html#bibleref">BibleRef</a> instances</p>
+									</div>
+								</li>
+								<li>
+									<h5>y: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Second set of <a href="globals.html#bibleref">BibleRef</a> instances</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Simplified and sorted list of <a href="globals.html#bibleref">BibleRef</a>s which appear in both input sets. Will
+							return empty array if there are no verses in common between the inputs</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="getunion" class="tsd-anchor"></a>
+					<h3>get<wbr>Union</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Union<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, a<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, b<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L113">geometry.ts:113</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the union of two sets of <a href="globals.html#bibleref">BibleRef</a>s, IE: the combined and simpified set of verses
+									which are in one or the other or both input sets</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+								</li>
+								<li>
+									<h5>a: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>b: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="indexof" class="tsd-anchor"></a>
+					<h3>index<wbr>Of</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">index<wbr>Of<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, array<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, verse<span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L141">geometry.ts:141</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Given a (potentially non-continous) set of <a href="globals.html#bibleref">BibleRef</a>&#39;s, computes the index of some
+									<a href="interfaces/bibleverse.html">BibleVerse</a> within the set.</p>
+								</div>
+								<p>For example, given the input set &quot;Revelation 1:1; Exodus 1:2-4; Genesis 10:5&quot; the following
+								verses appear at each index:</p>
+								<ul>
+									<li>0: Revelation 1:1</li>
+									<li>1: Exodus 1:2</li>
+									<li>2: Exodus 1:3</li>
+									<li>3: Exodus 1:4</li>
+									<li>4: Genesis 10:5</li>
+								</ul>
+								<dl class="tsd-comment-tags">
+									<dt>note</dt>
+									<dd><p>If the same verse appears at multiple positions within the input array then only the
+										first index is returned</p>
+									</dd>
+									<dt>note</dt>
+									<dd><p>The inverse of this function is <a href="globals.html#verseatindex">verseAtIndex</a></p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+								</li>
+								<li>
+									<h5>array: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The array of input verses you wish to search (aka, the haystack)</p>
+									</div>
+								</li>
+								<li>
+									<h5>verse: <a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The verse whose index you wish to determnine (aka, the needle)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>The zero based index at which <code>verse</code> can be found, or -1 if the <code>verse</code> does not appear
+							within the input <code>array</code></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="intersects" class="tsd-anchor"></a>
+					<h3>intersects</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">intersects<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, a<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, b<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L78">geometry.ts:78</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines whether two sets of <a href="globals.html#bibleref">BibleRef</a>s have any verses in common</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+								</li>
+								<li>
+									<h5>a: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>b: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="iteratebybook" class="tsd-anchor"></a>
+					<h3>iterate<wbr>ByBook</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByBook<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L133">range-manip.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -473,7 +673,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -490,13 +690,13 @@
 					<a name="iteratebychapter" class="tsd-anchor"></a>
 					<h3>iterate<wbr>ByChapter</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByChapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByChapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L149">range-manip.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L144">range-manip.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -508,7 +708,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -525,13 +725,13 @@
 					<a name="iteratebyverse" class="tsd-anchor"></a>
 					<h3>iterate<wbr>ByVerse</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByVerse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">iterate<wbr>ByVerse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L159">range-manip.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L154">range-manip.ts:154</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -543,7 +743,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -557,13 +757,13 @@
 					<a name="makerange" class="tsd-anchor"></a>
 					<h3>make<wbr>Range</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">make<wbr>Range<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, book<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, chapter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a></li>
+						<li class="tsd-signature tsd-kind-icon">make<wbr>Range<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, book<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, chapter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L37">range-manip.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L32">range-manip.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -581,7 +781,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Any object with a <code>versification</code> field</p>
 									</div>
@@ -601,13 +801,13 @@
 					<a name="nextbook" class="tsd-anchor"></a>
 					<h3>next<wbr>Book</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">next<wbr>Book<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">next<wbr>Book<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L222">range-manip.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L217">range-manip.ts:217</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -619,7 +819,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>ref: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a></h5>
@@ -634,13 +834,13 @@
 					<a name="nextchapter" class="tsd-anchor"></a>
 					<h3>next<wbr>Chapter</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">next<wbr>Chapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a>, constrain_book<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">next<wbr>Chapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a>, constrain_book<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L170">range-manip.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L165">range-manip.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -652,7 +852,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>ref: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a></h5>
@@ -673,13 +873,13 @@
 					<a name="parse" class="tsd-anchor"></a>
 					<h3>parse</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a>, str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#parseresult" class="tsd-signature-type">ParseResult</a></li>
+						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#parseresult" class="tsd-signature-type">ParseResult</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L112">index.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L133">index.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -689,16 +889,43 @@
 									and if so what value was obtained.</p>
 								</div>
 								<p>Examples of valid input strings include:</p>
+								<p>Book references (returns (list of) range(s) representing entire book):</p>
+								<ul>
+									<li>Genesis</li>
+									<li>Gen</li>
+									<li>GEN</li>
+									<li>Genesis; Revelation</li>
+								</ul>
+								<p>Chapter references (returns (list of) range(s) representing entire chapters):</p>
 								<ul>
 									<li>Genesis 1</li>
+									<li>GEN1</li>
+									<li>Genesis 1; Exodus 2; REV1</li>
+								</ul>
+								<p>Verse References (represents a single verse):</p>
+								<ul>
+									<li>Genesis 1:1</li>
+									<li>Gen 1v1</li>
+									<li>GEN1.1</li>
+								</ul>
+								<p>Verse Ranges (continous blocks of verses, can cross chapter/book boundaries):</p>
+								<ul>
+									<li>Genesis 1:1-4</li>
+									<li>Genesis 1:1 - 2:2</li>
+									<li>Genesis 50 - Exodus 2</li>
+								</ul>
+								<p>Complex sets/combinations:</p>
+								<ul>
+									<li>Genesis 1:1, 2-4, 6</li>
+									<li>GEN1.1-2; EXO3:4 - DEU5v6,10; Revelation 22</li>
 								</ul>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Instance of <a href="globals.html#biblereflib">BibleRefLib</a> (includes the versification to use)</p>
+										<p>Instance of <a href="interfaces/biblereflib.html">BibleRefLib</a> (includes the versification to use)</p>
 									</div>
 								</li>
 								<li>
@@ -716,27 +943,27 @@
 					<a name="parseorthrow" class="tsd-anchor"></a>
 					<h3>parse<wbr>OrThrow</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>OrThrow<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a>, str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>OrThrow<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L124">index.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L145">index.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>As with [[parse]], but throws error if the input string is not a valid representation
+									<p>As with <a href="interfaces/biblereflib.html#parse">parse</a>, but throws error if the input string is not a valid representation
 									of a <a href="globals.html#bibleref">BibleRef</a></p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Instance of <a href="globals.html#biblereflib">BibleRefLib</a> (includes the versification to use)</p>
+										<p>Instance of <a href="interfaces/biblereflib.html">BibleRefLib</a> (includes the versification to use)</p>
 									</div>
 								</li>
 								<li>
@@ -754,13 +981,13 @@
 					<a name="previousbook" class="tsd-anchor"></a>
 					<h3>previous<wbr>Book</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">previous<wbr>Book<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">previous<wbr>Book<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L238">range-manip.ts:238</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L233">range-manip.ts:233</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -772,7 +999,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>ref: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a></h5>
@@ -787,13 +1014,13 @@
 					<a name="previouschapter" class="tsd-anchor"></a>
 					<h3>previous<wbr>Chapter</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">previous<wbr>Chapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a>, constrain_book<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">previous<wbr>Chapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, ref<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a>, constrain_book<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L196">range-manip.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L191">range-manip.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -805,7 +1032,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>ref: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a></h5>
@@ -832,7 +1059,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/validate.ts#L166">validate.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/validate.ts#L166">validate.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -863,13 +1090,13 @@
 					<a name="sort" class="tsd-anchor"></a>
 					<h3>sort</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/index.ts#L154">index.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/index.ts#L175">index.ts:175</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -887,7 +1114,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <a href="globals.html#biblereflib" class="tsd-signature-type">BibleRefLib</a></h5>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -901,13 +1128,13 @@
 					<a name="splitbybook" class="tsd-anchor"></a>
 					<h3>split<wbr>ByBook</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">split<wbr>ByBook<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">split<wbr>ByBook<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L106">range-manip.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L101">range-manip.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -919,7 +1146,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -943,13 +1170,13 @@
 					<a name="splitbychapter" class="tsd-anchor"></a>
 					<h3>split<wbr>ByChapter</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">split<wbr>ByChapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">split<wbr>ByChapter<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, expand_verses<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L120">range-manip.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L115">range-manip.ts:115</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -961,7 +1188,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -985,13 +1212,13 @@
 					<a name="splitbyverse" class="tsd-anchor"></a>
 					<h3>split<wbr>ByVerse</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">split<wbr>ByVerse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">_Self</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">split<wbr>ByVerse<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, refs<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/range-manip.ts#L130">range-manip.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/range-manip.ts#L125">range-manip.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1002,7 +1229,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>this: <span class="tsd-signature-type">_Self</span></h5>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
 								</li>
 								<li>
 									<h5>refs: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
@@ -1025,7 +1252,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/vidx.ts#L13">vidx.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/vidx.ts#L13">vidx.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1057,7 +1284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/jnterry/awoken-bible-reference/blob/5b32f45/src/validate.ts#L105">validate.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/validate.ts#L105">validate.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1087,6 +1314,56 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="verseatindex" class="tsd-anchor"></a>
+					<h3>verse<wbr>AtIndex</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">verse<wbr>AtIndex<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BibleRefLibData</span>, array<span class="tsd-signature-symbol">: </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/47a0739/src/geometry.ts#L172">geometry.ts:172</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Given a (potentially non-continous) set of <a href="globals.html#bibleref">BibleRef</a>&#39;s, finds the <a href="interfaces/bibleverse.html">BibleVerse</a> at the
+									specified index. This is the inverse of <a href="globals.html#indexof">indexOf</a></p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>note</dt>
+									<dd><p>Semantically, the call <code>AwokenRef.verseAtIndex(array, n)</code> is equivalent to
+											<code>AwokenRef.splitByVerse(array)[n]</code>, however this version is more efficent for a single call,
+											since it does not have build the full temporary array, but intead internally operates by
+										blocks of verses represented by the <a href="globals.html#bibleref">BibleRef</a> instances in the input <code>array</code></p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">BibleRefLibData</span></h5>
+								</li>
+								<li>
+									<h5>array: <a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The set of <a href="globals.html#bibleref">BibleRef</a> instances (or singular instance) to extract a verse from</p>
+									</div>
+								</li>
+								<li>
+									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The zero based index of the verse you wish to extract from the input set</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+							<p>BibleVerse instance, or undefined if <code>index</code> is out of bounds</p>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -1106,6 +1383,9 @@
 						<a href="interfaces/biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/biblereflib.html" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -1121,9 +1401,6 @@
 						<a href="globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#biblereflib" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -1134,6 +1411,9 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#contains" class="tsd-kind-icon">contains</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
@@ -1149,6 +1429,18 @@
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getintersection" class="tsd-kind-icon">get<wbr>Intersection</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getunion" class="tsd-kind-icon">get<wbr>Union</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#intersects" class="tsd-kind-icon">intersects</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a>
@@ -1201,6 +1493,9 @@
 					<li class=" tsd-kind-function">
 						<a href="globals.html#validate" class="tsd-kind-icon">validate</a>
 					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#verseatindex" class="tsd-kind-icon">verse<wbr>AtIndex</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -1212,6 +1507,7 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>
