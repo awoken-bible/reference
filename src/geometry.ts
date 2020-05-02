@@ -14,6 +14,7 @@ export interface GeometryFunctions {
 	contains(a: BibleRef, b: BibleRef): boolean,
 	getUnion(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
 	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
+	verseAtIndex(a: BibleRef | BibleRef[], idx: number): BibleVerse | undefined;
 };
 
 /**
@@ -145,6 +146,34 @@ export function indexOf(this: BibleRefLibData, array: BibleRef | BibleRef[], ver
 	}
 
 	return -1;
+}
+
+/**
+ * Given a (potentially non-continous) set of [[BibleRef]]'s, finds the [[BibleVerse]] at the
+ * specified index. This is the inverse of [[indexOf]]
+ *
+ * @return BibleVerse instance, or undefined if `index` is out of bounds
+ *
+ * @note Semantically, the call `AwokenRef.verseAtIndex(array, n)` is equivalent to
+ * `AwokenRef.splitByVerse(array)[n]`, however this version is more efficent for a single call,
+ * since it does not have build the full temporary array, but intead internally operates by
+ * blocks verses represented by the input `array`. The function is also included as a convienience
+ * to invert the operation performed by `indexOf`
+ */
+export function verseAtIndex(this: BibleRefLibData, array: BibleRef | BibleRef[], index: number): BibleVerse | undefined {
+	let blocks = _toLineSegmentsUnsorted(this, array);
+
+	let offset = 0;
+	for(let b of blocks){
+		let max_offset = offset + (b.max - b.min);
+		if(index >= offset && index <= max_offset){
+			return Vidx.fromVidx(this.versification, b.min + index - offset);
+		} else {
+			offset = max_offset + 1;
+		}
+	}
+
+	return undefined;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -117,7 +117,7 @@ describe("Geometry", () => {
     expect(AwokenRef.contains(p('Gen 1 - Exo 40; Rev'), p('Exo 1:1; Ruth 1:1'))).to.deep.equal(false);
   });
 
-  it('indexOf', () => {
+  it('indexOf and verseAtIndex', () => {
     let arr = p('Revelation 1:1; Exodus 1:2-4; Genesis 6:7');
 
     expect(AwokenRef.indexOf(arr, { book: 'REV', chapter: 1, verse: 1 })).to.deep.equal(0);
@@ -131,6 +131,15 @@ describe("Geometry", () => {
     expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 6, verse: 6 })).to.deep.equal(-1);
     expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 6, verse: 8 })).to.deep.equal(-1);
 
+    expect(AwokenRef.verseAtIndex(arr, 0)).to.deep.equal({ book: 'REV', chapter: 1, verse: 1 });
+    expect(AwokenRef.verseAtIndex(arr, 1)).to.deep.equal({ book: 'EXO', chapter: 1, verse: 2 });
+    expect(AwokenRef.verseAtIndex(arr, 2)).to.deep.equal({ book: 'EXO', chapter: 1, verse: 3 });
+    expect(AwokenRef.verseAtIndex(arr, 3)).to.deep.equal({ book: 'EXO', chapter: 1, verse: 4 });
+    expect(AwokenRef.verseAtIndex(arr, 4)).to.deep.equal({ book: 'GEN', chapter: 6, verse: 7 });
+    expect(AwokenRef.verseAtIndex(arr, -1)).to.deep.equal(undefined);
+    expect(AwokenRef.verseAtIndex(arr,  5)).to.deep.equal(undefined);
+    expect(AwokenRef.verseAtIndex(arr, 10)).to.deep.equal(undefined);
+
     arr = {
       is_range : true,
       start    : { book: 'GEN', chapter:  1, verse:  1 },
@@ -141,5 +150,12 @@ describe("Geometry", () => {
     expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter:  2, verse:  1})).to.deep.equal(  31);
     expect(AwokenRef.indexOf(arr, { book: 'GEN', chapter: 50, verse: 26})).to.deep.equal(1532);
     expect(AwokenRef.indexOf(arr, { book: 'EXO', chapter:  1, verse:  1})).to.deep.equal( -1 );
+
+    expect(AwokenRef.verseAtIndex(arr,    0)).to.deep.equal({ book: 'GEN', chapter:  1, verse:  1});
+    expect(AwokenRef.verseAtIndex(arr,   30)).to.deep.equal({ book: 'GEN', chapter:  1, verse: 31});
+    expect(AwokenRef.verseAtIndex(arr,   31)).to.deep.equal({ book: 'GEN', chapter:  2, verse:  1});
+    expect(AwokenRef.verseAtIndex(arr, 1532)).to.deep.equal({ book: 'GEN', chapter: 50, verse: 26});
+    expect(AwokenRef.verseAtIndex(arr,   -1)).to.deep.equal(undefined);
+    expect(AwokenRef.verseAtIndex(arr, 1533)).to.deep.equal(undefined);
   });
 });
