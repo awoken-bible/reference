@@ -198,21 +198,45 @@ function chapterVerseSpecifierToBibleRef(book : string, cv : ChapterVerseSpecifi
 }
 
 const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
-	// Ranges accross chapters
+	// Ranges where both sides of - have a book name, for example:
+	//
+	// Eg:
+	// - Genesis 1:1 - Genesis 5:1
+	// - Genesis 1   - Genesis 5
+	// - Genesis - Exodus
 	P.seqMap(
 		pBook,
-		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)),
+		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)).fallback(null),
 		pRangeSeperator,
 		pBook,
-		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)),
-		(b1, [c1, v1], r, b2, [c2, v2]) => {
-			 if(v1 == null) { v1 = 1; }
-			 if(v2 == null) { v2 = VERSIFICATION.book[b2][c2].verse_count; }
+		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)).fallback(null),
+		(b1, b1_extra, r, b2, b2_extra) => {
 
-			 return [{ is_range: true,
-								 start : { book: b1, chapter: c1, verse: v1 },
-								 end   : { book: b2, chapter: c2, verse: v2 },
-							 }];
+			let start = { book: b1, chapter: 1, verse: 1};
+			if(b1_extra){
+				let [c1, v1] = b1_extra;
+				start.chapter = c1;
+				if(v1 !== null) { start.verse = v1; }
+			}
+
+			let end = {
+				book    : b2,
+				chapter : VERSIFICATION.book[b2].chapters.length,
+				verse   : 0
+			};
+			if(b2_extra){
+				let [ c2, v2 ] = b2_extra;
+				end.chapter = c2;
+				if(v2 == null){
+					end.verse = VERSIFICATION.book[b2][end.chapter].verse_count;
+				} else {
+					end.verse = v2;
+				}
+			} else {
+				end.verse = VERSIFICATION.book[b2][end.chapter].verse_count;
+			}
+
+			return [{ is_range: true, start, end }];
 		 }
 	),
 

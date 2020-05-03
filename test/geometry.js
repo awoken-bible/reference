@@ -92,6 +92,59 @@ describe("Geometry", () => {
     ]);
   });
 
+  it('getDifference', () => {
+    expect(AwokenRef.getDifference(p('Gen 1:1-2')[0], p('Genesis 1:1')[0])).to.deep.equal(p('Gen 1:2'));
+    expect(AwokenRef.getDifference(p('Gen 1:1-2')[0], p('Genesis 1:2')[0])).to.deep.equal(p('Gen 1:1'));
+    expect(AwokenRef.getDifference(p('Gen 1:1-2')[0], p('Genesis 1:3')[0])).to.deep.equal(p('Gen 1:1-2'));
+    expect(AwokenRef.getDifference(p('Gen 1:1-2')[0], []                 )).to.deep.equal(p('Gen 1:1-2'));
+
+    expect(AwokenRef.getDifference(p('Gen 1:2-4')[0], p('Genesis 1:1')[0])).to.deep.equal(p('Gen 1:2-4'));
+    expect(AwokenRef.getDifference(p('Gen 1:2-4')[0], p('Genesis 1:2')[0])).to.deep.equal(p('Gen 1:3-4'));
+    expect(AwokenRef.getDifference(p('Gen 1:2-4')[0], p('Genesis 1:3')[0])).to.deep.equal(p('Gen 1:2,4'));
+    expect(AwokenRef.getDifference(p('Gen 1:2-4')[0], p('Genesis 1:4')[0])).to.deep.equal(p('Gen 1:2-3'));
+    expect(AwokenRef.getDifference(p('Gen 1:2-4')[0], p('Genesis 1:5')[0])).to.deep.equal(p('Gen 1:2-4'));
+
+    expect(AwokenRef.getDifference(p('Gen - Deu'), p('Exo'))).to.deep.equal(p('Gen; Lev - Deu'));
+
+    expect(AwokenRef.getDifference(
+      p('Gen 1; Gen 3; Gen 5; Gen 7'),
+      p('Gen 1; Gen 3; Gen 5v1-10; Gen 7; Gen 5v12-32 ')
+    )).to.deep.equal([ { book: 'GEN', chapter: 5, verse: 11 } ]);
+
+    expect(AwokenRef.getDifference(
+      p('Gen 1; Gen 3; Gen 5; Gen 7'),
+      p('Gen 1; Gen7 v21-24; Gen 3; Gen 5v1-10; Gen 7v1-20; Gen 5v11-32 ')
+    )).to.deep.equal([]);
+
+    expect(AwokenRef.getDifference(
+      p('Gen 1; Gen 3; Gen 5; Gen 7'),
+      p('Gen 1:5-10; Gen 1:26-Gen 2:9; Gen 5:1,3,5; Gen 6; Gen 7:1 ')
+    )).to.deep.equal([
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 1, verse: 1 },
+        end      : { book: 'GEN', chapter: 1, verse: 4 },
+      },
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 1, verse: 11 },
+        end      : { book: 'GEN', chapter: 1, verse: 25 },
+      },
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 3, verse:  1 },
+        end      : { book: 'GEN', chapter: 3, verse: 24 },
+      },
+      { book: 'GEN', chapter: 5, verse:  2 },
+      { book: 'GEN', chapter: 5, verse:  4 },
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 5, verse:  6 },
+        end      : { book: 'GEN', chapter: 5, verse: 32 },
+      },
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 7, verse:  2 },
+        end      : { book: 'GEN', chapter: 7, verse: 24 },
+      },
+    ]);
+  });
+
   it('contains', () => {
     expect(AwokenRef.contains(p('Gen 1'  )[0], p('Gen 1:1')[0])).to.deep.equal(true);
     expect(AwokenRef.contains(p('Gen 1:1')[0], p('Gen 1'  )[0])).to.deep.equal(false);
