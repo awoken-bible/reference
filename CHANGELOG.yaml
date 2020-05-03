@@ -1,3 +1,11 @@
+- v1.10.0:
+  date: '2020-05-03'
+  name: 'Set Subtraction'
+  features:
+    - Add function to get difference between BibleRef sets (IE: all verses in a but not in b)
+  fixes:
+    - Allow parser to read ranges where sides are a full book. Eg, Torah can now be represented as "Gen - Deu"
+
 - v1.9.0:
   date: '2020-05-02'
   name: 'Array Operations'
