@@ -161,6 +161,41 @@ describe("parse", () => {
     });
   });
 
+  it("Book Range", () => {
+    expect(parse('Genesis - Leviticus')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start: { book: 'GEN', chapter:  1, verse:  1 },
+          end  : { book: 'LEV', chapter: 27, verse: 34 },
+        }
+      ]
+    });
+
+    expect(parse('Genesis - Leviticus 2:3')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start: { book: 'GEN', chapter:  1, verse:  1 },
+          end  : { book: 'LEV', chapter:  2, verse:  3 },
+        }
+      ]
+    });
+
+    expect(parse('Mat 5:10 - Mk.')).to.deep.equal({
+      status: true,
+      value: [
+        {
+          is_range: true,
+          start: { book: 'MAT', chapter:  5, verse: 10 },
+          end  : { book: 'MRK', chapter: 16, verse: 20 },
+        }
+      ]
+    });
+  });
+
   it("Comma seperated", () => {
     expect(parse('GEN 3:12,15')).to.deep.equal({
       status: true,
