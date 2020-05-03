@@ -13,6 +13,7 @@ export interface GeometryFunctions {
 	intersects(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): boolean,
 	contains(a: BibleRef, b: BibleRef): boolean,
 	getUnion(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
+	getDifference(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
 	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
 	verseAtIndex(a: BibleRef | BibleRef[], idx: number): BibleVerse | undefined;
 };
@@ -114,6 +115,49 @@ export function getUnion(this: BibleRefLibData, a: BibleRef | BibleRef[], b: Bib
 	let x = 'length' in a ? a : [a];
 	let y = 'length' in b ? b : [b];
 	return combineRanges.bind(this)([...x, ...y]);
+}
+
+/**
+ * Computes the subtraction of two sets of [[BibleRef]]s, returing a new list of [[BibleRef]]
+ * instances containing all verses in set `x` but not in set `y`
+ *
+ * @param x - The left hand set
+ * @param y - The right hand set
+ * @return Set operation `x \ y` -> IE: all verses in `x` but not in `y`
+ */
+export function getDifference(this: BibleRefLibData, x: BibleRef | BibleRef[], y: BibleRef | BibleRef[]): BibleRef[] {
+	let a = _toLineSegments(this, x);
+	let b = _toLineSegments(this, y);
+
+	let result : BibleRef[] = [];
+	let ai = 0, bi = 0
+	while(ai < a.length && bi < b.length){
+		let inter = _intersectLineSegment(a[ai], b[bi]);
+		if(inter){
+			if(a[ai].min < inter.min){
+				result.push(_fromLineSegment(this, { min: a[ai].min, max: inter.min-1 }));
+			}
+			a[ai].min = inter.max+1;
+			b[bi].min = inter.max+1;
+			if(a[ai].min > a[ai].max){ ++ai; }
+			if(b[bi].min > b[bi].max){ ++bi; }
+		} else {
+			if(a[ai].min < b[bi].min){
+				result.push(_fromLineSegment(this, a[ai]));
+				++ai;
+			} else {
+				++bi;
+			}
+		}
+	}
+
+	// Consume any remaining elements of a now that b has been exhausted
+	while(ai < a.length){
+		result.push(_fromLineSegment(this, a[ai]));
+		++ai;
+	}
+
+	return result;
 }
 
 /**
