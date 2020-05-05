@@ -5,16 +5,7 @@ import * as P from 'parsimmon';
 
 let book_name_to_id : { [ index: string ] : string } = {};
 for(let book of VERSIFICATION.order){
-	book_name_to_id[book.name.toLowerCase()] = book.id;
-
-	for(let n of book.aliases.map(x => x.toLowerCase())){
-		// We support aliases both with and without a trailing .
-		book_name_to_id[n      ] = book.id;
-		book_name_to_id[n + '.'] = book.id;
-	}
-
-	let name = book.name.toLowerCase();
-	book_name_to_id[book.name.toLowerCase()] = book.id;
+	[ book.name, ...book.aliases ].map(x => book_name_to_id[x.toLowerCase()] = book.id)
 }
 
 
@@ -53,10 +44,10 @@ const pBookPrefixNumber : P.Parser<number> = P.alt(
 
 const pBookName : P.Parser<string> = P.alt(
 	// Multiword book names
-	P.regexp(/[Ss]ong\sof\s[Ss](ongs|olomon|ol.?)/).chain(x => P.succeed("SNG")),
+	P.regexp(/[Ss]ong\sof\s[Ss](ongs|olomon|ol)/).chain(x => P.succeed("SNG")),
 
 	// Number followed by single word (eg: 1 Kings)
-	P.seq(pBookPrefixNumber, pAnySpace, P.regexp(/[A-Z]+\.?/i)).chain(x => {
+	P.seq(pBookPrefixNumber, pAnySpace, P.letters).chain(x => {
 		let name = x[0] + ' ' + x[2].toLowerCase();
 		let id   = book_name_to_id[name];
 		if(id){ return P.succeed(id); }
@@ -64,14 +55,14 @@ const pBookName : P.Parser<string> = P.alt(
 	}),
 
 	// Single word book names
-	P.regexp(/[A-Z]+\.?/i).chain(x => {
+	P.regexp(/[A-Z]+/i).chain(x => {
 		let id = book_name_to_id[x.toLowerCase()];
 		if(id){ return P.succeed(id); }
 		else  { return P.fail("Invalid book name: " + x); }
 	})
 ).desc("Book name (eg, 'Genesis', '2 Kings')");
 
-const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(pAnySpace);
+const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(P.regexp(/\.? */));
 
 ///////////////////////////////////////////////////////////////////////
 

@@ -414,6 +414,39 @@ describe("parse", () => {
                      ]);
   });
 
+  // I've seen this "dots only" style in various places online, so we should make sure we can parse
+  it("Dotted Style", () => {
+    expect(parse('Luke 1.1').value).to.deep.equal([{
+      book: 'LUK', chapter: 1, verse: 1
+    }]);
+    expect(parse('Luke.1.1').value).to.deep.equal([{
+      book: 'LUK', chapter: 1, verse: 1
+    }]);
+    expect(parse('Luke.1.1-Luke.1.5').value).to.deep.equal([{
+      is_range : true,
+      start    : { book: 'LUK', chapter: 1, verse: 1 },
+      end      : { book: 'LUK', chapter: 1, verse: 5 },
+    }]);
+    expect(parse('Luke.1.1-1.5').value).to.deep.equal([{
+      is_range : true,
+      start    : { book: 'LUK', chapter: 1, verse: 1 },
+      end      : { book: 'LUK', chapter: 1, verse: 5 },
+    }]);
+    expect(parse('Luke.1').value).to.deep.equal([{
+      is_range : true,
+      start    : { book: 'LUK', chapter: 1, verse:  1 },
+      end      : { book: 'LUK', chapter: 1, verse: 80 },
+    }]);
+    expect(parse('Luke.').value).to.deep.equal([{
+      is_range : true,
+      start    : { book: 'LUK', chapter:  1, verse:  1 },
+      end      : { book: 'LUK', chapter: 24, verse: 53 },
+    }]);
+    expect(parse('Lk.1.1').value).to.deep.equal([{
+      book: 'LUK', chapter: 1, verse: 1
+    }]);
+  });
+
   it("Chicago Book Abbreviation", () => {
     // Old testemant: https://hbl.gcc.libguides.com/ld.php?content_id=13822328
     expect(parse('Am       1:1').value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
