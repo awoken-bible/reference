@@ -115,6 +115,7 @@
 								<li class="tsd-kind-function"><a href="globals.html#nextbook" class="tsd-kind-icon">next<wbr>Book</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#nextchapter" class="tsd-kind-icon">next<wbr>Chapter</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#parse" class="tsd-kind-icon">parse</a></li>
+								<li class="tsd-kind-function"><a href="globals.html#parsebookname" class="tsd-kind-icon">parse<wbr>Book<wbr>Name</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#parseorthrow" class="tsd-kind-icon">parse<wbr>OrThrow</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#previousbook" class="tsd-kind-icon">previous<wbr>Book</a></li>
 								<li class="tsd-kind-function"><a href="globals.html#previouschapter" class="tsd-kind-icon">previous<wbr>Chapter</a></li>
@@ -139,7 +140,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<span class="tsd-signature-symbol">:</span> <a href="interfaces/bibleverse.html" class="tsd-signature-type">BibleVerse</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/biblerange.html" class="tsd-signature-type">BibleRange</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/BibleRef.ts#L74">BibleRef.ts:74</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/BibleRef.ts#L74">BibleRef.ts:74</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -155,7 +156,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>v<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Versification</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L269">index.ts:269</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L234">index.ts:234</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -195,7 +196,7 @@
 					<div class="tsd-signature tsd-kind-icon">Parse<wbr>Result<span class="tsd-signature-symbol">:</span> <a href="interfaces/parseresultsuccess.html" class="tsd-signature-type">ParseResultSuccess</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/parseresultfailure.html" class="tsd-signature-type">ParseResultFailure</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/parser.ts#L308">parser.ts:308</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/parser.ts#L308">parser.ts:308</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -212,7 +213,7 @@
 					<div class="tsd-signature tsd-kind-icon">Validation<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"book"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"chapter"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"verse"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/validate.ts#L34">validate.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/validate.ts#L34">validate.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -234,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L48">range-manip.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L48">range-manip.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -246,7 +247,7 @@
 								<p>For example, an input list of &quot;Gen 1&quot;, &quot;Gen 2&quot;, &quot;Gen 3&quot;, would produce a
 								single <a href="interfaces/biblerange.html">BibleRange</a> for &quot;Gen 1-3&quot;</p>
 								<p>Order of input ranges in unimportant, since this functional will interally
-								call <a href="interfaces/biblereflib.html#sort">sort</a> first</p>
+								call <a href="globals.html#sort">sort</a> first</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -271,7 +272,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L86">geometry.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L86">geometry.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -305,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/vidx.ts#L51">vidx.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/vidx.ts#L51">vidx.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -336,7 +337,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/Versification.ts#L81">Versification.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/Versification.ts#L81">Versification.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -365,7 +366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/vidx.ts#L65">vidx.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/vidx.ts#L65">vidx.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -415,7 +416,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L156">index.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L121">index.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -450,7 +451,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L205">index.ts:205</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L170">index.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -487,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L128">geometry.ts:128</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L128">geometry.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -529,7 +530,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L41">geometry.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L41">geometry.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -574,7 +575,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L114">geometry.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L114">geometry.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -609,7 +610,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L185">geometry.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L185">geometry.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -670,7 +671,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L79">geometry.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L79">geometry.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -704,7 +705,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L133">range-manip.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L133">range-manip.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -739,7 +740,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L144">range-manip.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L144">range-manip.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -774,7 +775,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L154">range-manip.ts:154</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L154">range-manip.ts:154</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -806,7 +807,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L32">range-manip.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L32">range-manip.ts:32</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -850,7 +851,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L217">range-manip.ts:217</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L217">range-manip.ts:217</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -883,7 +884,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L165">range-manip.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L165">range-manip.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -922,7 +923,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L133">index.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L81">index.ts:81</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -983,6 +984,44 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="parsebookname" class="tsd-anchor"></a>
+					<h3>parse<wbr>Book<wbr>Name</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Book<wbr>Name<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a>, str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L107">index.ts:107</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parses the name of a book and returns either a string containing the USFM book id
+									or <code>null</code> if the book name was not recognised</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <a href="interfaces/biblereflib.html" class="tsd-signature-type">BibleRefLib</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Instance of <a href="interfaces/biblereflib.html">BibleRefLib</a> (includes the versification to use)</p>
+									</div>
+								</li>
+								<li>
+									<h5>str: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The string to parse</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
 					<a name="parseorthrow" class="tsd-anchor"></a>
 					<h3>parse<wbr>OrThrow</h3>
 					<ul class="tsd-signatures tsd-kind-function">
@@ -992,12 +1031,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L145">index.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L93">index.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>As with <a href="interfaces/biblereflib.html#parse">parse</a>, but throws error if the input string is not a valid representation
+									<p>As with <a href="globals.html#parse">parse</a>, but throws error if the input string is not a valid representation
 									of a <a href="globals.html#bibleref">BibleRef</a></p>
 								</div>
 							</div>
@@ -1030,7 +1069,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L233">range-manip.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L233">range-manip.ts:233</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1063,7 +1102,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L191">range-manip.ts:191</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L191">range-manip.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1102,7 +1141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/validate.ts#L166">validate.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/validate.ts#L166">validate.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1139,7 +1178,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/index.ts#L175">index.ts:175</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/index.ts#L140">index.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1177,7 +1216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L101">range-manip.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L101">range-manip.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1219,7 +1258,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L115">range-manip.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L115">range-manip.ts:115</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1261,7 +1300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/range-manip.ts#L125">range-manip.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/range-manip.ts#L125">range-manip.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1295,7 +1334,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/vidx.ts#L13">vidx.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/vidx.ts#L13">vidx.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1327,7 +1366,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/validate.ts#L105">validate.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/validate.ts#L105">validate.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1367,7 +1406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b24185b/src/geometry.ts#L216">geometry.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/68a922b/src/geometry.ts#L216">geometry.ts:216</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1510,6 +1549,9 @@
 						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
 					</li>
 					<li class=" tsd-kind-function">
+						<a href="globals.html#parsebookname" class="tsd-kind-icon">parse<wbr>Book<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="globals.html#parseorthrow" class="tsd-kind-icon">parse<wbr>OrThrow</a>
 					</li>
 					<li class=" tsd-kind-function">
@@ -1553,7 +1595,6 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>
