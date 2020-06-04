@@ -31,6 +31,7 @@ export { ValidationError } from './validate';
 export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, GeometryFunctions {
 	parse(str: string) : ParseResult;
 	parseOrThrow(str: string) : BibleRef[];
+	parseBookName(this: BibleRefLib, str: string) : string | null;
 	format(b : BibleRef | BibleRef[], opts?: FormatOptions) : string;
 	sort(refs : BibleRef[]) : BibleRef[];
 	toVidx(verse: BibleVerse) : number;
@@ -93,6 +94,23 @@ function parseOrThrow(this: BibleRefLib, str: string) : BibleRef[]{
 	let result = this.parse(str);
 	if(result.status === true){ return result.value; }
 	throw result;
+}
+
+/**
+ * Parses the name of a book and returns either a string containing the USFM book id
+ * or `null` if the book name was not recognised
+ *
+ * @public
+ * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
+ * @param str  - The string to parse
+ */
+function parseBookName(this: BibleRefLib, str: string) : string | null {
+	let result = Parsers.Book.parse(str);
+	if(result.status === true){
+		return result.value;
+	} else {
+		return null;
+	}
 }
 
 /**
@@ -253,6 +271,7 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 constructFunc.versification    = VERSIFICATION;
 constructFunc.parse            = parse.bind(constructFunc);
 constructFunc.parseOrThrow     = parseOrThrow.bind(constructFunc);
+constructFunc.parseBookName    = parseBookName.bind(constructFunc);
 constructFunc.format           = format.bind(constructFunc);
 constructFunc.sort             = sort.bind(constructFunc);
 constructFunc.toVidx           = toVidx.bind(constructFunc);
