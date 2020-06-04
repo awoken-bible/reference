@@ -4,6 +4,8 @@ _Bible verse reference parsing, formating and manipulation_
 
 [Click for public API reference docs](https://awoken-bible.github.io/reference/index.html).
 
+Developed for [awokenbible.com](https://awokenbible.com), but released under MIT licence.
+
 ## Quick Start Guide
 
 The simplest use case is to simply import the library and start calling API functions:

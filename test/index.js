@@ -19,6 +19,17 @@ describe("index", () => {
                        })).is.deep.equal('Malachi 3:6 - 4:2');
   });
 
+  it('Parse Book Name', () => {
+    expect(BibleRef.parseBookName('Genesis')).to.deep.equal('GEN');
+    expect(BibleRef.parseBookName('genesis')).to.deep.equal('GEN');
+    expect(BibleRef.parseBookName('Apoc.'  )).to.deep.equal('REV');
+    expect(BibleRef.parseBookName('2SA'    )).to.deep.equal('2SA');
+
+    expect(BibleRef.parseBookName(''       )).to.deep.equal(null);
+    expect(BibleRef.parseBookName('Geness' )).to.deep.equal(null);
+    expect(BibleRef.parseBookName('XYZ'    )).to.deep.equal(null);
+  });
+
   it('Can use static methods or new() interface', () => {
     const bref = new BibleRef(BibleRef.versification);
 

@@ -29,68 +29,16 @@ export { ValidationError } from './validate';
  * Publically exposed interface to this library
  */
 export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, GeometryFunctions {
-	/**
-	 * Parses a string containing a BibleRef
-	 */
 	parse(str: string) : ParseResult;
-
-	/**
-	 * Wrapper around parse() which throws the error object
-	 * on failure, but returns just the value on success
-	 */
 	parseOrThrow(str: string) : BibleRef[];
-
-	/**
-	 * Formats a single BibleVerse, BibleRange, or list of BibleRefs as a human
-	 * readable string which can be parsed to rebuild the original object
-	 */
+	parseBookName(this: BibleRefLib, str: string) : string | null;
 	format(b : BibleRef | BibleRef[], opts?: FormatOptions) : string;
-
-	/**
-	 * Sorts a list of bible refs into chronological order (ranges are sorted
-	 * based on their start, standalone verses come before the range with the
-	 * same start)
-	 * Modifies the passed in array, and returns reference to same array
-	 */
 	sort(refs : BibleRef[]) : BibleRef[];
-
-	/**
-	 * Converts a BibleVerse to corresponding verse index - a unique identifier
-	 * but which is dependent on the Versification scheme in use, and thus is
-	 * not portable across translations with different schemes
-	 */
 	toVidx(verse: BibleVerse) : number;
-
-	/**
-	 * Converts a VIDX back into the corresponding BibleVerse
-	 */
 	fromVidx(vidx : number) : BibleVerse;
-
-	/**
-	 * Truncates a list of verses and references such that the total number
-	 * of verses contained within does not exceed n
-	 * Does not modify passed in array, however some elements of the result
-	 * may be references to elements in the original array
-	 */
 	firstNVerses(refs : BibleRef | BibleRef[], n : number) : BibleRef[];
-
-	/**
-	 * Counts the total number of verses represented by a single BibleRef
-	 * or list of refs
-	 */
 	countVerses(refs : BibleRef | BibleRef[]) : number;
-
-	/**
-	 * Validates a set of BibleRefs returning a list of errors, such as out of
-	 * bound chapter and verse numbers, backwards ranges, etc
-	 */
 	validate(refs: BibleRef | BibleRef[], include_warnings?: boolean) : ValidationError[];
-
-	/**
-	 * Repairs a BibleRef, resolving errors found by validate
-	 * Note this function can throw if it encounters an error that cannot be
-	 * repaired
-	 */
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
 };
 
@@ -146,6 +94,23 @@ function parseOrThrow(this: BibleRefLib, str: string) : BibleRef[]{
 	let result = this.parse(str);
 	if(result.status === true){ return result.value; }
 	throw result;
+}
+
+/**
+ * Parses the name of a book and returns either a string containing the USFM book id
+ * or `null` if the book name was not recognised
+ *
+ * @public
+ * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
+ * @param str  - The string to parse
+ */
+function parseBookName(this: BibleRefLib, str: string) : string | null {
+	let result = Parsers.Book.parse(str);
+	if(result.status === true){
+		return result.value;
+	} else {
+		return null;
+	}
 }
 
 /**
@@ -306,6 +271,7 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 constructFunc.versification    = VERSIFICATION;
 constructFunc.parse            = parse.bind(constructFunc);
 constructFunc.parseOrThrow     = parseOrThrow.bind(constructFunc);
+constructFunc.parseBookName    = parseBookName.bind(constructFunc);
 constructFunc.format           = format.bind(constructFunc);
 constructFunc.sort             = sort.bind(constructFunc);
 constructFunc.toVidx           = toVidx.bind(constructFunc);
