@@ -1,3 +1,9 @@
+- v1.11.1:
+  date: '2020-06-04'
+  name: 'Book Name Parsing'
+  features:
+    - Add publically exposed function to parse a book name in isolation, and map to USFM id
+
 - v1.10.1:
   date: '2020-05-05'
   name: 'Dotted Chapters'
