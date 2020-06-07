@@ -586,4 +586,79 @@ describe('range-manip', () => {
     })).to.deep.equal(null);
     expect(() => Rm.previousBook({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
   });
+
+  it('isFullBook', () => {
+    expect(Rm.isFullBook({ book: 'GEN', chapter: 5, verse: 10 })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  1, verse:   1 },
+      end      : { book: 'GEN', chapter: 50, verse:  26 },
+    })).to.deep.equal(true);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  1, verse:   2 },
+      end      : { book: 'GEN', chapter: 50, verse:  26 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  1, verse:   1 },
+      end      : { book: 'GEN', chapter: 50, verse:  25 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  2, verse:   1 },
+      end      : { book: 'GEN', chapter: 50, verse:  25 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  2, verse:   1 },
+      end      : { book: 'GEN', chapter: 49, verse:  26 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'GEN', chapter:  1, verse:   1 },
+      end      : { book: 'EXO', chapter:  1, verse:   1 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullBook({
+      is_range : true,
+      start    : { book: 'EZR', chapter:  1, verse:   1 },
+      end      : { book: 'EZR', chapter: 10, verse:  44 },
+    })).to.deep.equal(true);
+  });
+
+  it('isFullChapter', () => {
+    expect(Rm.isFullBook({ book: 'GEN', chapter: 5, verse: 10 })).to.deep.equal(false);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 5, verse:  1 },
+      end      : { book: 'GEN', chapter: 5, verse: 32 },
+    })).to.deep.equal(true);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 5, verse:  1 },
+      end      : { book: 'GEN', chapter: 5, verse: 31 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 5, verse:  2 },
+      end      : { book: 'GEN', chapter: 5, verse: 32 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 4, verse: 26 },
+      end      : { book: 'GEN', chapter: 5, verse: 32 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'GEN', chapter: 5, verse:  1 },
+      end      : { book: 'GEN', chapter: 6, verse:  1 },
+    })).to.deep.equal(false);
+    expect(Rm.isFullChapter({
+      is_range : true,
+      start    : { book: 'MIC', chapter: 6, verse:  1 },
+      end      : { book: 'MIC', chapter: 6, verse: 16 },
+    })).to.deep.equal(true);
+
+
+  });
 });
