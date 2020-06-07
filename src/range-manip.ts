@@ -19,6 +19,8 @@ export interface RangeManipFunctions {
 	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
 	nextBook(ref: BibleRef) : BibleRange | null;
 	previousBook(ref: BibleRef) : BibleRange | null;
+	isFullBook(ref: BibleRef) : boolean;
+	isFullChapter(ref: BibleRef) : boolean;
 };
 
 /**
@@ -239,6 +241,43 @@ export function previousBook(this: BibleRefLibData, ref: BibleRef) : BibleRange 
 	} else {
 		return null;
 	}
+}
+
+/**
+ * Determines if a [[BibleRef]] is in fact just a single [[BibleRange]] which represents **exactly**
+ * the entirety of a single book - no more, no less
+ * @return Boolean representing decision
+ */
+export function isFullBook(this: BibleRefLibData, ref: BibleRef) : boolean {
+	if(!ref.is_range){ return false; }
+
+	let book_id = ref.start.book;
+	if(ref.end.book != book_id){ return false; }
+
+	return (
+		ref.start.chapter === 1 &&
+			ref.start.verse   === 1 &&
+			ref.end.chapter   === this.versification.book[book_id].chapters.length &&
+			ref.end.verse     === this.versification.book[book_id][ref.end.chapter].verse_count
+	);
+}
+
+/**
+ * Determines if a [[BibleRef]] is in fact just a single [[BibleRange]] which represents **exactly**
+ * the entirety of a single chapter - no more, no less
+ * @return Boolean representing decision
+ */
+export function isFullChapter(this: BibleRefLibData, ref: BibleRef) : boolean {
+	if(!ref.is_range){ return false; }
+
+	let book_id = ref.start.book;
+	if(ref.end.book != book_id){ return false; }
+
+	return (
+		ref.start.chapter === ref.end.chapter &&
+	  ref.start.verse   === 1 &&
+		ref.end.verse     === this.versification.book[book_id][ref.start.chapter].verse_count
+	);
 }
 
 ////////////////////////////////////////////////////////////////////
