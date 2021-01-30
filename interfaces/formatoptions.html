@@ -7,7 +7,6 @@
 	<meta name="description" content="Documentation for awoken-bible-reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
-	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -41,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -52,7 +53,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">awoken-bible-reference</a>
+					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
 					<a href="formatoptions.html">FormatOptions</a>
@@ -106,10 +107,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="book_format" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> book_<wbr>format</h3>
-					<div class="tsd-signature tsd-kind-icon">book_<wbr>format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;name&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;usfm&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;osis&quot;</span></div>
+					<div class="tsd-signature tsd-kind-icon">book_<wbr>format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"name"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"usfm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"osis"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L20">printer.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L20">printer.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -129,7 +130,7 @@
 					<div class="tsd-signature tsd-kind-icon">book_<wbr>separator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L27">printer.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L27">printer.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -143,10 +144,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="combine_ranges" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> combine_<wbr>ranges</h3>
-					<div class="tsd-signature tsd-kind-icon">combine_<wbr>ranges<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">combine_<wbr>ranges<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L75">printer.ts:75</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L75">printer.ts:75</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -159,10 +160,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="compact" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> compact</h3>
-					<div class="tsd-signature tsd-kind-icon">compact<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">compact<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L56">printer.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L56">printer.ts:56</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -177,10 +178,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="complete_refs" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> complete_<wbr>refs</h3>
-					<div class="tsd-signature tsd-kind-icon">complete_<wbr>refs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">complete_<wbr>refs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L69">printer.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L69">printer.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -197,10 +198,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="lowercase" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> lowercase</h3>
-					<div class="tsd-signature tsd-kind-icon">lowercase<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">lowercase<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L80">printer.ts:80</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L80">printer.ts:80</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,13 +216,13 @@
 					<div class="tsd-signature tsd-kind-icon">ref_<wbr>separator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L41">printer.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L41">printer.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The character to use to separate multiple references if a list of distinct refs is passed in.
-								To be conformat with the parser this should be set to a string matching the regex \s*[;_]\s*
+								To be conformat with the parser this should be set to a string matching the regex \s<em>[;_]\s</em>
 							Defaults to &#39;; &#39;</p>
 						</div>
 					</div>
@@ -229,10 +230,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="strip_whitespace" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> strip_<wbr>whitespace</h3>
-					<div class="tsd-signature tsd-kind-icon">strip_<wbr>whitespace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">strip_<wbr>whitespace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L48">printer.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L48">printer.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -249,7 +250,7 @@
 					<div class="tsd-signature tsd-kind-icon">verse_<wbr>separator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/7832819/src/printer.ts#L34">printer.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/printer.ts#L34">printer.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -265,22 +266,13 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class=" ">
-						<a href="../modules.html">Exports</a>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface">
-						<a href="biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="biblereflib.html" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="bibleverse.html" class="tsd-kind-icon">Bible<wbr>Verse</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
@@ -317,15 +309,6 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias">
-						<a href="../modules.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../modules.html#formatarg" class="tsd-kind-icon">Format<wbr>Arg</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="../modules.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

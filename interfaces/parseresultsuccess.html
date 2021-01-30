@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BibleRange | awoken-bible-reference</title>
+	<title>ParseResultSuccess | awoken-bible-reference</title>
 	<meta name="description" content="Documentation for awoken-bible-reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="biblerange.html">BibleRange</a>
+					<a href="parseresultsuccess.html">ParseResultSuccess</a>
 				</li>
 			</ul>
-			<h1>Interface BibleRange</h1>
+			<h1>Interface ParseResultSuccess</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Type which represents a continous block of Bible verses</p>
+						<p>Represents the result of a successful attempt to parse a string representing a <a href="../globals.html#bibleref">BibleRef</a></p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">BibleRange</span>
+						<span class="target">ParseResultSuccess</span>
 					</li>
 				</ul>
 			</section>
@@ -88,9 +88,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="biblerange.html#end" class="tsd-kind-icon">end</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="biblerange.html#is_range" class="tsd-kind-icon">is_<wbr>range</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="biblerange.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="parseresultsuccess.html#status" class="tsd-kind-icon">status</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="parseresultsuccess.html#value" class="tsd-kind-icon">value</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,47 +98,37 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="end" class="tsd-anchor"></a>
-					<h3>end</h3>
-					<div class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">:</span> <a href="bibleverse.html" class="tsd-signature-type">BibleVerse</a></div>
+					<a name="status" class="tsd-anchor"></a>
+					<h3>status</h3>
+					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/BibleRef.ts#L67">BibleRef.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/parser.ts#L272">parser.ts:272</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Last verse in the range, inclusive</p>
+							<p>Whether the parsing was successful - <code>true</code> for a <a href="parseresultsuccess.html">ParseResultSuccess</a></p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="is_range" class="tsd-anchor"></a>
-					<h3>is_<wbr>range</h3>
-					<div class="tsd-signature tsd-kind-icon">is_<wbr>range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span></div>
+					<a name="value" class="tsd-anchor"></a>
+					<h3>value</h3>
+					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <a href="../globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/BibleRef.ts#L57">BibleRef.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/parser.ts#L280">parser.ts:280</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Field that allows us to distingish a <a href="biblerange.html">BibleRange</a> from a <a href="bibleverse.html">BibleVerse</a></p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
-					<div class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">:</span> <a href="bibleverse.html" class="tsd-signature-type">BibleVerse</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/b83a3a6/src/BibleRef.ts#L62">BibleRef.ts:62</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>First verse in the range, inclusive</p>
+							<p>The array of <a href="../globals.html#bibleref">BibleRef</a>s which were parsed
+							An array is used since input string may include multiple non-contigious blocks, for example:</p>
+							<ul>
+								<li>Genesis 1 v5,8</li>
+								<li>Genesis 1:1 ; Exodus 1:1</li>
+							</ul>
 						</div>
 					</div>
 				</section>
@@ -158,16 +147,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
+						<a href="parseresultsuccess.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Success</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="biblerange.html#end" class="tsd-kind-icon">end</a>
+								<a href="parseresultsuccess.html#status" class="tsd-kind-icon">status</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="biblerange.html#is_range" class="tsd-kind-icon">is_<wbr>range</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="biblerange.html#start" class="tsd-kind-icon">start</a>
+								<a href="parseresultsuccess.html#value" class="tsd-kind-icon">value</a>
 							</li>
 						</ul>
 					</li>

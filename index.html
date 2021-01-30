@@ -7,7 +7,6 @@
 	<meta name="description" content="Documentation for awoken-bible-reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -41,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -50,7 +51,12 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>Project awoken-bible-reference</h1>
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>awoken-bible-reference</h1>
 		</div>
 	</div>
 </header>
@@ -68,36 +74,34 @@
 					<h2>Quick Start Guide</h2>
 				</a>
 				<p>The simplest use case is to simply import the library and start calling API functions:</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">AwokenRef</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;awoken-bible-reference&#039;</span><span style="color: #000000">;</span>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> AwokenRef <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
 
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">vref</span><span style="color: #000000"> = </span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">parseOrThrow</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Genesis 1&#039;</span><span style="color: #000000">);</span>
-<span style="color: #AF00DB">if</span><span style="color: #000000">(</span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">countVerses</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">) &gt; </span><span style="color: #098658">10</span><span style="color: #000000">)){</span>
-<span style="color: #000000">    </span><span style="color: #001080">vref</span><span style="color: #000000"> = </span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">firstNVerses</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">, </span><span style="color: #098658">10</span><span style="color: #000000">);</span>
-<span style="color: #000000">}</span>
-<span style="color: #001080">vref</span><span style="color: #000000"> = </span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">getIntersection</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">, </span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">parseOrThrow</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;GEN 1 v6,9-20&#039;</span><span style="color: #000000">));</span>
+<span class="hljs-keyword">let</span> vref = AwokenRef.parseOrThrow(<span class="hljs-string">'Genesis 1'</span>);
+<span class="hljs-keyword">if</span>(AwokenRef.countVerses(vref) &gt; <span class="hljs-number">10</span>)){
+    vref = AwokenRef.firstNVerses(vref, <span class="hljs-number">10</span>);
+}
+vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-string">'GEN 1 v6,9-20'</span>));
 
-<span style="color: #008000">// Print as human readable verse reference (IE: &quot;Genesis 1:6,9-10&quot;)</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">format</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">));</span>
+<span class="hljs-comment">// Print as human readable verse reference (IE: "Genesis 1:6,9-10")</span>
+<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref));
 
-<span style="color: #008000">// Print as url encodable reference (IE: &quot;gen1v6,9-10&quot;)</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">format</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">, { </span><span style="color: #001080">url:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000"> }));</span>
+<span class="hljs-comment">// Print as url encodable reference (IE: "gen1v6,9-10")</span>
+<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref, { url: <span class="hljs-literal">true</span> }));
 
-<span style="color: #008000">// Inspect the object, will yield:</span>
-<span style="color: #008000">// [ { book: &#039;GEN&#039;, chapter: 1, verse: 6 },</span>
-<span style="color: #008000">//   { is_range : true,</span>
-<span style="color: #008000">//     start    : { book: &#039;GEN&#039;, chapter: 1, verse:  9 },</span>
-<span style="color: #008000">//     end      : { book: &#039;GEN&#039;, chapter: 1, verse: 10 },</span>
-<span style="color: #008000">//   }</span>
-<span style="color: #008000">// ]</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">dir</span><span style="color: #000000">(</span><span style="color: #001080">vref</span><span style="color: #000000">);</span>
-</code></pre>
+<span class="hljs-comment">// Inspect the object, will yield:</span>
+<span class="hljs-comment">// [ { book: 'GEN', chapter: 1, verse: 6 },</span>
+<span class="hljs-comment">//   { is_range : true,</span>
+<span class="hljs-comment">//     start    : { book: 'GEN', chapter: 1, verse:  9 },</span>
+<span class="hljs-comment">//     end      : { book: 'GEN', chapter: 1, verse: 10 },</span>
+<span class="hljs-comment">//   }</span>
+<span class="hljs-comment">// ]</span>
+<span class="hljs-built_in">console</span>.dir(vref);</code></pre>
 				<p>Non-standard versification schemes can be used by instead creating an instance of the library. This allows support to be added for the Apocrypha, or translations that use a different split of verses per chapter.</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">__AwokenRef__</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;awoken-bible-reference&#039;</span><span style="color: #000000">;</span>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> __AwokenRef__ <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">AwokenRef</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">__AwokenRef__</span><span style="color: #000000">(</span><span style="color: #001080">my_versificaton</span><span style="color: #000000">);</span>
+<span class="hljs-keyword">const</span> AwokenRef = <span class="hljs-keyword">new</span> __AwokenRef__(my_versificaton);
 
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">vref</span><span style="color: #000000"> = </span><span style="color: #001080">AwokenRef</span><span style="color: #000000">.</span><span style="color: #795E26">parse</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;MyBook 100:999&#039;</span><span style="color: #000000">);</span>
-</code></pre>
+<span class="hljs-keyword">let</span> vref = AwokenRef.parse(<span class="hljs-string">'MyBook 100:999'</span>);</code></pre>
 				<p>The full list of methods on the <code>AwokenRef</code> object can be found in the <a href="https://awoken-bible.github.io/reference/index.html">API docs</a>.</p>
 				<a href="#type-representations" id="type-representations" style="color: inherit; text-decoration: none;">
 					<h1>Type Representations</h1>
@@ -128,28 +132,25 @@
 					<tr>
 						<td>JSON</td>
 						<td>
-							<pre><code class="language-typescript"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">BibleVerse</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #001080">book</span><span style="color: #000000">    : </span><span style="color: #267F99">string</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">chapter</span><span style="color: #000000"> : </span><span style="color: #267F99">number</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">verse</span><span style="color: #000000">   : </span><span style="color: #267F99">number</span><span style="color: #000000">,</span>
-<span style="color: #000000">}</span>
-</code></pre>
+							<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> BibleVerse {
+  book    : <span class="hljs-built_in">string</span>,
+  chapter : <span class="hljs-built_in">number</span>,
+  verse   : <span class="hljs-built_in">number</span>,
+}</code></pre>
 						</td>
 						<td>
-							<pre><code class="language-json"><span style="color: #000000">{</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;book&quot;</span><span style="color: #000000">    : </span><span style="color: #A31515">&quot;GEN&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;chapter&quot;</span><span style="color: #000000"> : </span><span style="color: #098658">1</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;verse&quot;</span><span style="color: #000000">   : </span><span style="color: #098658">1</span><span style="color: #000000">,</span>
-<span style="color: #000000">}</span>
-</code></pre>
+							<pre><code class="language-json">{
+  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"GEN"</span>,
+  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">1</span>,
+  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">1</span>,
+}</code></pre>
 						</td>
 						<td>
-							<pre><code class="language-json"><span style="color: #000000">{</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;book&quot;</span><span style="color: #000000">    : </span><span style="color: #A31515">&quot;REV&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;chapter&quot;</span><span style="color: #000000"> : </span><span style="color: #098658">22</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #0451A5">&quot;verse&quot;</span><span style="color: #000000">   : </span><span style="color: #098658">21</span><span style="color: #000000">,</span>
-<span style="color: #000000">}</span>
-</code></pre>
+							<pre><code class="language-json">{
+  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"REV"</span>,
+  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">22</span>,
+  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">21</span>,
+}</code></pre>
 						</td>
 					</tr>
 				</table>
@@ -161,21 +162,19 @@
 					<h2>BibleRanges</h2>
 				</a>
 				<p>BibleRanges are represented by an object of the form:</p>
-				<pre><code class="language-typescript"><span style="color: #008000">/** Representation of continous block of verses */</span>
-<span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">BibleRange</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">is_range</span><span style="color: #000000"> : </span><span style="color: #267F99">true</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">start</span><span style="color: #000000">    : </span><span style="color: #267F99">BibleVerse</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">end</span><span style="color: #000000">      : </span><span style="color: #267F99">BibleVerse</span><span style="color: #000000">,</span>
-<span style="color: #000000">};</span>
-</code></pre>
+				<pre><code class="language-typescript"><span class="hljs-comment">/** Representation of continous block of verses */</span>
+<span class="hljs-keyword">interface</span> BibleRange {
+    is_range : <span class="hljs-literal">true</span>,
+    start    : BibleVerse,
+    end      : BibleVerse,
+};</code></pre>
 				<a href="#mixed-sets" id="mixed-sets" style="color: inherit; text-decoration: none;">
 					<h2>Mixed Sets</h2>
 				</a>
 				<p>Note that most API function can take either <code>BibleRange</code> or <code>BibleVerse</code> objects (or lists thereof), and thus the <code>is_range</code> field can be used to easily distinguish the types from one another.</p>
 				<p>The following union type is also exported for convenience:</p>
-				<pre><code class="language-typescript"><span style="color: #008000">/** Generic reference to verse or range */</span>
-<span style="color: #0000FF">type</span><span style="color: #000000"> </span><span style="color: #267F99">BibleRef</span><span style="color: #000000"> = </span><span style="color: #267F99">BibleVerse</span><span style="color: #000000"> | </span><span style="color: #267F99">BibleRange</span><span style="color: #000000">;</span>
-</code></pre>
+				<pre><code class="language-typescript"><span class="hljs-comment">/** Generic reference to verse or range */</span>
+<span class="hljs-keyword">type</span> BibleRef = BibleVerse | BibleRange;</code></pre>
 				<a href="#overview-of-functionality" id="overview-of-functionality" style="color: inherit; text-decoration: none;">
 					<h1>Overview of Functionality</h1>
 				</a>
@@ -213,13 +212,16 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class=" ">
-						<a href="modules.html">Exports</a>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/errkind.html" class="tsd-kind-icon">Err<wbr>Kind</a>
+					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/biblerange.html" class="tsd-kind-icon">Bible<wbr>Range</a>
 					</li>
@@ -232,14 +234,128 @@
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/formatoptions.html" class="tsd-kind-icon">Format<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/parseresultfailure.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Failure</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/parseresultsuccess.html" class="tsd-kind-icon">Parse<wbr>Result<wbr>Success</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#formatarg" class="tsd-kind-icon">Format<wbr>Arg</a>
+						<a href="globals.html#bibleref" class="tsd-kind-icon">Bible<wbr>Ref</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
+						<a href="globals.html#biblereflibconstructor" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#formatarg" class="tsd-kind-icon">Format<wbr>Arg</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#formatpreset" class="tsd-kind-icon">Format<wbr>Preset</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#parseresult" class="tsd-kind-icon">Parse<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#contains" class="tsd-kind-icon">contains</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createversification" class="tsd-kind-icon">create<wbr>Versification</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#firstnverses" class="tsd-kind-icon">firstNVerses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#format" class="tsd-kind-icon">format</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#fromvidx" class="tsd-kind-icon">from<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getdifference" class="tsd-kind-icon">get<wbr>Difference</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getintersection" class="tsd-kind-icon">get<wbr>Intersection</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getunion" class="tsd-kind-icon">get<wbr>Union</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#intersects" class="tsd-kind-icon">intersects</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isfullbook" class="tsd-kind-icon">is<wbr>Full<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#isfullchapter" class="tsd-kind-icon">is<wbr>Full<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebybook" class="tsd-kind-icon">iterate<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebychapter" class="tsd-kind-icon">iterate<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#iteratebyverse" class="tsd-kind-icon">iterate<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#makerange" class="tsd-kind-icon">make<wbr>Range</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#nextbook" class="tsd-kind-icon">next<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#nextchapter" class="tsd-kind-icon">next<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parsebookname" class="tsd-kind-icon">parse<wbr>Book<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parseorthrow" class="tsd-kind-icon">parse<wbr>OrThrow</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#previousbook" class="tsd-kind-icon">previous<wbr>Book</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#previouschapter" class="tsd-kind-icon">previous<wbr>Chapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#repair" class="tsd-kind-icon">repair</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#sort" class="tsd-kind-icon">sort</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbybook" class="tsd-kind-icon">split<wbr>ByBook</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbychapter" class="tsd-kind-icon">split<wbr>ByChapter</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitbyverse" class="tsd-kind-icon">split<wbr>ByVerse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#tovidx" class="tsd-kind-icon">to<wbr>Vidx</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#validate" class="tsd-kind-icon">validate</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#verseatindex" class="tsd-kind-icon">verse<wbr>AtIndex</a>
 					</li>
 				</ul>
 			</nav>
