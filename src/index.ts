@@ -79,7 +79,11 @@ export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, Geome
  * @param str  - The string to parse
  */
 function parse(this: BibleRefLib, str: string) : ParseResult {
-	return Parsers.BibleRef.parse(str);
+	let result = Parsers.BibleRef.parse(str);
+	if(result.status === false){
+		return { ...result, input: str };
+	}
+	return result;
 }
 
 /**

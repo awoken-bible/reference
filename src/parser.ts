@@ -298,6 +298,11 @@ interface ParseResultFailure {
 	 * Location within input string where an unexpected token was encountered
 	 */
 	index: { column: number, line: number, offset: number },
+
+	/**
+	 * The string we were attempting to parse
+	 */
+	input: string,
 };
 
 /**

@@ -1,11 +1,12 @@
 "use strict";
 
-const rewire   = require('rewire');
-const chai     = require('chai');
-const expect   = chai.expect;
+const rewire    = require('rewire');
+const chai      = require('chai');
+const expect    = chai.expect;
 
-const Parser   = require('../src/parser.ts').default;
-const p = rewire('../src/parser.ts');
+const Parser    = require('../src/parser.ts').default;
+const p         = rewire('../src/parser.ts');
+const AwokenRef = require('../src/index.ts').default;
 
 describe("parser internals", () => {
   it("pBookId", () => {
@@ -73,12 +74,44 @@ describe("parser internals", () => {
 
 
 describe("parse", () => {
-  function parse(str){ return Parser.BibleRef.parse(str); }
+  function parse(str){ return AwokenRef.parse(str); }
+	function parseErr(str){
+		let out = AwokenRef.parse(str);
+		delete out.expected;
+		return out;
+	}
+
 
   it("Single Verse", () => {
     expect(parse('Malachi 10:8')).to.deep.equal({
       status: true,
       value: [{ book: 'MAL', chapter: 10, verse:  8 }]
+    });
+  });
+
+  it("Error Objects", () => {
+    expect(parseErr('XYZ 1:1')).to.deep.equal({
+      status : false,
+      input  : 'XYZ 1:1',
+      index  : { column: 4, line: 1, offset: 3 },
+    });
+
+    expect(parseErr('GEN a:1')).to.deep.equal({
+      status : false,
+      input  : 'GEN a:1',
+      index  : { column: 5, line: 1, offset: 4 },
+    });
+
+    expect(parseErr('GEN 1a1')).to.deep.equal({
+      status : false,
+      input  : 'GEN 1a1',
+      index  : { column: 6, line: 1, offset: 5 },
+    });
+
+    expect(parseErr('GEN 1:a')).to.deep.equal({
+      status : false,
+      input  : 'GEN 1:a',
+      index  : { column: 7, line: 1, offset: 6 },
     });
   });
 
