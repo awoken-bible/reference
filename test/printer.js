@@ -8,6 +8,7 @@ const v = require('../src/Versification.ts').default;
 
 
 describe("printer", () => {
+
   describe('formatBibleVerse', () => {
     it('Default Options', () => {
       // Standard
@@ -19,14 +20,14 @@ describe("printer", () => {
         .is.deep.equal('Song of Solomon 3:4');
     });
 
-    it('Custom Verse Seperator', () => {
+    it('Custom Verse Separator', () => {
       expect(formatBibleVerse(v,
                               { book: 'GEN', chapter: 3, verse: 8 },
-                              { verse_seperator: 'v' }))
+                              { verse_separator: 'v' }))
         .is.deep.equal('Genesis 3v8');
       expect(formatBibleVerse(v,
                               { book: '1JN', chapter: 10, verse: 2 },
-                              { verse_seperator: '.' }))
+                              { verse_separator: '.' }))
         .is.deep.equal('1 John 10.2');
     });
 
@@ -48,30 +49,30 @@ describe("printer", () => {
     it('Book Ids', () => {
       expect(formatBibleVerse(v,
                               { book: 'GEN', chapter: 3, verse: 8 },
-                              { use_book_id: true }))
+                              { book_format: 'usfm' }))
         .is.deep.equal('GEN 3:8');
       expect(formatBibleVerse(v,
-                              { book: '1JH', chapter: 10, verse: 2 },
-                              { use_book_id: true }))
-        .is.deep.equal('1JH 10:2');
+                              { book: '1JN', chapter: 10, verse: 2 },
+                              { book_format: 'usfm' }))
+        .is.deep.equal('1JN 10:2');
       expect(formatBibleVerse(v,
                               { book: 'SNG', chapter: 3, verse: 4 },
-                              { use_book_id: true }))
+                              { book_format: 'usfm' }))
         .is.deep.equal('SNG 3:4');
     });
 
     it('Mixed Options', () => {
       expect(formatBibleVerse(v,
                               { book: 'GEN', chapter: 3, verse: 8 },
-                              { strip_whitespace: true, verse_seperator: '.' }))
+                              { strip_whitespace: true, verse_separator: '.' }))
         .is.deep.equal('Genesis3.8');
       expect(formatBibleVerse(v,
-                              { book: '1JH', chapter: 10, verse: 2 },
-                              { verse_seperator: ' v ', use_book_id: true }))
-        .is.deep.equal('1JH 10 v 2');
+                              { book: '1JN', chapter: 10, verse: 2 },
+                              { verse_separator: ' v ', book_format: 'usfm' }))
+        .is.deep.equal('1JN 10 v 2');
       expect(formatBibleVerse(v,
                               { book: 'SNG', chapter: 3, verse: 4 },
-                              { use_book_id: true, strip_whitespace: true }))
+                              { book_format: 'usfm', strip_whitespace: true }))
         .is.deep.equal('SNG3:4');
     });
 
@@ -82,7 +83,7 @@ describe("printer", () => {
     it('Lowercase', () => {
       expect(formatBibleVerse(v, { book: 'GEN', chapter: 1, verse: 1 }, { lowercase: true }))
         .is.deep.equal('genesis 1:1');
-      expect(formatBibleVerse(v, { book: 'GEN', chapter: 1, verse: 1 }, { lowercase: true, use_book_id: true }))
+      expect(formatBibleVerse(v, { book: 'GEN', chapter: 1, verse: 1 }, { lowercase: true, book_format: 'usfm' }))
         .is.deep.equal('gen 1:1');
     });
   });
@@ -122,7 +123,7 @@ describe("printer", () => {
     });
 
     it('Strip Whitespace and book id', () => {
-      let opts = { strip_whitespace: true, use_book_id: true };
+      let opts = { strip_whitespace: true, book_format: 'usfm' };
       // Verse range
       expect(formatBibleRange(v, { is_range: true,
                                    start: { book: 'GEN', chapter: 3, verse:  8 },
@@ -294,7 +295,7 @@ describe("printer", () => {
                     ];
       expect(formatBibleRefList(v, reflist))
         .is.deep.equal('Genesis 3:2,5-7, 5:20 - 6:3, 6:10,12');
-      expect(formatBibleRefList(v, reflist, { strip_whitespace: true, use_book_id: true }))
+      expect(formatBibleRefList(v, reflist, { strip_whitespace: true, book_format: 'usfm' }))
         .is.deep.equal('GEN3:2,5-7,5:20-6:3,6:10,12');
     });
 
@@ -336,13 +337,13 @@ describe("printer", () => {
       { book: 'GEN', chapter: 3, verse:  2 },
       { book: 'GEN', chapter: 3, verse:  3 },
       { book: 'GEN', chapter: 3, verse:  4 },
-    ], { url: true})).to.deep.equal('gen3v2,3,4');
+    ], 'url' )).to.deep.equal('gen3v2,3,4');
 
     expect(formatBibleRefList(v, [
       { book: 'GEN', chapter: 3, verse:  2 },
       { book: 'GEN', chapter: 3, verse:  3 },
       { book: 'GEN', chapter: 3, verse:  4 },
-    ], { url: true, combine_ranges: true})).to.deep.equal('gen3v2-4');
+    ], 'url:combined')).to.deep.equal('gen3v2-4');
 
     expect(formatBibleRefList(v, [
       { is_range : true,
@@ -353,6 +354,31 @@ describe("printer", () => {
         start    : { book: 'EXO', chapter: 5, verse:  3 },
         end      : { book: 'EXO', chapter: 6, verse:  4 },
       },
-    ], { url: true, combine_ranges: true})).to.deep.equal('gen1v2-10_exo5v3-6v4');
+    ], 'url:combined')).to.deep.equal('gen1v2-10_exo5v3-6v4');
+  });
+
+	it('OSIS', () => {
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], 'osis' )).to.deep.equal('Gen.3.2, Gen.3.3, Gen.3.4');
+
+    expect(formatBibleRefList(v, [
+      { book: 'GEN', chapter: 3, verse:  2 },
+      { book: 'GEN', chapter: 3, verse:  3 },
+      { book: 'GEN', chapter: 3, verse:  4 },
+    ], 'osis:combined')).to.deep.equal('Gen.3.2-Gen.3.4');
+
+    expect(formatBibleRefList(v, [
+      { is_range : true,
+        start    : { book: 'GEN', chapter: 1, verse:  2 },
+        end      : { book: 'GEN', chapter: 1, verse: 10 },
+      },
+      { is_range : true,
+        start    : { book: 'EXO', chapter: 5, verse:  3 },
+        end      : { book: 'EXO', chapter: 6, verse:  4 },
+      },
+    ], 'osis')).to.deep.equal('Gen.1.2-Gen.1.10, Exod.5.3-Exod.6.4');
   });
 });

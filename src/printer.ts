@@ -12,28 +12,37 @@ import { combineRanges } from './range-manip';
  */
 export interface FormatOptions {
 	/**
-	 * If set then the 3 character book id will be used rather than the full
-	 * book name
+	 * The format to use for book name
+	 * - name -> The full name      -> Judges
+	 * - usfm -> The 3 char usfm id -> JDG
+	 * - osis -> The OSIS id        -> Judg
 	 */
-	use_book_id? : boolean,
+	book_format? : "name" | "usfm" | "osis",
 
 	/**
-	 * The character to use to seperate the chapter number from the verse number
+	 * The character/string to use to separate the book name/id from the chapter/verse
+	 * numbers
+	 * Defaults to ' ', can use '.' and still be conformant with parser
+	 */
+	book_separator?: string,
+
+	/**
+	 * The character to use to separate the chapter number from the verse number
 	 * To be conformant with the parse this should be set to one of:
 	 * [ ':', 'v', '.', ' v ' ]
 	 */
-	verse_seperator?: string;
+	verse_separator?: string;
 
 	/**
-	 * The character to use to seperate multiple references if a list of distinct refs is passed in.
+	 * The character to use to separate multiple references if a list of distinct refs is passed in.
 	 * To be conformat with the parser this should be set to a string matching the regex \s*[;_]\s*
-	 * Defaults to ';'
+	 * Defaults to '; '
 	 */
-	ref_seperator?: string;
+	ref_separator?: string;
 
 	/**
 	 * If set then all printer added whitespace will be stripped
-	 * (IE: not any in custom seperator options)
+	 * (IE: excludes whitespace in any custom separator options)
 	 * This makes for harder to read outputs, but URL encodable output strings
 	 */
 	strip_whitespace?: boolean,
@@ -47,6 +56,19 @@ export interface FormatOptions {
 	compact? : boolean,
 
 	/**
+	 * If true, references will always be output in there entirety
+	 * (IE: never reusing part of the previous reference as implicit context)
+	 *
+	 * Eg, Rather than "Genesis 1:4,6" we will return "Genesis 1:4; Genesis 1:6"
+	 *
+	 * Additionally, ranges will contain complete references on both sides of the separator
+	 * character, Eg, Rather than "Genesis 1:4-6" we will return "Genesis 1:4 - Genesis 1:6"
+	 *
+	 * Defaults to false, must be true to adhear to OSIS reference specification
+	 */
+	complete_refs? : boolean,
+
+	/**
 	 * If true then adjacent/overlapping ranges will sorted into order and
 	 * combined before printing
 	 */
@@ -56,44 +78,68 @@ export interface FormatOptions {
 	 * If true then string will be converted to lower case before being returned
 	 */
 	lowercase?: boolean,
-
-	/**
-	 * If set then will ensure returned string uses only characters which may appear in a URL,
-	 * but can also be natively parsed by this library
-	 * This implies:
-	 * { use_book_id      : true,
-   *   verse_seperator  : 'v',
-   *   strip_whitespace : true,
-   *   compact          : true,
-   *   lowercase        : true,
-   * }
-   * And in addition the return string will be converted to lowercase
-	 *
-	 * All other options which are implied by this may still be overrien
-	 */
-	url? : boolean,
 };
 
 const DEFAULT_OPTS : FormatOptions = {
-	use_book_id      : false,
-	verse_seperator  : ':',
+	book_format      : "name",
+	verse_separator  : ':',
 	strip_whitespace : false,
 	compact          : false,
 	combine_ranges   : false,
+	complete_refs    : false,
 	lowercase        : false,
-	ref_seperator    : '; ',
-	url              : false,
 };
-const DEFAULT_OPTS_URL : FormatOptions = {
-	use_book_id      : true,
-	verse_seperator  : 'v',
-	strip_whitespace : true,
-	compact          : true,
-	combine_ranges   : false,
-	ref_seperator    : '_',
-	lowercase        : true,
-	url              : true,
+
+/**
+ * Enumeration of possible format presets
+ *
+ * - osis      -> uses . separators and osis book ids, eg: "Gen.1.1"
+ * - url       -> uses url safe separators and usfm book ids, eg: gen1v1_exo1v2-3
+ * - compact   -> sets the `compact` flag to true
+ * - lowercase -> sets the `lowercase` flag to true
+ * - combined  -> sets the `combine_ranges` flag to true
+ * - complete  -> sets the `complete_refs` flag to true
+ */
+export type FormatPreset = "osis" | "url" | "compact" | "lowercase" | "combined";
+
+/**
+ * Set of arguments that can be passed to represent a formatting scheme
+ *
+ * Either a full FormatOptions object describing the options, or a present
+ * name such as "osis" for OSIS formatted references
+ *
+ * Present name can be combined with :, eg: url:combined to use url formatting, and combine ranges
+ * Later presets override earlier presets
+ *
+ * For a full list of present names, see [[FormatPreset]]
+ *
+ */
+export type FormatArg = FormatOptions | string;
+
+const FORMAT_PRESETS : { [index:string] : FormatOptions } = {
+	"osis": {
+		book_format      : "osis",
+		book_separator   : '.',
+		verse_separator  : '.',
+		complete_refs    : true,
+		strip_whitespace : true,
+		ref_separator    : ', ',
+	},
+	"url": {
+		book_format      : "usfm",
+		book_separator   : '',
+		verse_separator  : 'v',
+		strip_whitespace : true,
+		compact          : true,
+		ref_separator    : '_',
+		lowercase        : true,
+	},
+	"compact"   : { compact        : true },
+	"lowercase" : { lowercase      : true },
+	"combined"  : { combine_ranges : true },
+	"complete"  : { complete_refs  : true },
 };
+
 
 
 // Strips whitespace if option is set
@@ -105,32 +151,57 @@ function _stripWhitespaceMaybe(opts : FormatOptions, str: string){
 // obeying the format options
 // Will have a trailing space unless strip_whitespace is set
 function _formatBookName(v: Versification, id : string, opts : FormatOptions) : string {
-	let out = opts.use_book_id ? id : v.book[id].name;
+	let out : string;
+	switch(opts.book_format){
+		case "name": out = v.book[id].name; break;
+		case "usfm": out = id; break;
+		case "osis": out = v.book[id].osisId; break;
+		default:
+			throw new Error("Invalid output book format specified");
+	}
 	return opts.lowercase ? out.toLowerCase() : out;
 }
 
 // Formats a chapter verse specifier, eg "3:5"
 function _formatChapterVerse(x: BibleVerse, opts: FormatOptions) : string {
-	return `${x.chapter}${opts.verse_seperator}${x.verse}`;
+	return `${x.chapter}${opts.verse_separator}${x.verse}`;
 }
 
-function _generateFormatOpts(arg_opts?: FormatOptions) : FormatOptions{
-	if(arg_opts === undefined){ return DEFAULT_OPTS; }
-	if(arg_opts.url){
-		return { ...DEFAULT_OPTS_URL, ...arg_opts };
-	} else {
-		return { ...DEFAULT_OPTS, ...arg_opts };
+function _generateFormatOpts(arg_opts?: FormatArg) : FormatOptions{
+	let result = { ...DEFAULT_OPTS };
+
+	if(typeof arg_opts === "string"){
+		for(let preset of arg_opts.split(':')){
+
+			if(!(preset in FORMAT_PRESETS)){
+				throw new Error(`Invalid format preset name specified: '${preset}'`);
+			}
+
+			result = { ...result, ...FORMAT_PRESETS[preset] };
+		}
+
+	} else if (arg_opts !== undefined) {
+		result = { ...result, ...arg_opts };
 	}
+
+	if(!result.book_separator) {
+		result.book_separator = result.strip_whitespace ? '' : ' ';
+	}
+	if(!result.ref_separator) {
+		result.ref_separator = result.strip_whitespace ? ';' : '; ';
+	}
+
+	return result;
 }
 
 /**
  * Format a single BibleVerse to a string
  * @private
  */
-export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : FormatOptions) : string {
+export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : FormatArg) : string {
 	let opts = _generateFormatOpts(arg_opts);
 	return _stripWhitespaceMaybe(
-		opts, _formatBookName(v, x.book, opts) + ' ' + _formatChapterVerse(x, opts)
+		opts, _formatBookName(v, x.book, opts) + opts.book_separator + _formatChapterVerse(x, opts)
 	);
 }
 
@@ -138,19 +209,21 @@ export function formatBibleVerse(v: Versification, x : BibleVerse, arg_opts? : F
  * Format a single BibleRange to a string
  * @private
  */
-export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : FormatOptions) : string{
+export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : FormatArg) : string{
 	let opts = _generateFormatOpts(arg_opts);
 
 	let b_meta = v.book[x.start.book];
 
-	if(x.start.book !== x.end.book){
+	const SPACED_HYPHEN = opts.strip_whitespace ? '-' : ' - ';
+
+	if(x.start.book !== x.end.book || opts.complete_refs){
 		// cross book range
-		// Format as two completely seperate BibleVerse refs, joined by " - "
-		return _stripWhitespaceMaybe(opts,
-																 formatBibleVerse(v, x.start, opts) +
-																 ' - ' +
-																 formatBibleVerse(v, x.end, opts)
-																);
+		// Format as two completely separate BibleVerse refs, joined by " - "
+		return (
+			formatBibleVerse(v, x.start, opts) +
+			SPACED_HYPHEN +
+			formatBibleVerse(v, x.end, opts)
+		);
 	} else if (x.start.chapter !== x.end.chapter){
 		// Cross chapter range within single book
 
@@ -166,28 +239,26 @@ export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : Fo
 				return _formatBookName(v, x.start.book, opts);
 			} else {
 				// format as "Geneses 1 - 2"
-				return _stripWhitespaceMaybe(
-					opts,
-					_formatBookName(v, x.start.book, opts) +
-						` ${x.start.chapter} - ${x.end.chapter}`
-				);
+				return _formatBookName(v, x.start.book, opts) + `${opts.book_separator}${x.start.chapter}${SPACED_HYPHEN}${x.end.chapter}`;
 			}
 		}
 
 		// Format as "Genesis 1:2 - 3:4"
-			return _stripWhitespaceMaybe(opts,
-																	 _formatBookName    (v, x.start.book, opts) + ' ' +
-																	 _formatChapterVerse(x.start, opts) + ' - ' +
-																	 _formatChapterVerse(x.end, opts)
-																	);
+		return (
+			_formatBookName(v, x.start.book, opts) +
+			opts.book_separator +
+			_formatChapterVerse(x.start, opts) +
+			SPACED_HYPHEN +
+			_formatChapterVerse(x.end, opts)
+		);
 	} else if (x.start.verse !== x.end.verse){
 		if(opts.compact &&
 			 x.start.verse === 1 &&
 			 x.end.verse   === b_meta.chapters[x.end.chapter-1].verse_count
 			) {
 			// then its an entire chapter, format as "Genesis 1"
-			return _stripWhitespaceMaybe(
-				opts, _formatBookName(v, x.start.book, opts) + ' ' + x.start.chapter
+			return (
+				_formatBookName(v, x.start.book, opts) + opts.book_separator + x.start.chapter
 			);
 		}
 
@@ -211,7 +282,7 @@ export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : Fo
  * By using this function we instead get the more compact "Genesis 1:1,2"
  * @private
  */
-export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatOptions) : string {
+export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? : FormatArg) : string {
 	if(xs.length == 0){ return ""; }
 	let opts = _generateFormatOpts(arg_opts);
 
@@ -223,7 +294,10 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 	let results = [];
 	let cur_str = "";
 
-	let cv_seperator = ", ";
+	// separator used for multiple chapter verse blocks, eg Gen 1:2, 5:6
+	//                                                             ^^
+	const CV_SEPARATOR = opts.strip_whitespace ? ',' : ', ';
+	const SPACED_HYPHEN = opts.strip_whitespace ? '-' : ' - ';
 
 	function makeNewRef(x : BibleRef){
 		if(cur_str.length > 0){ results.push(cur_str) };
@@ -241,7 +315,7 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 
 	for(let x of xs){
 		if(!x.is_range){ // Then we're dealing with a single verse
-			if(x.book != cur_book){
+			if(x.book !== cur_book || opts.complete_refs){
 				// Nothing to reuse
 				makeNewRef(x);
 				continue;
@@ -249,7 +323,7 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 
 			if(x.chapter != cur_chpt){
 				// Can reuse book only
-				cur_str += cv_seperator + _formatChapterVerse(x,opts);
+				cur_str += CV_SEPARATOR + _formatChapterVerse(x,opts);
 				cur_chpt = x.chapter;
 				continue;
 			}
@@ -261,7 +335,7 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 
 		// If still going then we're dealing with a range
 
-		if(x.start.book !== x.end.book || x.start.book !== cur_book){
+		if(x.start.book !== x.end.book || x.start.book !== cur_book || opts.complete_refs){
 			// Don't reuse anything if its a cross book range, or
 			// if the range is within a single book - but not the current book
 			makeNewRef(x);
@@ -273,10 +347,12 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 
 		if(x.start.chapter !== x.end.chapter || x.start.chapter !== cur_chpt){
 			// Cannot reuse chapter part
-			cur_str += (cv_seperator +
-									_formatChapterVerse(x.start, opts) + ' - ' +
-									_formatChapterVerse(x.end,   opts)
-								 );
+			cur_str += (
+				  CV_SEPARATOR +
+					_formatChapterVerse(x.start, opts) +
+					SPACED_HYPHEN +
+					_formatChapterVerse(x.end,   opts)
+			);
 			continue;
 		}
 
@@ -286,5 +362,5 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 
 	results.push(cur_str);
 
-	return _stripWhitespaceMaybe(opts, results.join(opts.ref_seperator || '; '));
+	return results.join(opts.ref_separator);
 }
