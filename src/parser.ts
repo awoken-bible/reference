@@ -66,13 +66,13 @@ const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(P.regexp(/\.? */
 
 ///////////////////////////////////////////////////////////////////////
 
-// Parses a character that seperates a chapter number from verse number
-const pVerseSeperator : P.Parser<string> = P.oneOf(":v.").skip(pAnySpace);
+// Parses a character that separates a chapter number from verse number
+const pVerseSeparator : P.Parser<string> = P.oneOf(":v.").skip(pAnySpace);
 
 // Parses a comma seperator, optionally followed by whitespace
-const pCommaSeperator : P.Parser<string> = P.oneOf(',').skip(pAnySpace);
+const pCommaSeparator : P.Parser<string> = P.oneOf(',').skip(pAnySpace);
 
-const pRangeSeperator : P.Parser<string> = P
+const pRangeSeparator : P.Parser<string> = P
 	.optWhitespace
 	.then(P.oneOf("-"))
 	.skip(pAnySpace);
@@ -83,7 +83,7 @@ interface IntRange {
 	end   : number | null,
 };
 const pIntRange : P.Parser<IntRange> = P.seq(
-	pInt, pRangeSeperator.then(pInt).fallback(null)
+	pInt, pRangeSeparator.then(pInt).fallback(null)
 ).chain(([start, end]) => {
 	if(end && end <= start){
 		return P.fail("End of range must be higher than start");
@@ -121,24 +121,24 @@ type ChapterVerseSpecifier = {
 const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
 	// chapter_range:
 	P.seqMap(
-		pInt.skip(pVerseSeperator),
+		pInt.skip(pVerseSeparator),
 		pInt,
-		pRangeSeperator,
-		pInt.skip(pVerseSeperator),
+		pRangeSeparator,
+		pInt.skip(pVerseSeparator),
 		pInt,
 		(c1, v1, r, c2, v2) => { return { kind: "chapter_range", c1, v1, c2, v2 }; }
 	),
 
 	// Parses full chapters, eg "5", "5-8"
-	pIntRange.notFollowedBy(pVerseSeperator).map((range) => {
+	pIntRange.notFollowedBy(pVerseSeparator).map((range) => {
 		return { kind: "full_chapter", range };
 	}),
 
 	// Parses single chapter with verses, eg "5:8", "5:8-10",
 	P.seqMap(
 		pInt,
-		pVerseSeperator.then(
-			(pIntRange.notFollowedBy(pVerseSeperator)).sepBy1(pCommaSeperator)
+		pVerseSeparator.then(
+			(pIntRange.notFollowedBy(pVerseSeparator)).sepBy1(pCommaSeparator)
 		),
 		(chapter : number, verses : IntRange[]) => {
 			return { kind: "verse", chapter, verses };
@@ -197,10 +197,10 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 	// - Genesis - Exodus
 	P.seqMap(
 		pBook,
-		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)).fallback(null),
-		pRangeSeperator,
+		P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
+		pRangeSeparator,
 		pBook,
-		P.seq(pInt, pVerseSeperator.then(pInt).fallback(null)).fallback(null),
+		P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
 		(b1, b1_extra, r, b2, b2_extra) => {
 
 			let start = { book: b1, chapter: 1, verse: 1};
@@ -235,7 +235,7 @@ const pBibleRefSingle : P.Parser<BibleRef[]> = P.alt(
 	// EG: Gen 5:12-14
 	P.seqMap(
 		pBook,
-		pChapterVerseSpecifier.sepBy(pCommaSeperator),
+		pChapterVerseSpecifier.sepBy(pCommaSeparator),
 		(book : string, cv_list : ChapterVerseSpecifier[]) => {
 
 			if(cv_list.length == 0){

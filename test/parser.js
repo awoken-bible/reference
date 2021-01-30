@@ -229,7 +229,7 @@ describe("parse", () => {
     });
   });
 
-  it("Comma seperated", () => {
+  it("Comma separated", () => {
     expect(parse('GEN 3:12,15')).to.deep.equal({
       status: true,
       value: [
