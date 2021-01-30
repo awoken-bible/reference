@@ -12,7 +12,7 @@ import * as RangeManip          from './range-manip';
 import * as Geometry            from './geometry';
 
 import { Versification        } from './Versification';
-import { FormatOptions        } from './printer';
+import { FormatArg            } from './printer';
 import { ValidationError      } from './validate';
 import { RangeManipFunctions  } from './range-manip';
 import { GeometryFunctions    } from './geometry';
@@ -21,9 +21,9 @@ import { GeometryFunctions    } from './geometry';
  * Export types which should be visible to users of the library
  */
 export { BibleRef, BibleVerse, BibleRange } from './BibleRef';
-export { Versification }   from './Versification';
-export { FormatOptions }   from './printer';
-export { ValidationError } from './validate';
+export { Versification   }                  from './Versification';
+export { FormatOptions, FormatArg  }        from './printer';
+export { ValidationError }                  from './validate';
 
 /**
  * Publically exposed interface to this library
@@ -32,7 +32,7 @@ export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, Geome
 	parse(str: string) : ParseResult;
 	parseOrThrow(str: string) : BibleRef[];
 	parseBookName(this: BibleRefLib, str: string) : string | null;
-	format(b : BibleRef | BibleRef[], opts?: FormatOptions) : string;
+	format(b : BibleRef | BibleRef[], opts?: FormatArg) : string;
 	sort(refs : BibleRef[]) : BibleRef[];
 	toVidx(verse: BibleVerse) : number;
 	fromVidx(vidx : number) : BibleVerse;
@@ -79,7 +79,11 @@ export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, Geome
  * @param str  - The string to parse
  */
 function parse(this: BibleRefLib, str: string) : ParseResult {
-	return Parsers.BibleRef.parse(str);
+	let result = Parsers.BibleRef.parse(str);
+	if(result.status === false){
+		return { ...result, input: str };
+	}
+	return result;
 }
 
 /**
@@ -116,9 +120,9 @@ function parseBookName(this: BibleRefLib, str: string) : string | null {
 /**
  * Converts a JSON [[BibleRef]] (or array thereof) into a human readable string
  *
- * The output format is fairly flexible, see [[FormatOptions]] for details
+ * The output format is fairly flexible, see [[FormatArg]] for details
  */
-function format(this: BibleRefLib, b : BibleRef | BibleRef[], opts?: FormatOptions) : string{
+function format(this: BibleRefLib, b : BibleRef | BibleRef[], opts?: FormatArg) : string{
 	if('length' in b){
 		return Printer.formatBibleRefList(this.versification, b, opts);
 	}

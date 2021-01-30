@@ -14,7 +14,7 @@
   date: '2020-05-05'
   name: 'Dotted Chapters'
   fixes:
-    - Fix parsing of dot seperated chapters with full book names (eg, we now support Luke.1.1 - previously only Lk.1.1 parsed successfully)
+    - Fix parsing of dot separated chapters with full book names (eg, we now support Luke.1.1 - previously only Lk.1.1 parsed successfully)
 
 - v1.10.0:
   date: '2020-05-03'
