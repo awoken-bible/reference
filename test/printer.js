@@ -98,6 +98,15 @@ describe("printer", () => {
                              ))
         .is.deep.equal('Genesis 3:8-10');
 
+			// Single Verse range (make sure we don't output the invalid "Genesis 3:8-8"
+			// which the parser will error on
+      expect(formatBibleRange(v, { is_range: true,
+                                   start: { book: 'GEN', chapter: 3, verse: 8 },
+                                   end  : { book: 'GEN', chapter: 3, verse: 8 },
+                                 }
+                             ))
+        .is.deep.equal('Genesis 3:8');
+
       // Cross Chapter Range
       expect(formatBibleRange(v, { is_range: true,
                                    start: { book: 'GEN', chapter: 3, verse:  8 },
@@ -355,7 +364,8 @@ describe("printer", () => {
         end      : { book: 'EXO', chapter: 6, verse:  4 },
       },
     ], 'url:combined')).to.deep.equal('gen1v2-10_exo5v3-6v4');
-  });
+
+	});
 
 	it('OSIS', () => {
     expect(formatBibleRefList(v, [

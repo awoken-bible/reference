@@ -218,3 +218,30 @@ describe("index", () => {
     expect(() => BibleRef.makeRange('ABC'    )).to.throw();
   });
 });
+
+
+// tests for bugs identified in the wild...
+describe("Regressions", () => {
+
+	it("Formatter avoids outputting ranges of length 1", () => {
+
+		// we found a bug when trying to encode a complex list of single verses
+		// in url:compact:combined format where the final string ended in "38-38"
+		// which then causes the parser to fail
+
+		let input = "exo39v1,39v42-40v1,40v16,34-35";
+
+		let refs = BibleRef.parseOrThrow(input);
+
+		refs.push({
+			is_range: true,
+			start : { book: 'EXO', chapter: 40, verse: 38},
+			end   : { book: 'EXO', chapter: 40, verse: 38},
+		});
+
+		let output = BibleRef.format(refs, 'url:compact');
+
+		expect(output).is.deep.equal(`${input},38`);
+	});
+
+});

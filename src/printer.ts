@@ -357,7 +357,7 @@ export function formatBibleRefList(v: Versification, xs: BibleRef[], arg_opts? :
 		}
 
 		// Can reuse chapter part
-		cur_str += "," + x.start.verse + "-" + x.end.verse;
+		cur_str += "," + x.start.verse + (x.start.verse === x.end.verse ? '' : "-" + x.end.verse);
 	}
 
 	results.push(cur_str);
