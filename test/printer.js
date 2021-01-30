@@ -381,4 +381,18 @@ describe("printer", () => {
       },
     ], 'osis')).to.deep.equal('Gen.1.2-Gen.1.10, Exod.5.3-Exod.6.4');
   });
+
+  it('Errors', () => {
+    expect(
+      () => formatBibleRefList(v, [ { book: 'ABC', chapter: 1, verse:  1 } ])
+    ).to.throw();
+
+    expect(
+      () => formatBibleRefList(v, [ { book: 'GEN', chapter: 1, verse:  1 } ], 'bad_preset')
+    ).to.throw();
+
+    expect(
+      () => formatBibleRefList(v, [ { book: 'GEN', chapter: 1, verse:  1 } ], { book_format: 'bad_format' })
+    ).to.throw();
+  });
 });
