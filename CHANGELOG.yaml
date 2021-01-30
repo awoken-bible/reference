@@ -1,3 +1,18 @@
+- v2.0.0:
+  date: '2021-01-30'
+  name: 'OSIS References'
+  breaking:
+    - Overhaul AwokenRef.format() format options object
+  features:
+    - Allow parsing of all valid OSIS references
+    - Add format option "presets" allowing easier specification of common formats by passing string
+    - Add formatting preset for OSIS compliant references
+    - Replace old FormatOptions.url field with new "url" formatting preset
+    - Allow parsing of comma seperated reference lists (previously used ; or _ as seperator between references)
+  misc:
+    - Add input string to error object returned by parser, to make generating error messages self-contained on the thrown object
+    - Update dependencies
+
 - v1.12.0:
   date: '2020-06-07'
   name: 'Full Book/Chapter Tests'
