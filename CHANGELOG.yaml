@@ -1,3 +1,9 @@
+- v2.0.3:
+  date: '2021-02-01'
+  name: 'Ambigious Comma Seperated Chapter/Reference Lists'
+  fixes:
+    - Fix bug with parser where it failed to disambiguate between a comma seperated list of chapters within a book, and a comma seperated list of Bible references, when using book names with leading numbers (eg, 1Sam.1,2Sam.1)
+
 - v2.0.2:
   date: '2021-02-01'
   name: 'Formatter Compact Range Fix'
