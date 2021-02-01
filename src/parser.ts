@@ -144,6 +144,15 @@ const pChapterVerseSpecifier : P.Parser<ChapterVerseSpecifier> = P.alt(
 			return { kind: "verse", chapter, verses };
 		}
 	)
+).notFollowedBy(
+	// this requirement breaks an ambiguity in parsing something like:
+	// "1Sam1,2Sam1
+	//
+	// Without it we parse
+	// "1Sam1" -> valid ref
+	// ",2"    -> valid ref (with previous context)
+	// "Sam1"  -> invalid ref (no such book)
+	P.regex(/[a-z]/i)
 );
 
 // Converts a parsed ChapterVerseSpecifier into a list of BibleRefs

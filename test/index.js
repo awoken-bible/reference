@@ -244,4 +244,50 @@ describe("Regressions", () => {
 		expect(output).is.deep.equal(`${input},38`);
 	});
 
+	it("Parser succeeds on (semi) ambigious comma seperated lists ", () => {
+
+		// This was previously being interpreted as:
+		//
+		// 1Sam.1 -> valid ref
+		// ,2     -> valid ref (using previous as context)
+		// Sam.2  -> invalid ref
+		expect(BibleRef.parse('1Sam.1,1Sam.2')).is.deep.equal({
+			status : true,
+			value   : [
+				{ is_range : true,
+					start    : { book: "1SA", chapter: 1, verse:  1 },
+					end      : { book: "1SA", chapter: 1, verse: 28 },
+				},
+				{ is_range : true,
+					start    : { book: "1SA", chapter: 2, verse:  1 },
+					end      : { book: "1SA", chapter: 2, verse: 36 },
+				},
+			],
+		});
+
+		// more complex version of above which in which first comma seperates a list of chapters,
+		// and second chapter separates a list of references - and this requires backtracking/context
+		// for the parser to disambiguate
+		expect(BibleRef.parse('1Jn.1,2,3Jn.1')).is.deep.equal({
+			status : true,
+			value   : [
+				{ is_range : true,
+					start    : { book: "1JN", chapter: 1, verse:  1 },
+					end      : { book: "1JN", chapter: 1, verse: 10 },
+				},
+				{ is_range : true,
+					start    : { book: "1JN", chapter: 2, verse:  1 },
+					end      : { book: "1JN", chapter: 2, verse: 29 },
+				},
+				{ is_range : true,
+					start    : { book: "3JN", chapter: 1, verse:  1 },
+					end      : { book: "3JN", chapter: 1, verse: 14 },
+				},
+			],
+		});
+
+	});
+
+
+
 });
