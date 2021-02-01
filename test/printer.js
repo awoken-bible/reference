@@ -182,16 +182,6 @@ describe("printer", () => {
 
 
       r = { is_range: true,
-            start: { book: 'GEN', chapter:  1, verse:  1 },
-            end  : { book: 'GEN', chapter: 50, verse: 26 },
-          };
-      expect(formatBibleRange(v, r, { compact: true }))
-        .is.deep.equal('Genesis');
-      expect(formatBibleRange(v, r, { compact: false }))
-        .is.deep.equal('Genesis 1:1 - 50:26');
-
-
-      r = { is_range: true,
             start: { book: 'NAM', chapter:  1, verse:  1 },
             end  : { book: 'NAM', chapter:  3, verse: 18 },
           };
@@ -239,6 +229,35 @@ describe("printer", () => {
         .is.deep.equal('Nahum 1:1-14');
       expect(formatBibleRange(v, r, { compact: false }))
         .is.deep.equal('Nahum 1:1-14');
+
+      r = { is_range: true,
+            start: { book: 'GEN', chapter:  1, verse:  1 },
+            end  : { book: 'DEU', chapter: 34, verse: 12 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Genesis - Deuteronomy');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Genesis 1:1 - Deuteronomy 34:12');
+
+			r = { is_range: true,
+            start: { book: 'GEN', chapter: 47, verse:  1 },
+            end  : { book: 'EXO', chapter:  3, verse: 22 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Genesis 47 - Exodus 3');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Genesis 47:1 - Exodus 3:22');
+
+			r = { is_range: true,
+            start: { book: 'PSA', chapter: 2, verse:  1 },
+            end  : { book: 'PSA', chapter: 9, verse: 20 },
+          };
+      expect(formatBibleRange(v, r, { compact: true }))
+        .is.deep.equal('Psalm 2 - 9');
+      expect(formatBibleRange(v, r, { compact: false }))
+        .is.deep.equal('Psalm 2:1 - 9:20');
+			expect(formatBibleRange(v, r, { complete_refs: true }))
+        .is.deep.equal('Psalm 2:1 - Psalm 9:20');
     });
   });
 

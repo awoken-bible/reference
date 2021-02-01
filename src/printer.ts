@@ -217,31 +217,52 @@ export function formatBibleRange(v: Versification, x: BibleRange, arg_opts? : Fo
 	const SPACED_HYPHEN = opts.strip_whitespace ? '-' : ' - ';
 
 	if(x.start.book !== x.end.book || opts.complete_refs){
-		// cross book range
-		// Format as two completely separate BibleVerse refs, joined by " - "
-		return (
-			formatBibleVerse(v, x.start, opts) +
-			SPACED_HYPHEN +
-			formatBibleVerse(v, x.end, opts)
-		);
-	} else if (x.start.chapter !== x.end.chapter){
-		// Cross chapter range within single book
+    // cross book range
 
-		if(opts.compact &&
-			 x.start.chapter === 1 &&
-			 x.start.verse === 1 &&
-			 x.end.verse === b_meta.chapters[x.end.chapter-1].verse_count
-			){
-			// then its a range of complete chapters
+    if(
+      opts.compact && !opts.complete_refs &&
+      x.start.verse === 1 &&
+      x.end.verse === v.book[x.end.book].chapters[x.end.chapter-1].verse_count
+    ) {
 
-			if(x.end.chapter === b_meta.chapters.length){
-				// Its a complete book, format as "Genesis"
-				return _formatBookName(v, x.start.book, opts);
-			} else {
-				// format as "Geneses 1 - 2"
-				return _formatBookName(v, x.start.book, opts) + `${opts.book_separator}${x.start.chapter}${SPACED_HYPHEN}${x.end.chapter}`;
-			}
-		}
+      if (
+        x.start.chapter === 1 &&
+        x.end.chapter === v.book[x.end.book].chapters.length
+      ) {
+        // then its a range of complete books, eg, "Genesis - Exodus"
+        return _formatBookName(v, x.start.book, opts) + SPACED_HYPHEN + _formatBookName(v, x.end.book, opts)
+      } else {
+        // then its a range of complete chapters, eg "Genesis 10 - Exodus 3"
+        return (
+          _formatBookName(v, x.start.book, opts) + `${opts.book_separator}${x.start.chapter}` +
+          SPACED_HYPHEN +
+            _formatBookName(v, x.end.book, opts) + `${opts.book_separator}${x.end.chapter}`
+        );
+      }
+    }
+    // Format as two completely separate BibleVerse refs, joined by " - "
+    return (
+      formatBibleVerse(v, x.start, opts) +
+        SPACED_HYPHEN +
+        formatBibleVerse(v, x.end, opts)
+    );
+  } else if (x.start.chapter !== x.end.chapter){
+    // Cross chapter range within single book
+
+    if(opts.compact &&
+       x.start.verse === 1 &&
+       x.end.verse === b_meta.chapters[x.end.chapter-1].verse_count
+      ){
+      // then its a range of complete chapters
+
+      if(x.start.chapter === 1 && x.end.chapter === b_meta.chapters.length){
+        // Its a complete book, format as "Genesis"
+        return _formatBookName(v, x.start.book, opts);
+      } else {
+        // format as "Geneses 1 - 2"
+        return _formatBookName(v, x.start.book, opts) + `${opts.book_separator}${x.start.chapter}${SPACED_HYPHEN}${x.end.chapter}`;
+      }
+    }
 
 		// Format as "Genesis 1:2 - 3:4"
 		return (
