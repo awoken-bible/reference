@@ -1,3 +1,9 @@
+- v2.0.2:
+  date: '2021-02-01'
+  name: 'Formatter Compact Range Fix'
+  fixes:
+    - Fix bug where formatter ignored the compact flag when printing cross book ranges, or cross-chapter ranges except when start chapter = 1
+
 - v2.0.1:
   date: '2021-01-30'
   name: 'Formatter Single Verse Range Bug Fix'
