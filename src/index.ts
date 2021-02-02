@@ -24,6 +24,7 @@ export { BibleRef, BibleVerse, BibleRange } from './BibleRef';
 export { Versification   }                  from './Versification';
 export { FormatOptions, FormatArg  }        from './printer';
 export { ValidationError }                  from './validate';
+export { RefsByBook, RefsByChapter }        from './range-manip';
 
 /**
  * Publically exposed interface to this library
@@ -253,6 +254,8 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 	this.splitByBook      = RangeManip.splitByBook;
 	this.splitByChapter   = RangeManip.splitByChapter;
 	this.splitByVerse     = RangeManip.splitByVerse;
+	this.groupByBook      = RangeManip.groupByBook;
+	this.groupByChapter   = RangeManip.groupByChapter;
 	this.iterateByBook    = RangeManip.iterateByBook;
 	this.iterateByChapter = RangeManip.iterateByChapter;
 	this.iterateByVerse   = RangeManip.iterateByVerse;
@@ -291,6 +294,8 @@ constructFunc.splitByVerse     = RangeManip.splitByVerse.bind(constructFunc);
 constructFunc.iterateByBook    = RangeManip.iterateByBook.bind(constructFunc);
 constructFunc.iterateByChapter = RangeManip.iterateByChapter.bind(constructFunc);
 constructFunc.iterateByVerse   = RangeManip.iterateByVerse.bind(constructFunc);
+constructFunc.groupByBook      = RangeManip.groupByBook.bind(constructFunc);
+constructFunc.groupByChapter   = RangeManip.groupByChapter.bind(constructFunc);
 constructFunc.combineRanges    = RangeManip.combineRanges.bind(constructFunc);
 constructFunc.nextChapter      = RangeManip.nextChapter.bind(constructFunc);
 constructFunc.previousChapter  = RangeManip.previousChapter.bind(constructFunc);
