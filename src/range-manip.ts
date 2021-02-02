@@ -282,8 +282,15 @@ export function isFullChapter(this: BibleRefLibData, ref: BibleRef) : boolean {
 	);
 }
 
+/**
+ * Bucket of BibleRefs with a common Book
+ * @see [[groupByBook]]
+ */
 export interface RefsByBook {
+	/** The book common to all references in this bucket */
 	book       : string;
+
+	/** The set of [[BibleRef]]s in this bucket */
 	references : BibleRef[];
 };
 
@@ -315,9 +322,18 @@ export function groupByBook(this: BibleRefLibData, refs: BibleRef[] | BibleRef) 
 	});
 }
 
+/**
+ * Bucket of BibleRefs with a common Book and chapter
+ * @see [[groupByChapter]]
+ */
 export interface RefsByChapter {
+	/** The book common to all references in this bucket */
 	book       : string;
+
+	/** The chapter common to all references in this bucket */
 	chapter    : number;
+
+	/** The set of [[BibleRef]]s in this bucket */
 	references : BibleRef[];
 };
 

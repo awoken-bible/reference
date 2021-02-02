@@ -24,6 +24,7 @@ export { BibleRef, BibleVerse, BibleRange } from './BibleRef';
 export { Versification   }                  from './Versification';
 export { FormatOptions, FormatArg  }        from './printer';
 export { ValidationError }                  from './validate';
+export { RefsByBook, RefsByChapter }        from './range-manip';
 
 /**
  * Publically exposed interface to this library
