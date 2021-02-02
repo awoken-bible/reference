@@ -1,3 +1,9 @@
+- v2.1.0:
+  date: '2021-02-02'
+  name: 'Grouping Functions'
+  features:
+    - Add groupByBook and groupByChapter to sort a list of BibleRef instances into buckets with common books or book/chapter combinations
+
 - v2.0.3:
   date: '2021-02-01'
   name: 'Ambigious Comma Seperated Chapter/Reference Lists'
