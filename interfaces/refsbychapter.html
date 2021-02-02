@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BibleRefLib | awoken-bible-reference</title>
+	<title>RefsByChapter | awoken-bible-reference</title>
 	<meta name="description" content="Documentation for awoken-bible-reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="biblereflib.html">BibleRefLib</a>
+					<a href="refsbychapter.html">RefsByChapter</a>
 				</li>
 			</ul>
-			<h1>Interface BibleRefLib</h1>
+			<h1>Interface RefsByChapter</h1>
 		</div>
 	</div>
 </header>
@@ -69,26 +69,20 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Publically exposed interface to this library</p>
+						<p>Bucket of BibleRefs with a common Book and chapter</p>
 					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p><a href="../globals.html#groupbychapter">groupByChapter</a></p>
+						</dd>
+					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">BibleRefLibData</span>
-					</li>
-					<li>
-						<span class="tsd-signature-type">RangeManipFunctions</span>
-					</li>
-					<li>
-						<span class="tsd-signature-type">GeometryFunctions</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">BibleRefLib</span>
-							</li>
-						</ul>
+						<span class="target">RefsByChapter</span>
 					</li>
 				</ul>
 			</section>
@@ -96,30 +90,61 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="biblereflib.html#versification" class="tsd-kind-icon">versification</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="refsbychapter.html#book" class="tsd-kind-icon">book</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="refsbychapter.html#chapter" class="tsd-kind-icon">chapter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="refsbychapter.html#references" class="tsd-kind-icon">references</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="versification" class="tsd-anchor"></a>
-					<h3>versification</h3>
-					<div class="tsd-signature tsd-kind-icon">versification<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Versification</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="book" class="tsd-anchor"></a>
+					<h3>book</h3>
+					<div class="tsd-signature tsd-kind-icon">book<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from BibleRefLibData.versification</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/6c301ac/src/BibleRef.ts#L19">BibleRef.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/6c301ac/src/range-manip.ts#L331">range-manip.ts:331</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The versification used by methods</p>
+							<p>The book common to all references in this bucket</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="chapter" class="tsd-anchor"></a>
+					<h3>chapter</h3>
+					<div class="tsd-signature tsd-kind-icon">chapter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/6c301ac/src/range-manip.ts#L334">range-manip.ts:334</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The chapter common to all references in this bucket</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="references" class="tsd-anchor"></a>
+					<h3>references</h3>
+					<div class="tsd-signature tsd-kind-icon">references<span class="tsd-signature-symbol">:</span> <a href="../globals.html#bibleref" class="tsd-signature-type">BibleRef</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/awoken-bible/reference/blob/6c301ac/src/range-manip.ts#L337">range-manip.ts:337</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The set of <a href="../globals.html#bibleref">BibleRef</a>s in this bucket</p>
 						</div>
 					</div>
 				</section>
@@ -138,10 +163,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="biblereflib.html" class="tsd-kind-icon">Bible<wbr>Ref<wbr>Lib</a>
+						<a href="refsbychapter.html" class="tsd-kind-icon">Refs<wbr>ByChapter</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="biblereflib.html#versification" class="tsd-kind-icon">versification</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="refsbychapter.html#book" class="tsd-kind-icon">book</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="refsbychapter.html#chapter" class="tsd-kind-icon">chapter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="refsbychapter.html#references" class="tsd-kind-icon">references</a>
 							</li>
 						</ul>
 					</li>
