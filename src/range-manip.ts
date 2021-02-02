@@ -14,6 +14,7 @@ export interface RangeManipFunctions {
 	iterateByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
 	iterateByVerse  (refs: BibleRef | BibleRef[]): Iterable<BibleVerse>;
 	groupByBook(refs: BibleRef | BibleRef[]) : RefsByBook[];
+	groupByChapter(refs: BibleRef | BibleRef[]) : RefsByChapter[];
 	combineRanges(refs: BibleRef[]) : BibleRef[];
 	makeRange(book : string, chapter?: number) : BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
@@ -288,6 +289,11 @@ export interface RefsByBook {
 
 /**
  * Groups a list of references into buckets split by book
+ *
+ * Returns list of [[RefsByBook]] representing the buckets that the input references have been
+ * sorted into. Returns list will be in order from the bucket for the first book to the last book,
+ * however the individual references within each bucket will maintain their order relative to
+ * the input array - hence input order matters. Pre-sort if desired.
  */
 export function groupByBook(this: BibleRefLibData, refs: BibleRef[] | BibleRef) : RefsByBook[] {
 	let buckets : { [index:string]: RefsByBook } = {};
@@ -306,6 +312,54 @@ export function groupByBook(this: BibleRefLibData, refs: BibleRef[] | BibleRef) 
 
 	return Object.values(buckets).sort((a,b) => {
 		return this.versification.book[a.book].index - this.versification.book[b.book].index;
+	});
+}
+
+export interface RefsByChapter {
+	book       : string;
+	chapter    : number;
+	references : BibleRef[];
+};
+
+/**
+ * Groups a list of references into buckets split by book, chapter
+ *
+ * Returns list of [[RefsByChapter]] representing the buckets that the input references have been
+ * sorted into. Returns list will be in order from the bucket for the first book to the last book,
+ * however the individual references within each bucket will maintain their order relative to
+ * the input array - hence input order matters. Pre-sort if desired.
+ */
+export function groupByChapter(this: BibleRefLibData, refs: BibleRef[] | BibleRef) : RefsByChapter[] {
+	let buckets : { [index:string]: RefsByChapter } = {};
+
+	for (let r of iterateByChapter.bind(this)(refs)) {
+		let bk, ch;
+		if(r.is_range){
+			bk = r.start.book;
+			ch = r.start.chapter;
+		} else {
+			bk = r.book;
+			ch = r.chapter;
+		}
+		let key = `${bk}_${ch}`;
+
+		if(!buckets[key]){
+			buckets[key] = {
+				book: bk, chapter: ch,
+				references: [ r ]
+			};
+		} else {
+			buckets[key].references.push(r);
+		}
+	}
+
+	return Object.values(buckets).sort((a,b) => {
+		let bkDelta = this.versification.book[a.book].index - this.versification.book[b.book].index;
+		if(bkDelta === 0){
+			return a.chapter - b.chapter;
+		} else {
+			return bkDelta;
+		}
 	});
 }
 

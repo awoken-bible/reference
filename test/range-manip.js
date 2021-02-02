@@ -343,7 +343,6 @@ describe('range-manip', () => {
 
 
 	it('groupByBook', () => {
-
 		expect(
 			Rm.groupByBook({ book: 'GEN', chapter: 1, verse: 1 })
 		).is.deep.equal([
@@ -413,8 +412,94 @@ describe('range-manip', () => {
 				],
 			},
 		]);
+	}); // end of groupByBook
 
+		it('groupByChapter', () => {
+		expect(
+			Rm.groupByChapter({ book: 'GEN', chapter: 1, verse: 1 })
+		).is.deep.equal([
+			{ book: 'GEN', chapter: 1,
+				references: [ { book: 'GEN', chapter: 1, verse: 1 } ],
+			}
+		]);
 
+		expect(
+			Rm.groupByChapter([
+				{ book: 'GEN', chapter: 10, verse: 5 },
+				{ book: 'EXO', chapter:  5, verse: 2 },
+				{ book: 'GEN', chapter: 10, verse: 4 },
+				{ book: 'EXO', chapter:  5, verse: 6 },
+				{ is_range: true,
+					start: { book: 'GEN', chapter:  9, verse: 10 },
+					end  : { book: 'GEN', chapter: 10, verse: 3  },
+				}
+			])
+		).is.deep.equal([
+			{ book: 'GEN', chapter: 9,
+				references: [
+					{ is_range: true,
+						start : { book: 'GEN', chapter: 9, verse: 10 },
+						end   : { book: 'GEN', chapter: 9, verse: 29 },
+					}
+				],
+			},
+			{ book: 'GEN', chapter: 10,
+				references: [
+					{ book: 'GEN', chapter: 10, verse: 5 },
+					{ book: 'GEN', chapter: 10, verse: 4 },
+					{ is_range: true,
+						start : { book: 'GEN', chapter: 10, verse: 1 },
+						end   : { book: 'GEN', chapter: 10, verse: 3 },
+					}
+				],
+			},
+			{ book: 'EXO', chapter: 5,
+				references: [
+					{ book: 'EXO', chapter:  5, verse: 2 },
+					{ book: 'EXO', chapter:  5, verse: 6 },
+				],
+			},
+		]);
+
+		expect(
+			Rm.groupByChapter([
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 11, verse: 1 },
+					end  : { book: 'GEN', chapter: 11, verse: 3 },
+				},
+				{ is_range: true,
+					start : { book: 'GEN', chapter: 50, verse: 10 },
+					end   : { book: 'EXO', chapter:  1, verse:  5 },
+				},
+				{ book: 'EXO', chapter: 1, verse: 14 },
+			])
+		).is.deep.equal([
+			{ book: 'GEN', chapter: 11,
+				references: [
+					{ is_range: true,
+						start: { book: 'GEN', chapter: 11, verse: 1 },
+						end  : { book: 'GEN', chapter: 11, verse: 3 },
+					},
+				]
+			},
+			{ book: 'GEN', chapter: 50,
+				references: [
+					{ is_range: true,
+						start: { book: 'GEN', chapter: 50, verse: 10 },
+						end  : { book: 'GEN', chapter: 50, verse: 26 },
+					},
+				],
+			},
+			{ book: 'EXO', chapter: 1,
+				references: [
+					{ is_range: true,
+						start: { book: 'EXO', chapter:  1, verse: 1 },
+						end  : { book: 'EXO', chapter:  1, verse: 5 },
+					},
+					{ book: 'EXO', chapter:  1, verse: 14 },
+				],
+			},
+		]);
 	}); // end of groupByBook
 
   it('combineRanges', () => {
