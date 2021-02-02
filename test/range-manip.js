@@ -341,6 +341,82 @@ describe('range-manip', () => {
     ]);
   }); // end of splitByVerse
 
+
+	it('groupByBook', () => {
+
+		expect(
+			Rm.groupByBook({ book: 'GEN', chapter: 1, verse: 1 })
+		).is.deep.equal([
+			{ book: 'GEN',
+				references: [
+					{ book: 'GEN', chapter: 1, verse: 1 }
+				],
+			}
+		]);
+
+		expect(
+			Rm.groupByBook([
+				{ book: 'GEN', chapter: 10, verse: 5 },
+				{ book: 'EXO', chapter:  5, verse: 2 },
+				{ book: 'GEN', chapter:  1, verse: 1 },
+				{ book: 'EXO', chapter:  3, verse: 2 },
+				{ book: 'GEN', chapter:  3, verse: 3 },
+			])
+		).is.deep.equal([
+			{ book: 'GEN',
+				references: [
+					{ book: 'GEN', chapter: 10, verse: 5 },
+					{ book: 'GEN', chapter:  1, verse: 1 },
+					{ book: 'GEN', chapter:  3, verse: 3 }
+				],
+			},
+			{ book: 'EXO',
+				references: [
+					{ book: 'EXO', chapter:  5, verse: 2 },
+					{ book: 'EXO', chapter:  3, verse: 2 },
+				],
+			},
+		]);
+
+		expect(
+			Rm.groupByBook([
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 11, verse: 1 },
+					end  : { book: 'GEN', chapter: 11, verse: 3 },
+				},
+				{ is_range: true,
+					start : { book: 'GEN', chapter: 50, verse: 10 },
+					end   : { book: 'EXO', chapter:  1, verse:  5 },
+				},
+				{ book: 'EXO', chapter: 3, verse: 14 },
+			])
+		).is.deep.equal([
+			{ book: 'GEN',
+				references: [
+					{ is_range: true,
+						start: { book: 'GEN', chapter: 11, verse: 1 },
+						end  : { book: 'GEN', chapter: 11, verse: 3 },
+					},
+					{ is_range: true,
+						start: { book: 'GEN', chapter: 50, verse: 10 },
+						end  : { book: 'GEN', chapter: 50, verse: 26 },
+					},
+				],
+			},
+			{ book: 'EXO',
+				references: [
+					{ is_range: true,
+						start: { book: 'EXO', chapter:  1, verse: 1 },
+						end  : { book: 'EXO', chapter:  1, verse: 5 },
+					},
+					{ book: 'EXO', chapter:  3, verse: 14 },
+				],
+			},
+		]);
+
+
+	}); // end of groupByBook
+
   it('combineRanges', () => {
     // empty input is no-up
     expect(Rm.combineRanges([])).is.deep.equal([]);

@@ -13,6 +13,7 @@ export interface RangeManipFunctions {
 	iterateByBook   (refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
 	iterateByChapter(refs: BibleRef | BibleRef[], expand_verses?: boolean): Iterable<BibleRef>;
 	iterateByVerse  (refs: BibleRef | BibleRef[]): Iterable<BibleVerse>;
+	groupByBook(refs: BibleRef | BibleRef[]) : RefsByBook[];
 	combineRanges(refs: BibleRef[]) : BibleRef[];
 	makeRange(book : string, chapter?: number) : BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
@@ -190,7 +191,7 @@ export function nextChapter(this: BibleRefLibData, ref: BibleRef, constrain_book
  * @param constrain_book - If true, will not cross book boundaries to find another chapter
  * @return BibleRef or null if there is no previous chapter
  */
-export function	previousChapter(this: BibleRefLibData, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
+export function previousChapter(this: BibleRefLibData, ref: BibleRef, constrain_book?: boolean) : BibleRange | null{
 	let r : BibleVerse = ref.is_range ? ref.start : ref;
 
 	let new_book_id = r.book;
@@ -278,6 +279,34 @@ export function isFullChapter(this: BibleRefLibData, ref: BibleRef) : boolean {
 	  ref.start.verse   === 1 &&
 		ref.end.verse     === this.versification.book[book_id][ref.start.chapter].verse_count
 	);
+}
+
+export interface RefsByBook {
+	book       : string;
+	references : BibleRef[];
+};
+
+/**
+ * Groups a list of references into buckets split by book
+ */
+export function groupByBook(this: BibleRefLibData, refs: BibleRef[] | BibleRef) : RefsByBook[] {
+	let buckets : { [index:string]: RefsByBook } = {};
+
+	for (let r of iterateByBook.bind(this)(refs)) {
+		let bk = r.is_range ? r.start.book : r.book;
+		if(!buckets[bk]){
+			buckets[bk] = {
+				book: bk,
+				references: [ r ]
+			};
+		} else {
+			buckets[bk].references.push(r);
+		}
+	}
+
+	return Object.values(buckets).sort((a,b) => {
+		return this.versification.book[a.book].index - this.versification.book[b.book].index;
+	});
 }
 
 ////////////////////////////////////////////////////////////////////
