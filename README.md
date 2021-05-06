@@ -4,11 +4,11 @@ _Bible verse reference parsing, formating and manipulation_
 
 [Click for public API reference docs](https://awoken-bible.github.io/reference/index.html).
 
-Developed for [awokenbible.com](https://awokenbible.com), but released under MIT licence.
-
 ## Quick Start Guide
 
-The simplest use case is to simply import the library and start calling API functions:
+### Node JS
+
+To use the default versification scheme, simple import the libary and use the global [API functions](https://awoken-bible.github.io/reference/index.html).
 
 ```typescript
 import AwokenRef from 'awoken-bible-reference';
@@ -46,6 +46,25 @@ let vref = AwokenRef.parse('MyBook 100:999');
 ```
 
 The full list of methods on the `AwokenRef` object can be found in the [API docs](https://awoken-bible.github.io/reference/index.html).
+
+### Browser
+
+If using plain javascript in the browser with no build-system to bundle your dependencies, you may simply reference the file found in `./dist.browser/awoken-ref.js`.
+
+This will create a global "AwokenRef` variable, which can be used as both an instance of the library, and a constructor to create new instances with non-default versification schemes.
+
+```html
+
+<script src="[path]/awoken-ref.js"/>
+
+
+<script>
+	var refs = AwokenRef.parseOrThrow('Tobit 1.1'); // error!
+
+	var lib = new AwokenRef(myCustomVersificationWithApocrytha);
+	var myRefs = lib.parseOrThrow('Tobit 1.1'); // success!
+</script>
+```
 
 # Type Representations
 
@@ -171,4 +190,6 @@ The published copy of this library contains two output targets, which to use in 
 
 - `dist/` contains a set of js files representing esmodules, to be loaded by other nodejs projects, react apps, etc
   - This folder contains `.d.ts` files to allow type infomation to be loaded in other typescript projects, however the js files can equally well be loaded in javascript based projects
+  - This is built using the typescript compiler only!
 - `dist.browser/awoken-ref.js` is a minified and self-contained bundle containing all the code required to run in the browser. Adding a `<script src="[path]/awoken-ref.js"/>` tag to your html will create a global "AwokenRef" variable with attached functions using the default versification, or you can create a new instance with `new AwokenRef(customVersification)`
+  - This is built using webpack/babel
