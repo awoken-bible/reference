@@ -56,7 +56,8 @@
   },
   "homepage": "https://awoken-bible.github.io/reference/index.html",
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+		"dist.browser/**/*"
   ],
   "nyc": {
     "extension": [
