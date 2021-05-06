@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
 	entry: {
-    'awoken-ref' : './src/index.ts',
+    'awoken-ref' : './src/lib.ts',
   },
 	output: {
 		path: path.resolve(__dirname, 'dist.browser/'),
