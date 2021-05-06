@@ -164,3 +164,11 @@ API methods include functionality to:
 - Combining/Simplifying ranges, as well as finding the intersection/union of ranges
 
 For a full list of the exported functions and data types, see the [generated typedoc API reference](https://awoken-bible.github.io/reference/index.html).
+
+# Build Targets
+
+The published copy of this library contains two output targets, which to use in your project depends on your use case.
+
+- `dist/` contains a set of js files representing esmodules, to be loaded by other nodejs projects, react apps, etc
+  - This folder contains `.d.ts` files to allow type infomation to be loaded in other typescript projects, however the js files can equally well be loaded in javascript based projects
+- `dist.browser/awoken-ref.js` is a minified and self-contained bundle containing all the code required to run in the browser. Adding a `<script src="[path]/awoken-ref.js"/>` tag to your html will create a global "AwokenRef" variable with attached functions using the default versification, or you can create a new instance with `new AwokenRef(customVersification)`

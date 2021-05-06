@@ -8,6 +8,7 @@
 
 # Generated output
 /dist
+/dist.browser
 /docs
 coverage/
 .nyc_output/

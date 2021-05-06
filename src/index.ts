@@ -238,7 +238,7 @@ function repair(this: BibleRefLib, ref: BibleRef, include_warnings?: boolean) : 
  */
 type BibleRefLibConstructor =	(v: Versification) => BibleRefLib;
 
-const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib, v: Versification) : BibleRefLib {
+const AwokenRef : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib, v: Versification) : BibleRefLib {
 	this.versification    = v;
 	this.parse            = parse;
 	this.parseOrThrow     = parseOrThrow;
@@ -275,40 +275,41 @@ const constructFunc : BibleRefLib & BibleRefLibConstructor = function(this: Bibl
 };
 
 // Allow calling of all methods statically, with the default Versification scheme used
-constructFunc.versification    = VERSIFICATION;
-constructFunc.parse            = parse.bind(constructFunc);
-constructFunc.parseOrThrow     = parseOrThrow.bind(constructFunc);
-constructFunc.parseBookName    = parseBookName.bind(constructFunc);
-constructFunc.format           = format.bind(constructFunc);
-constructFunc.sort             = sort.bind(constructFunc);
-constructFunc.toVidx           = toVidx.bind(constructFunc);
-constructFunc.fromVidx         = fromVidx.bind(constructFunc);
-constructFunc.firstNVerses     = firstNVerses.bind(constructFunc);
-constructFunc.countVerses      = countVerses.bind(constructFunc);
-constructFunc.validate         = validate.bind(constructFunc);
-constructFunc.repair           = repair.bind(constructFunc);
-constructFunc.makeRange        = RangeManip.makeRange.bind(constructFunc);
-constructFunc.splitByBook      = RangeManip.splitByBook.bind(constructFunc);
-constructFunc.splitByChapter   = RangeManip.splitByChapter.bind(constructFunc);
-constructFunc.splitByVerse     = RangeManip.splitByVerse.bind(constructFunc);
-constructFunc.iterateByBook    = RangeManip.iterateByBook.bind(constructFunc);
-constructFunc.iterateByChapter = RangeManip.iterateByChapter.bind(constructFunc);
-constructFunc.iterateByVerse   = RangeManip.iterateByVerse.bind(constructFunc);
-constructFunc.groupByBook      = RangeManip.groupByBook.bind(constructFunc);
-constructFunc.groupByChapter   = RangeManip.groupByChapter.bind(constructFunc);
-constructFunc.combineRanges    = RangeManip.combineRanges.bind(constructFunc);
-constructFunc.nextChapter      = RangeManip.nextChapter.bind(constructFunc);
-constructFunc.previousChapter  = RangeManip.previousChapter.bind(constructFunc);
-constructFunc.nextBook         = RangeManip.nextBook.bind(constructFunc);
-constructFunc.previousBook     = RangeManip.previousBook.bind(constructFunc);
-constructFunc.isFullBook       = RangeManip.isFullBook.bind(constructFunc);
-constructFunc.isFullChapter    = RangeManip.isFullChapter.bind(constructFunc);
-constructFunc.getIntersection  = Geometry.getIntersection.bind(constructFunc);
-constructFunc.intersects       = Geometry.intersects.bind(constructFunc);
-constructFunc.getUnion         = Geometry.getUnion.bind(constructFunc);
-constructFunc.getDifference    = Geometry.getDifference.bind(constructFunc);
-constructFunc.contains         = Geometry.contains.bind(constructFunc);
-constructFunc.indexOf          = Geometry.indexOf.bind(constructFunc);
-constructFunc.verseAtIndex     = Geometry.verseAtIndex.bind(constructFunc);
+AwokenRef.versification    = VERSIFICATION;
+AwokenRef.parse            = parse.bind(AwokenRef);
+AwokenRef.parseOrThrow     = parseOrThrow.bind(AwokenRef);
+AwokenRef.parseBookName    = parseBookName.bind(AwokenRef);
+AwokenRef.format           = format.bind(AwokenRef);
+AwokenRef.sort             = sort.bind(AwokenRef);
+AwokenRef.toVidx           = toVidx.bind(AwokenRef);
+AwokenRef.fromVidx         = fromVidx.bind(AwokenRef);
+AwokenRef.firstNVerses     = firstNVerses.bind(AwokenRef);
+AwokenRef.countVerses      = countVerses.bind(AwokenRef);
+AwokenRef.validate         = validate.bind(AwokenRef);
+AwokenRef.repair           = repair.bind(AwokenRef);
+AwokenRef.makeRange        = RangeManip.makeRange.bind(AwokenRef);
+AwokenRef.splitByBook      = RangeManip.splitByBook.bind(AwokenRef);
+AwokenRef.splitByChapter   = RangeManip.splitByChapter.bind(AwokenRef);
+AwokenRef.splitByVerse     = RangeManip.splitByVerse.bind(AwokenRef);
+AwokenRef.iterateByBook    = RangeManip.iterateByBook.bind(AwokenRef);
+AwokenRef.iterateByChapter = RangeManip.iterateByChapter.bind(AwokenRef);
+AwokenRef.iterateByVerse   = RangeManip.iterateByVerse.bind(AwokenRef);
+AwokenRef.groupByBook      = RangeManip.groupByBook.bind(AwokenRef);
+AwokenRef.groupByChapter   = RangeManip.groupByChapter.bind(AwokenRef);
+AwokenRef.combineRanges    = RangeManip.combineRanges.bind(AwokenRef);
+AwokenRef.nextChapter      = RangeManip.nextChapter.bind(AwokenRef);
+AwokenRef.previousChapter  = RangeManip.previousChapter.bind(AwokenRef);
+AwokenRef.nextBook         = RangeManip.nextBook.bind(AwokenRef);
+AwokenRef.previousBook     = RangeManip.previousBook.bind(AwokenRef);
+AwokenRef.isFullBook       = RangeManip.isFullBook.bind(AwokenRef);
+AwokenRef.isFullChapter    = RangeManip.isFullChapter.bind(AwokenRef);
+AwokenRef.getIntersection  = Geometry.getIntersection.bind(AwokenRef);
+AwokenRef.intersects       = Geometry.intersects.bind(AwokenRef);
+AwokenRef.getUnion         = Geometry.getUnion.bind(AwokenRef);
+AwokenRef.getDifference    = Geometry.getDifference.bind(AwokenRef);
+AwokenRef.contains         = Geometry.contains.bind(AwokenRef);
+AwokenRef.indexOf          = Geometry.indexOf.bind(AwokenRef);
+AwokenRef.verseAtIndex     = Geometry.verseAtIndex.bind(AwokenRef);
 
-export default constructFunc;
+export default AwokenRef;
+export { AwokenRef };
