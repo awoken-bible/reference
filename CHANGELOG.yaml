@@ -1,3 +1,12 @@
+- v2.2.0:
+  date: '2021-05-06'
+  name: 'Browser Bundle'
+  features:
+    - Add secondary build system for producing minimized single js file for use in web browsers
+  misc:
+    - Remove test coverage for EOL nodejs versions (v8.x and v10.x)
+    - Add test coverage for modern nodejs versions (v14.x and v16.x)
+
 - v2.1.0:
   date: '2021-02-02'
   name: 'Grouping Functions'
