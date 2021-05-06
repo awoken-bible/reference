@@ -15,6 +15,7 @@ export interface RangeManipFunctions {
 	iterateByVerse  (refs: BibleRef | BibleRef[]): Iterable<BibleVerse>;
 	groupByBook(refs: BibleRef | BibleRef[]) : RefsByBook[];
 	groupByChapter(refs: BibleRef | BibleRef[]) : RefsByChapter[];
+	groupByLevel(refs: BibleRef | BibleRef[], options?: RefsByLevelOptions) : RefsByLevel;
 	combineRanges(refs: BibleRef[]) : BibleRef[];
 	makeRange(book : string, chapter?: number) : BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
@@ -377,6 +378,76 @@ export function groupByChapter(this: BibleRefLibData, refs: BibleRef[] | BibleRe
 			return bkDelta;
 		}
 	});
+}
+
+export interface RefsByLevel {
+	books      : BibleRange[];
+	chapters   : BibleRange[];
+	verses     : BibleVerse[];
+};
+
+export interface RefsByLevelOptions {
+	/**
+	 * If true, then the single input reference "Gen.1.1" will become 3 seperate entries,
+	 * "Gen" in books, "Gen.1" in chapters and "Gen.1.1" in verses
+	 *
+	 * Larger ranges will NOT imply smaller ranges, IE the input "Gen.1" will not generate a chapter
+	 * and book entry, but NOT a set of verse entries. "Gen" will generate only a book entry
+	 */
+	implyContainer?: boolean,
+}
+
+/**
+ * Sorts a list of references into seperate lists for full books, full chapters,
+ * and individual verses
+ *
+ * For example, Gen, Exo.1, Lev.1.1 would be grouped into the object:
+ * {
+ *   books    : [ Gen ],
+ *   chapters : [ Exo.1 ],
+ *   verses   : [ Lev.1.1 ],
+ * }
+ *
+ * The `books` and `chapters` array will always be ranges, and `verses` array will always be individual verses
+ */
+export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef, options: RefsByLevelOptions = {}) : RefsByLevel {
+	if(!('length' in refs)){ refs = [refs]; }
+
+	let result : RefsByLevel = { books: [], chapters: [], verses: [] };
+
+	for(let r of _iterateBookRanges(this.versification, refs, true) as BibleRange[]) {
+
+		let fullBook = isFullBook.bind(this)(r);
+		if(fullBook || options.implyContainer) {
+			result.books.push(_makeRange(this.versification, r.start.book));
+		}
+
+		if(fullBook) {
+			continue;
+		}
+
+		for(let c of _iterateChapterRanges(this.versification, [r], true) as BibleRange[]) {
+
+			let fullChapter = isFullChapter.bind(this)(c);
+
+			if(fullChapter || options.implyContainer) {
+				result.chapters.push(_makeRange(this.versification, c.start.book, c.start.chapter));
+			}
+
+			if(fullChapter) {
+				continue;
+			}
+
+			result.verses = result.verses.concat(splitByVerse.bind(this)(c));
+		}
+	}
+
+	// de-deduplicate entries
+	result.books    = splitByBook.bind(this)(combineRanges.bind(this)(result.books)) as BibleRange[];
+	result.chapters = splitByChapter.bind(this)(combineRanges.bind(this)(result.chapters)) as BibleRange[];
+	result.verses   = splitByVerse.bind(this)(combineRanges.bind(this)(result.verses)) as BibleVerse[];
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////

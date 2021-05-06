@@ -414,7 +414,7 @@ describe('range-manip', () => {
 		]);
 	}); // end of groupByBook
 
-		it('groupByChapter', () => {
+	it('groupByChapter', () => {
 		expect(
 			Rm.groupByChapter({ book: 'GEN', chapter: 1, verse: 1 })
 		).is.deep.equal([
@@ -501,6 +501,66 @@ describe('range-manip', () => {
 			},
 		]);
 	}); // end of groupByBook
+
+	it('groupByLevel', () => {
+
+		let refs = [
+			{ is_range : true,
+				start    : { book: 'GEN', chapter:  1, verse:  1 },
+				end      : { book: 'GEN', chapter: 50, verse: 26 },
+			},
+			{ is_range : true,
+				start    : { book: 'EXO', chapter:  1, verse:  1 },
+				end      : { book: 'EXO', chapter:  1, verse: 22 },
+			},
+			{ book: 'REV', chapter: 1, verse: 1 },
+		];
+
+		expect(Rm.groupByLevel(refs)).is.deep.equal({
+			books: [{
+				is_range : true,
+				start    : { book: 'GEN', chapter:  1, verse:  1 },
+				end      : { book: 'GEN', chapter: 50, verse: 26 },
+			}],
+			chapters: [{
+				is_range : true,
+				start    : { book: 'EXO', chapter:  1, verse:  1 },
+				end      : { book: 'EXO', chapter:  1, verse: 22 },
+			}],
+			verses : [
+				{ book: 'REV', chapter: 1, verse: 1 },
+			],
+		});
+
+		expect(Rm.groupByLevel(refs, { implyContainer: true })).is.deep.equal({
+			books: [{
+				is_range : true,
+				start    : { book: 'GEN', chapter:  1, verse:  1 },
+				end      : { book: 'GEN', chapter: 50, verse: 26 },
+			}, {
+				is_range : true,
+				start    : { book: 'EXO', chapter:  1, verse:  1 },
+				end      : { book: 'EXO', chapter: 40, verse: 38 },
+			}, {
+				is_range: true,
+				start    : { book: 'REV', chapter:  1, verse:  1 },
+				end      : { book: 'REV', chapter: 22, verse: 21 },
+			}],
+			chapters: [{
+				is_range : true,
+				start    : { book: 'EXO', chapter:  1, verse:  1 },
+				end      : { book: 'EXO', chapter:  1, verse: 22 },
+			}, {
+				is_range : true,
+				start    : { book: 'REV', chapter:  1, verse:  1 },
+				end      : { book: 'REV', chapter:  1, verse: 20 },
+			}],
+			verses : [
+				{ book: 'REV', chapter: 1, verse: 1 },
+			],
+		});
+
+	}); // end of groupByLevel
 
   it('combineRanges', () => {
     // empty input is no-up
