@@ -69,11 +69,13 @@
 				</a>
 				<p><em>Bible verse reference parsing, formating and manipulation</em></p>
 				<p><a href="https://awoken-bible.github.io/reference/index.html">Click for public API reference docs</a>.</p>
-				<p>Developed for <a href="https://awokenbible.com">awokenbible.com</a>, but released under MIT licence.</p>
 				<a href="#quick-start-guide" id="quick-start-guide" style="color: inherit; text-decoration: none;">
 					<h2>Quick Start Guide</h2>
 				</a>
-				<p>The simplest use case is to simply import the library and start calling API functions:</p>
+				<a href="#node-js" id="node-js" style="color: inherit; text-decoration: none;">
+					<h3>Node JS</h3>
+				</a>
+				<p>To use the default versification scheme, simple import the libary and use the global <a href="https://awoken-bible.github.io/reference/index.html">API functions</a>.</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> AwokenRef <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
 
 <span class="hljs-keyword">let</span> vref = AwokenRef.parseOrThrow(<span class="hljs-string">'Genesis 1'</span>);
@@ -103,6 +105,21 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 
 <span class="hljs-keyword">let</span> vref = AwokenRef.parse(<span class="hljs-string">'MyBook 100:999'</span>);</code></pre>
 				<p>The full list of methods on the <code>AwokenRef</code> object can be found in the <a href="https://awoken-bible.github.io/reference/index.html">API docs</a>.</p>
+				<a href="#browser" id="browser" style="color: inherit; text-decoration: none;">
+					<h3>Browser</h3>
+				</a>
+				<p>If using plain javascript in the browser with no build-system to bundle your dependencies, you may simply reference the file found in <code>./dist.browser/awoken-ref.js</code>.</p>
+				<p>This will create a global &quot;AwokenRef` variable, which can be used as both an instance of the library, and a constructor to create new instances with non-default versification schemes.</p>
+				<pre><code class="language-html">
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"[path]/awoken-ref.js"</span>/&gt;</span><span class="handlebars"><span class="xml">
+
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">
+    <span class="hljs-keyword">var</span> refs = AwokenRef.parseOrThrow(<span class="hljs-string">'Tobit 1.1'</span>); <span class="hljs-comment">// error!</span>
+
+    <span class="hljs-keyword">var</span> lib = <span class="hljs-keyword">new</span> AwokenRef(myCustomVersificationWithApocrytha);
+    <span class="hljs-keyword">var</span> myRefs = lib.parseOrThrow(<span class="hljs-string">'Tobit 1.1'</span>); <span class="hljs-comment">// success!</span>
+</span></span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 				<a href="#type-representations" id="type-representations" style="color: inherit; text-decoration: none;">
 					<h1>Type Representations</h1>
 				</a>
@@ -207,6 +224,21 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 					<li>Combining/Simplifying ranges, as well as finding the intersection/union of ranges</li>
 				</ul>
 				<p>For a full list of the exported functions and data types, see the <a href="https://awoken-bible.github.io/reference/index.html">generated typedoc API reference</a>.</p>
+				<a href="#build-targets" id="build-targets" style="color: inherit; text-decoration: none;">
+					<h1>Build Targets</h1>
+				</a>
+				<p>The published copy of this library contains two output targets, which to use in your project depends on your use case.</p>
+				<ul>
+					<li><code>dist/</code> contains a set of js files representing esmodules, to be loaded by other nodejs projects, react apps, etc<ul>
+							<li>This folder contains <code>.d.ts</code> files to allow type infomation to be loaded in other typescript projects, however the js files can equally well be loaded in javascript based projects</li>
+							<li>This is built using the typescript compiler only!</li>
+						</ul>
+					</li>
+					<li><code>dist.browser/awoken-ref.js</code> is a minified and self-contained bundle containing all the code required to run in the browser. Adding a <code>&lt;script src=&quot;[path]/awoken-ref.js&quot;/&gt;</code> tag to your html will create a global &quot;AwokenRef&quot; variable with attached functions using the default versification, or you can create a new instance with <code>new AwokenRef(customVersification)</code><ul>
+							<li>This is built using webpack/babel</li>
+						</ul>
+					</li>
+				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
