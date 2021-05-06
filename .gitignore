@@ -8,6 +8,8 @@
 
 # Generated output
 /dist
+/dist.browser
 /docs
 coverage/
 .nyc_output/
+awoken-bible-reference-*.tgz
