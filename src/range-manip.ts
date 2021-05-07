@@ -440,7 +440,8 @@ export interface RefsByLevelOptions {
  * The output arrays will be de-deuplicated when multiple inputs would create the same output,
  * and arrays will be sorted into verse order - hence input order is not important
  */
-export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef, options: RefsByLevelOptions = {}) : RefsByLevel {
+export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef, options?: RefsByLevelOptions) : RefsByLevel {
+	if(!options){ options = {}; }
 	if(!('length' in refs)){ refs = [refs]; }
 
 	let result : RefsByLevel = { books: [], chapters: [], verses: [] };
