@@ -15,6 +15,7 @@ export interface RangeManipFunctions {
 	iterateByVerse  (refs: BibleRef | BibleRef[]): Iterable<BibleVerse>;
 	groupByBook(refs: BibleRef | BibleRef[]) : RefsByBook[];
 	groupByChapter(refs: BibleRef | BibleRef[]) : RefsByChapter[];
+	groupByLevel(refs: BibleRef | BibleRef[], options?: RefsByLevelOptions) : RefsByLevel;
 	combineRanges(refs: BibleRef[]) : BibleRef[];
 	makeRange(book : string, chapter?: number) : BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
@@ -377,6 +378,107 @@ export function groupByChapter(this: BibleRefLibData, refs: BibleRef[] | BibleRe
 			return bkDelta;
 		}
 	});
+}
+
+export interface RefsByLevel {
+	books      : BibleRange[];
+	chapters   : BibleRange[];
+	verses     : BibleVerse[];
+};
+
+export interface RefsByLevelOptions {
+	/**
+	 * If true, then smaller levels will create entries in larger levels
+	 *
+	 * For example:
+	 * - Gen.1.1 -> { books: [ Gen ], chapters: [ Gen.1 ], verses: [ Gen.1.1 ] }
+	 * - Gen.1   -> { books: [ Gen ], chapters: [ Gen.1 ], verses: [] }
+	 * - Gen     -> { books: [ Gen ], chapters: [],        verses: [] }
+	 *
+	 * Multiple verses will be combined into a single chapter entry, and multiple
+	 * chapters will be combined into a single book entry
+	 *
+	 * If set then the following will hold: ---subset of---> chapters ---subset of---> books
+	 *
+	 * If `disperse` is also set, then all arrays will represent the same set of Bible references,
+	 * but with different organizations of data structures
+	 */
+	consolidate?: boolean,
+
+	/**
+	 * If true, then larger levels will create entries in smaller levels
+	 *
+	 * For example:
+	 * - Gen.1.1 -> { books: [],      chapters: [],                           verses: [ Gen.1.1 ] },
+	 * - Gen.1   -> { books: [],      chapters: [ Gen.1 ],                    verses: [ Gen.1.1, Gen.1.2, Gen.1.3, ... ] }
+	 * - Gen     -> { books: [ Gen ], chapters: [ Gen.1, Gen.2, Gen.3, ... ], verses: [ Gen.1.1, Gen.1.2, Gen.1.3, ... ] }
+	 *
+	 * A chapter/verse contained by multiple higher level ranges will only be added once
+	 *
+	 * If set then the following will hold: ---subset of--> chapters ---subset of---> verses
+	 *
+	 * If `consolidate` is also set, then all arrays will represent the same set of Bible references,
+	 * but with different organizations of data structures
+	 */
+	disperse?: boolean,
+}
+
+/**
+ * Sorts a list of references into seperate lists for full books, full chapters,
+ * and individual verses
+ *
+ * For example, Gen, Exo.1, Lev.1.1 would be grouped into the object:
+ * {
+ *   books    : [ Gen ],
+ *   chapters : [ Exo.1 ],
+ *   verses   : [ Lev.1.1 ],
+ * }
+ *
+ * The `books` and `chapters` array will contain only [[BibleRange]]s, where as `verses` will
+ * contain only [[BibleVerse]]s
+ *
+ * The output arrays will be de-deuplicated when multiple inputs would create the same output,
+ * and arrays will be sorted into verse order - hence input order is not important
+ */
+export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef, options?: RefsByLevelOptions) : RefsByLevel {
+	if(!options){ options = {}; }
+	if(!('length' in refs)){ refs = [refs]; }
+
+	let result : RefsByLevel = { books: [], chapters: [], verses: [] };
+
+	for(let r of _iterateBookRanges(this.versification, refs, true) as BibleRange[]) {
+
+		let fullBook = isFullBook.bind(this)(r);
+		if(fullBook || options.consolidate) {
+			result.books.push(_makeRange(this.versification, r.start.book));
+		}
+
+		if(fullBook && !options.disperse) {
+			continue;
+		}
+
+		for(let c of _iterateChapterRanges(this.versification, [r], true) as BibleRange[]) {
+
+			let fullChapter = isFullChapter.bind(this)(c);
+
+			if(fullChapter || options.consolidate) {
+				result.chapters.push(_makeRange(this.versification, c.start.book, c.start.chapter));
+			}
+
+			if(fullChapter && !options.disperse) {
+				continue;
+			}
+
+			result.verses = result.verses.concat(splitByVerse.bind(this)(c));
+		}
+	}
+
+	// de-deduplicate entries
+	result.books    = splitByBook.bind(this)(combineRanges.bind(this)(result.books)) as BibleRange[];
+	result.chapters = splitByChapter.bind(this)(combineRanges.bind(this)(result.chapters)) as BibleRange[];
+	result.verses   = splitByVerse.bind(this)(combineRanges.bind(this)(result.verses)) as BibleVerse[];
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////
