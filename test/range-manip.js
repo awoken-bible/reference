@@ -504,6 +504,8 @@ describe('range-manip', () => {
 
 	it('groupByLevel', () => {
 
+		//////////////////////////////////////////////////
+		// simple sorting by level...
 		let refs = [
 			{ is_range : true,
 				start    : { book: 'GEN', chapter:  1, verse:  1 },
@@ -532,7 +534,7 @@ describe('range-manip', () => {
 			],
 		});
 
-		expect(Rm.groupByLevel(refs, { implyContainer: true })).is.deep.equal({
+		expect(Rm.groupByLevel(refs, { consolidate: true })).is.deep.equal({
 			books: [{
 				is_range : true,
 				start    : { book: 'GEN', chapter:  1, verse:  1 },
@@ -557,6 +559,117 @@ describe('range-manip', () => {
 			}],
 			verses : [
 				{ book: 'REV', chapter: 1, verse: 1 },
+			],
+		});
+
+		//////////////////////////////////////////////////
+		// check splitting works
+		refs = [
+			{ is_range: true,
+				start : { book: 'EXO', chapter: 1, verse: 1 },
+				end   : { book: 'EXO', chapter: 2, verse: 3 },
+			},
+			{ is_range: true,
+				start : { book: 'GEN', chapter: 3, verse:  1 },
+				end   : { book: 'GEN', chapter: 3, verse: 24 },
+			},
+			{ book: 'MAT', chapter: 1, verse: 1 },
+		];
+
+		expect(Rm.groupByLevel(refs)).is.deep.equal({
+			books: [],
+			chapters: [{
+				is_range: true,
+				start : { book: 'GEN', chapter: 3, verse:  1 },
+				end   : { book: 'GEN', chapter: 3, verse: 24 },
+			}, {
+				is_range: true,
+				start : { book: 'EXO', chapter: 1, verse:  1 },
+				end   : { book: 'EXO', chapter: 1, verse: 22 },
+			}],
+			verses: [
+				{ book: 'EXO', chapter: 2, verse: 1 },
+				{ book: 'EXO', chapter: 2, verse: 2 },
+				{ book: 'EXO', chapter: 2, verse: 3 },
+				{ book: 'MAT', chapter: 1, verse: 1 },
+			],
+		});
+
+		expect(Rm.groupByLevel(refs, { consolidate: true })).is.deep.equal({
+			books: [{
+				is_range : true,
+				start    : { book: 'GEN', chapter:  1, verse:  1 },
+				end      : { book: 'GEN', chapter: 50, verse: 26 },
+			},{
+				is_range : true,
+				start    : { book: 'EXO', chapter:  1, verse:  1 },
+				end      : { book: 'EXO', chapter: 40, verse: 38 },
+			},{
+				is_range : true,
+				start    : { book: 'MAT', chapter:  1, verse:  1 },
+				end      : { book: 'MAT', chapter: 28, verse: 20 },
+			}],
+			chapters: [{
+				is_range: true,
+				start : { book: 'GEN', chapter: 3, verse:  1 },
+				end   : { book: 'GEN', chapter: 3, verse: 24 },
+			}, {
+				is_range: true,
+				start : { book: 'EXO', chapter: 1, verse:  1 },
+				end   : { book: 'EXO', chapter: 1, verse: 22 },
+			}, {
+				is_range: true,
+				start : { book: 'EXO', chapter: 2, verse:  1 },
+				end   : { book: 'EXO', chapter: 2, verse: 25 },
+			}, {
+				is_range: true,
+				start : { book: 'MAT', chapter: 1, verse:  1 },
+				end   : { book: 'MAT', chapter: 1, verse: 25 },
+			}],
+			verses: [
+				{ book: 'EXO', chapter: 2, verse: 1 },
+				{ book: 'EXO', chapter: 2, verse: 2 },
+				{ book: 'EXO', chapter: 2, verse: 3 },
+				{ book: 'MAT', chapter: 1, verse: 1 },
+			],
+		});
+
+		//////////////////////////////////////////////////
+		// check disperse flag works
+
+		refs = [{
+			is_range: true,
+			start : { book: '2JN', chapter: 1, verse:  1 },
+			end   : { book: '2JN', chapter: 1, verse: 13 },
+		}];
+
+		expect(Rm.groupByLevel(refs)).is.deep.equal({
+			books: [{
+				is_range: true,
+				start : { book: '2JN', chapter: 1, verse:  1 },
+				end   : { book: '2JN', chapter: 1, verse: 13 },
+			}],
+			chapters: [],
+			verses: [],
+		});
+
+		expect(Rm.groupByLevel(refs, { disperse: true })).is.deep.equal({
+			books: refs,
+			chapters: refs,
+			verses: [
+				{ book: '2JN', chapter: 1, verse:  1 },
+				{ book: '2JN', chapter: 1, verse:  2 },
+				{ book: '2JN', chapter: 1, verse:  3 },
+				{ book: '2JN', chapter: 1, verse:  4 },
+				{ book: '2JN', chapter: 1, verse:  5 },
+				{ book: '2JN', chapter: 1, verse:  6 },
+				{ book: '2JN', chapter: 1, verse:  7 },
+				{ book: '2JN', chapter: 1, verse:  8 },
+				{ book: '2JN', chapter: 1, verse:  9 },
+				{ book: '2JN', chapter: 1, verse: 10 },
+				{ book: '2JN', chapter: 1, verse: 11 },
+				{ book: '2JN', chapter: 1, verse: 12 },
+				{ book: '2JN', chapter: 1, verse: 13 },
 			],
 		});
 

@@ -388,13 +388,39 @@ export interface RefsByLevel {
 
 export interface RefsByLevelOptions {
 	/**
-	 * If true, then the single input reference "Gen.1.1" will become 3 seperate entries,
-	 * "Gen" in books, "Gen.1" in chapters and "Gen.1.1" in verses
+	 * If true, then smaller levels will create entries in larger levels
 	 *
-	 * Larger ranges will NOT imply smaller ranges, IE the input "Gen.1" will not generate a chapter
-	 * and book entry, but NOT a set of verse entries. "Gen" will generate only a book entry
+	 * For example:
+	 * - Gen.1.1 -> { books: [ Gen ], chapters: [ Gen.1 ], verses: [ Gen.1.1 ] }
+	 * - Gen.1   -> { books: [ Gen ], chapters: [ Gen.1 ], verses: [] }
+	 * - Gen     -> { books: [ Gen ], chapters: [],        verses: [] }
+	 *
+	 * Multiple verses will be combined into a single chapter entry, and multiple
+	 * chapters will be combined into a single book entry
+	 *
+	 * If set then the following will hold: ---subset of---> chapters ---subset of---> books
+	 *
+	 * If `disperse` is also set, then all arrays will represent the same set of Bible references,
+	 * but with different organizations of data structures
 	 */
-	implyContainer?: boolean,
+	consolidate?: boolean,
+
+	/**
+	 * If true, then larger levels will create entries in smaller levels
+	 *
+	 * For example:
+	 * - Gen.1.1 -> { books: [],      chapters: [],                           verses: [ Gen.1.1 ] },
+	 * - Gen.1   -> { books: [],      chapters: [ Gen.1 ],                    verses: [ Gen.1.1, Gen.1.2, Gen.1.3, ... ] }
+	 * - Gen     -> { books: [ Gen ], chapters: [ Gen.1, Gen.2, Gen.3, ... ], verses: [ Gen.1.1, Gen.1.2, Gen.1.3, ... ] }
+	 *
+	 * A chapter/verse contained by multiple higher level ranges will only be added once
+	 *
+	 * If set then the following will hold: ---subset of--> chapters ---subset of---> verses
+	 *
+	 * If `consolidate` is also set, then all arrays will represent the same set of Bible references,
+	 * but with different organizations of data structures
+	 */
+	disperse?: boolean,
 }
 
 /**
@@ -408,7 +434,11 @@ export interface RefsByLevelOptions {
  *   verses   : [ Lev.1.1 ],
  * }
  *
- * The `books` and `chapters` array will always be ranges, and `verses` array will always be individual verses
+ * The `books` and `chapters` array will contain only [[BibleRange]]s, where as `verses` will
+ * contain only [[BibleVerse]]s
+ *
+ * The output arrays will be de-deuplicated when multiple inputs would create the same output,
+ * and arrays will be sorted into verse order - hence input order is not important
  */
 export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef, options: RefsByLevelOptions = {}) : RefsByLevel {
 	if(!('length' in refs)){ refs = [refs]; }
@@ -418,11 +448,11 @@ export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef,
 	for(let r of _iterateBookRanges(this.versification, refs, true) as BibleRange[]) {
 
 		let fullBook = isFullBook.bind(this)(r);
-		if(fullBook || options.implyContainer) {
+		if(fullBook || options.consolidate) {
 			result.books.push(_makeRange(this.versification, r.start.book));
 		}
 
-		if(fullBook) {
+		if(fullBook && !options.disperse) {
 			continue;
 		}
 
@@ -430,11 +460,11 @@ export function groupByLevel(this: BibleRefLibData, refs: BibleRef[] | BibleRef,
 
 			let fullChapter = isFullChapter.bind(this)(c);
 
-			if(fullChapter || options.implyContainer) {
+			if(fullChapter || options.consolidate) {
 				result.chapters.push(_makeRange(this.versification, c.start.book, c.start.chapter));
 			}
 
-			if(fullChapter) {
+			if(fullChapter && !options.disperse) {
 				continue;
 			}
 
