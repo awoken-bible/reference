@@ -1,3 +1,9 @@
+- v2.3.0:
+  date: '2021-05-07'
+  name: 'Group By Level'
+  features:
+    - Add function to organize a list of BibleRefs into groups based on whether they represent books, chapters or verses
+
 - v2.2.0:
   date: '2021-05-06'
   name: 'Browser Bundle'
