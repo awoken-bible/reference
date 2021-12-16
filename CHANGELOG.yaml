@@ -1,3 +1,13 @@
+- v2.4.0:
+  date: '2021-12-16'
+  name: 'Intersection Optimization'
+  features:
+    - Add function to create an re-usable "IntersectionSet" to speedup intersects/getIntersection when testing a BibleRef list repeatedly
+  misc:
+    - Optimize intersects function for faster operation on large BibleRef lists
+    - Minor speedup to combineRanges
+    - Update dependencies
+
 - v2.3.0:
   date: '2021-05-07'
   name: 'Group By Level'
