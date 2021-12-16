@@ -16,6 +16,7 @@ export interface GeometryFunctions {
 	getDifference(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
 	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
 	verseAtIndex(a: BibleRef | BibleRef[], idx: number): BibleVerse | undefined;
+	createIntersectionSet(a: BibleRef | BibleRef[]) : IntersectionSet;
 };
 
 /**
@@ -29,6 +30,21 @@ interface LineSegment {
 }
 
 /**
+ * Opaque type containing data for use by `getIntersection` or `intersects`
+ */
+export type IntersectionSet = { segments: LineSegment[] };
+
+/**
+ * Precomputes data regarding BibleRef list as used by `getIntersection` and `intersects`
+ *
+ * This is more performant if you call either of these functions multiple times where one of the two
+ * inputs remains constant
+ */
+export function createIntersectionSet(this: BibleRefLibData, x: BibleRef | BibleRef[]) : IntersectionSet {
+	return { segments: _toLineSegments(this, x) };
+}
+
+/**
  * Creates a new array of [[BibleRef]]s which represents the intersection between two other sets
  *
  * @param this - Any object with a `versification` field
@@ -38,7 +54,7 @@ interface LineSegment {
  * @return Simplified and sorted list of [[BibleRef]]s which appear in both input sets. Will
  * return empty array if there are no verses in common between the inputs
  */
-export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[], y: BibleRef | BibleRef[]) : BibleRef[]  {
+export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[] | IntersectionSet, y: BibleRef | BibleRef[] | IntersectionSet) : BibleRef[]  {
 	let a = _toLineSegments(this, x);
 	let b = _toLineSegments(this, y);
 
@@ -76,8 +92,8 @@ export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[],
 /**
  * Determines whether two sets of [[BibleRef]]s have any verses in common
  */
-export function intersects(this: BibleRefLibData, a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]) : boolean {
-	return getIntersection.bind(this)(a,b).length > 0;
+export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | IntersectionSet, y: BibleRef | BibleRef[] | IntersectionSet) : boolean {
+	return getIntersection.bind(this)(x,y).length > 0;
 }
 
 /**
@@ -261,7 +277,8 @@ function _toLineSegmentsUnsorted(lib: BibleRefLibData, input: BibleRef | BibleRe
  *
  * @private
  */
-function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[]): LineSegment[] {
+function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[] | IntersectionSet): LineSegment[] {
+	if('segments' in input) { return input.segments; }
 	let in_arr : BibleRef[] = 'length' in input ? input : [input];
 	return _toLineSegmentsUnsorted(lib, combineRanges.bind(lib)(in_arr));
 }
