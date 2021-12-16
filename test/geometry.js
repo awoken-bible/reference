@@ -19,27 +19,6 @@ function p(str){
 }
 
 describe("Geometry", () => {
-
-	//expect(AwokenRef.intersects(
-	//	{ segments: [ { min:  5, max: 10 } ] },
-	//	{ segments: [ { min:  0, max:  2 },
-	//								{ min:  3, max:  4 },
-	//								{ min:  5, max:  7 },
-	//								{ min:  6, max:  8 },
-	//								{ min: 11, max: 15 },
-	//							]
-	//	},
-	//)).to.deep.equal(true);
-
-	//expect(AwokenRef.intersects(
-	//	{ segments: [ { min:  5, max: 10 } ] },
-	//	{ segments: [ { min:  0, max:  2 },
-	//								{ min:  3, max:  4 },
-	//								{ min: 11, max: 15 },
-	//							]
-	//	},
-	//)).to.deep.equal(false);
-
   it('getIntersection', () => {
     expect(AwokenRef.getIntersection(p('Genesis 1:5-10'), p('Genesis 1:7-12'))).to.deep.equal([
       { is_range: true,
@@ -96,6 +75,27 @@ describe("Geometry", () => {
   it('intersects', () => {
     expect(AwokenRef.intersects(p('Gen 1'), p('Genesis 1:1'))).to.deep.equal(true);
     expect(AwokenRef.intersects(p('Exo 1'), p('Genesis 1:1'))).to.deep.equal(false);
+
+		// expect passing in result of createIntersectionSet to work
+		expect(AwokenRef.intersects(
+			{ segments: [ { min:  5, max: 10 } ] },
+			{ segments: [ { min:  0, max:  2 },
+										{ min:  3, max:  4 },
+										{ min:  5, max:  7 },
+										{ min:  6, max:  8 },
+										{ min: 11, max: 15 },
+									]
+			},
+		)).to.deep.equal(true);
+
+		expect(AwokenRef.intersects(
+			{ segments: [ { min:  0, max:  2 },
+										{ min:  3, max:  4 },
+										{ min: 11, max: 15 },
+									]
+			},
+			{ segments: [ { min:  5, max: 10 } ] },
+		)).to.deep.equal(false);
   });
 
   it('getUnion', () => {

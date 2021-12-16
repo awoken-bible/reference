@@ -143,6 +143,7 @@ export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | Int
 	let a = _toLineSegments(this, x);
 	let b = _toLineSegments(this, y);
 
+	// apply the O(log(n)) search to the larger haystack and the O(n) search to the smaller needles
 	let [ needles, haystack ] =  a.length > b.length ? [ b, a ] : [ a, b ];
 
 	for(let needle of needles) {
