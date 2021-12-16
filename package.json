@@ -14,7 +14,7 @@
     "prepare": "git clean -Xf && npm run build"
   },
   "dependencies": {
-    "parsimmon": "^1.16.0"
+    "parsimmon": "^1.18.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.14.1",
@@ -57,7 +57,7 @@
   "homepage": "https://awoken-bible.github.io/reference/index.html",
   "files": [
     "dist/**/*",
-		"dist.browser/**/*"
+    "dist.browser/**/*"
   ],
   "nyc": {
     "extension": [
