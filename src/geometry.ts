@@ -91,9 +91,49 @@ export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[] 
 
 /**
  * Determines whether two sets of [[BibleRef]]s have any verses in common
+ *
+ * This is much faster on large data sets than `getIntersection` when just a boolean result is
+ * required
  */
 export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | IntersectionSet, y: BibleRef | BibleRef[] | IntersectionSet) : boolean {
-	return getIntersection.bind(this)(x,y).length > 0;
+	let a = _toLineSegments(this, x);
+	let b = _toLineSegments(this, y);
+
+	let [ needles, haystack ] =  a.length > b.length ? [ b, a ] : [ a, b ];
+
+	for(let needle of needles) {
+		// haystack is sorted by min, so find the first possible item that could possibly intersect
+		// with binary search (IE: O(log(n)) rather than O(n) performance)
+		let minLo = 0;
+		let minHi = haystack.length;
+		while(minLo < minHi-1) {
+			let center = minLo + Math.ceil((minHi - minLo)/2);
+			while(minLo < minHi-1 && haystack[center].min < needle.min) {
+				minLo  = center;
+				center = minLo + Math.ceil((minHi - minLo)/2);
+			}
+			minHi = center;
+		}
+
+		let maxLo = minLo;
+		let maxHi = haystack.length;
+		while(maxLo < maxHi-1) {
+			let center = Math.ceil((maxHi + maxLo)/2);
+			while(maxLo < maxHi-1 && haystack[center].min > needle.min) {
+				maxHi  = center;
+				center = Math.ceil((maxHi + maxLo)/2);
+			}
+			maxLo = center;
+		}
+
+		for(let i = minLo; i <= maxHi && i < haystack.length; ++i) {
+			if(_intersectLineSegment(needle, haystack[i])){
+				return true;
+			}
+		}
+
+	}
+	return false;
 }
 
 /**
