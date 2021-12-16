@@ -6,7 +6,6 @@
 import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Versification, BookMeta } from './Versification'
 import * as Vidx from './vidx';
-import { combineRanges } from './range-manip';
 
 export interface GeometryFunctions {
 	getIntersection(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
@@ -17,6 +16,7 @@ export interface GeometryFunctions {
 	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
 	verseAtIndex(a: BibleRef | BibleRef[], idx: number): BibleVerse | undefined;
 	createIntersectionSet(a: BibleRef | BibleRef[]) : IntersectionSet;
+	combineRanges(refs: BibleRef[]) : BibleRef[];
 };
 
 /**
@@ -24,9 +24,53 @@ export interface GeometryFunctions {
  *
  * @private
  */
-interface LineSegment {
+export interface LineSegment {
 	min: number;
 	max: number;
+}
+
+/**
+ * Generates the most compressed representation possible of some set of
+ * [[BibleVerse]]s/[[BibleRange]]s by combining adjacent or overlapping ranges into
+ * larger ones
+ *
+ * For example, an input list of "Gen 1", "Gen 2", "Gen 3", would produce a
+ * single [[BibleRange]] for "Gen 1-3"
+ *
+ * Order of input ranges in unimportant, since this functional will interally
+ * call [[sort]] first
+ */
+export function combineRanges(this: BibleRefLibData, refs: BibleRef[]) : BibleRef[]{
+	let v = this.versification;
+
+	// Convert BibleRefs into vidx pairs representing the range
+	let ranges = _toLineSegmentsUnsorted(this, refs);
+	ranges = ranges.sort((a,b) => a.min - b.min);
+
+	// Combine all ranges
+	let out_ranges : LineSegment[] = [];
+	let cur_r : LineSegment | null = null;
+	for(let new_r of ranges){
+		if(cur_r == null){
+			cur_r = new_r;
+			continue;
+		}
+
+		if(new_r.min > cur_r.max+1){
+			// then no overlap
+			out_ranges.push(cur_r);
+			cur_r = new_r;
+			continue;
+		}
+
+		// expand the current cur_r to end at the end of the new one
+		if(new_r.max > cur_r.max){ cur_r.max = new_r.max };
+	}
+
+	if(cur_r){ out_ranges.push(cur_r); }
+
+	// Convert vidx pairs back into BibleRefs
+	return out_ranges.map(x => _fromLineSegment(this, x));
 }
 
 /**
