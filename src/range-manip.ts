@@ -5,6 +5,7 @@
 import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Versification, BookMeta } from './Versification'
 import * as Vidx from './vidx';
+import { combineRanges } from './geometry';
 
 export interface RangeManipFunctions {
 	splitByBook(refs: BibleRef | BibleRef[], expand_verses?: boolean) : BibleRef[];
@@ -16,7 +17,6 @@ export interface RangeManipFunctions {
 	groupByBook(refs: BibleRef | BibleRef[]) : RefsByBook[];
 	groupByChapter(refs: BibleRef | BibleRef[]) : RefsByChapter[];
 	groupByLevel(refs: BibleRef | BibleRef[], options?: RefsByLevelOptions) : RefsByLevel;
-	combineRanges(refs: BibleRef[]) : BibleRef[];
 	makeRange(book : string, chapter?: number) : BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
 	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
@@ -37,63 +37,6 @@ export interface RangeManipFunctions {
 export function makeRange(this: BibleRefLibData, book : string, chapter? : number) : BibleRange {
 	let v = this.versification;
 	return _makeRange(this.versification, book, chapter);
-}
-
-/**
- * Generates the most compressed representation possible of some set of
- * [[BibleVerse]]s/[[BibleRange]]s by combining adjacent or overlapping ranges into
- * larger ones
- *
- * For example, an input list of "Gen 1", "Gen 2", "Gen 3", would produce a
- * single [[BibleRange]] for "Gen 1-3"
- *
- * Order of input ranges in unimportant, since this functional will interally
- * call [[sort]] first
- */
-export function combineRanges(this: BibleRefLibData, refs: BibleRef[]) : BibleRef[]{
-	let v = this.versification;
-
-	// Convert BibleRefs into vidx pairs representing the range
-	let ranges : [number,number][] = refs
-		.map((x) => x.is_range ? x : { is_range: true, start: x, end: x })
-		.map((x) => [ Vidx.toVidx(v, x.start), Vidx.toVidx(v, x.end) ]);
-
-	// Sort ranges based on start
-	ranges.sort((a,b) => a[0] - b[0]);
-
-	// Combine all ranges
-	let out_ranges : [number,number][] = [];
-	let cur_r : [number,number] | null = null;
-	for(let new_r of ranges){
-		if(cur_r == null){
-			cur_r = new_r;
-			continue;
-		}
-
-		if(new_r[0] > cur_r[1]+1){
-			// then no overlap
-			out_ranges.push(cur_r);
-			cur_r = new_r;
-			continue;
-		}
-
-		// expand the current cur_r to end at the end of the new one
-		if(new_r[1] > cur_r[1]){ cur_r[1] = new_r[1] };
-	}
-	if(cur_r){ out_ranges.push(cur_r); }
-
-
-	// Convert vidx pairs back into BibleRefs
-	return out_ranges.map((r) => {
-		if(r[0] == r[1]){
-			return Vidx.fromVidx(v, r[0]);
-		} else {
-			return { is_range: true,
-							 start : Vidx.fromVidx(v, r[0]),
-							 end   : Vidx.fromVidx(v, r[1]),
-						 };
-		}
-	});
 }
 
 /**

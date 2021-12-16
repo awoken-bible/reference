@@ -6,7 +6,6 @@
 import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Versification, BookMeta } from './Versification'
 import * as Vidx from './vidx';
-import { combineRanges } from './range-manip';
 
 export interface GeometryFunctions {
 	getIntersection(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
@@ -16,6 +15,8 @@ export interface GeometryFunctions {
 	getDifference(a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]): BibleRef[];
 	indexOf(a: BibleRef | BibleRef[], b: BibleVerse): number;
 	verseAtIndex(a: BibleRef | BibleRef[], idx: number): BibleVerse | undefined;
+	createIntersectionSet(a: BibleRef | BibleRef[]) : IntersectionSet;
+	combineRanges(refs: BibleRef[]) : BibleRef[];
 };
 
 /**
@@ -23,9 +24,68 @@ export interface GeometryFunctions {
  *
  * @private
  */
-interface LineSegment {
+export interface LineSegment {
 	min: number;
 	max: number;
+}
+
+/**
+ * Generates the most compressed representation possible of some set of
+ * [[BibleVerse]]s/[[BibleRange]]s by combining adjacent or overlapping ranges into
+ * larger ones
+ *
+ * For example, an input list of "Gen 1", "Gen 2", "Gen 3", would produce a
+ * single [[BibleRange]] for "Gen 1-3"
+ *
+ * Order of input ranges in unimportant, since this functional will interally
+ * call [[sort]] first
+ */
+export function combineRanges(this: BibleRefLibData, refs: BibleRef[]) : BibleRef[]{
+	let v = this.versification;
+
+	// Convert BibleRefs into vidx pairs representing the range
+	let ranges = _toLineSegmentsUnsorted(this, refs);
+	ranges = ranges.sort((a,b) => a.min - b.min);
+
+	// Combine all ranges
+	let out_ranges : LineSegment[] = [];
+	let cur_r : LineSegment | null = null;
+	for(let new_r of ranges){
+		if(cur_r == null){
+			cur_r = new_r;
+			continue;
+		}
+
+		if(new_r.min > cur_r.max+1){
+			// then no overlap
+			out_ranges.push(cur_r);
+			cur_r = new_r;
+			continue;
+		}
+
+		// expand the current cur_r to end at the end of the new one
+		if(new_r.max > cur_r.max){ cur_r.max = new_r.max };
+	}
+
+	if(cur_r){ out_ranges.push(cur_r); }
+
+	// Convert vidx pairs back into BibleRefs
+	return out_ranges.map(x => _fromLineSegment(this, x));
+}
+
+/**
+ * Opaque type containing data for use by `getIntersection` or `intersects`
+ */
+export type IntersectionSet = { segments: LineSegment[] };
+
+/**
+ * Precomputes data regarding BibleRef list as used by `getIntersection` and `intersects`
+ *
+ * This is more performant if you call either of these functions multiple times where one of the two
+ * inputs remains constant
+ */
+export function createIntersectionSet(this: BibleRefLibData, x: BibleRef | BibleRef[]) : IntersectionSet {
+	return { segments: _toLineSegments(this, x) };
 }
 
 /**
@@ -38,7 +98,7 @@ interface LineSegment {
  * @return Simplified and sorted list of [[BibleRef]]s which appear in both input sets. Will
  * return empty array if there are no verses in common between the inputs
  */
-export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[], y: BibleRef | BibleRef[]) : BibleRef[]  {
+export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[] | IntersectionSet, y: BibleRef | BibleRef[] | IntersectionSet) : BibleRef[]  {
 	let a = _toLineSegments(this, x);
 	let b = _toLineSegments(this, y);
 
@@ -75,9 +135,42 @@ export function getIntersection(this: BibleRefLibData, x: BibleRef | BibleRef[],
 
 /**
  * Determines whether two sets of [[BibleRef]]s have any verses in common
+ *
+ * This is much faster on large data sets than `getIntersection` when just a boolean result is
+ * required
  */
-export function intersects(this: BibleRefLibData, a: BibleRef | BibleRef[], b: BibleRef | BibleRef[]) : boolean {
-	return getIntersection.bind(this)(a,b).length > 0;
+export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | IntersectionSet, y: BibleRef | BibleRef[] | IntersectionSet) : boolean {
+	let a = _toLineSegments(this, x);
+	let b = _toLineSegments(this, y);
+
+	let [ needles, haystack ] =  a.length > b.length ? [ b, a ] : [ a, b ];
+
+	for(let needle of needles) {
+		// haystack is sorted by min, so find the first possible item that could possibly intersect
+		// using a binary search (IE: O(log(n)) rather than O(n) performance)
+		let minLo = 0;
+		let minHi = haystack.length-1;
+		while(minLo < minHi-1) {
+			let center = minLo + Math.ceil((minHi - minLo)/2);
+			while(minLo < minHi-1 && haystack[center].min < needle.min) {
+				minLo  = center;
+				center = minLo + Math.ceil((minHi - minLo)/2);
+			}
+			minHi = center;
+		}
+
+		// now do a linear search from minLow to end of haystack
+		// in reality, we can bail out much sooner
+		// (as soon as the haystack's min is greater than needle's max)
+		for(let i = minLo; i < haystack.length; ++i) {
+			if(needle.max < haystack[i].min) { break; }
+			if(_intersectLineSegment(needle, haystack[i])){ return true; }
+		}
+
+	}
+
+	// if still going, we obviously don't have an intersection
+	return false;
 }
 
 /**
@@ -261,7 +354,8 @@ function _toLineSegmentsUnsorted(lib: BibleRefLibData, input: BibleRef | BibleRe
  *
  * @private
  */
-function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[]): LineSegment[] {
+function _toLineSegments(lib: BibleRefLibData, input: BibleRef | BibleRef[] | IntersectionSet): LineSegment[] {
+	if('segments' in input) { return input.segments; }
 	let in_arr : BibleRef[] = 'length' in input ? input : [input];
 	return _toLineSegmentsUnsorted(lib, combineRanges.bind(lib)(in_arr));
 }

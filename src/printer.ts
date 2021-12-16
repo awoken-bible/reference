@@ -5,7 +5,7 @@
 import VERSIFICATION from './Versification';
 import { Versification } from './Versification';
 import { BibleRef, BibleVerse, BibleRange } from './BibleRef';
-import { combineRanges } from './range-manip';
+import { combineRanges } from './geometry';
 
 /**
  * Set of optional flags which can be passed to the format function
