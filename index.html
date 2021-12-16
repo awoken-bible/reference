@@ -76,34 +76,34 @@
 					<h3>Node JS</h3>
 				</a>
 				<p>To use the default versification scheme, simple import the libary and use the global <a href="https://awoken-bible.github.io/reference/index.html">API functions</a>.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> AwokenRef <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> AwokenRef <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;awoken-bible-reference&#x27;</span>;
 
-<span class="hljs-keyword">let</span> vref = AwokenRef.parseOrThrow(<span class="hljs-string">'Genesis 1'</span>);
+<span class="hljs-keyword">let</span> vref = AwokenRef.parseOrThrow(<span class="hljs-string">&#x27;Genesis 1&#x27;</span>);
 <span class="hljs-keyword">if</span>(AwokenRef.countVerses(vref) &gt; <span class="hljs-number">10</span>)){
     vref = AwokenRef.firstNVerses(vref, <span class="hljs-number">10</span>);
 }
-vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-string">'GEN 1 v6,9-20'</span>));
+vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-string">&#x27;GEN 1 v6,9-20&#x27;</span>));
 
-<span class="hljs-comment">// Print as human readable verse reference (IE: "Genesis 1:6,9-10")</span>
+<span class="hljs-comment">// Print as human readable verse reference (IE: &quot;Genesis 1:6,9-10&quot;)</span>
 <span class="hljs-built_in">console</span>.log(AwokenRef.format(vref));
 
-<span class="hljs-comment">// Print as url encodable reference (IE: "gen1v6,9-10")</span>
-<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref, { url: <span class="hljs-literal">true</span> }));
+<span class="hljs-comment">// Print as url encodable reference (IE: &quot;gen1v6,9-10&quot;)</span>
+<span class="hljs-built_in">console</span>.log(AwokenRef.format(vref, { <span class="hljs-attr">url</span>: <span class="hljs-literal">true</span> }));
 
 <span class="hljs-comment">// Inspect the object, will yield:</span>
-<span class="hljs-comment">// [ { book: 'GEN', chapter: 1, verse: 6 },</span>
+<span class="hljs-comment">// [ { book: &#x27;GEN&#x27;, chapter: 1, verse: 6 },</span>
 <span class="hljs-comment">//   { is_range : true,</span>
-<span class="hljs-comment">//     start    : { book: 'GEN', chapter: 1, verse:  9 },</span>
-<span class="hljs-comment">//     end      : { book: 'GEN', chapter: 1, verse: 10 },</span>
+<span class="hljs-comment">//     start    : { book: &#x27;GEN&#x27;, chapter: 1, verse:  9 },</span>
+<span class="hljs-comment">//     end      : { book: &#x27;GEN&#x27;, chapter: 1, verse: 10 },</span>
 <span class="hljs-comment">//   }</span>
 <span class="hljs-comment">// ]</span>
 <span class="hljs-built_in">console</span>.dir(vref);</code></pre>
 				<p>Non-standard versification schemes can be used by instead creating an instance of the library. This allows support to be added for the Apocrypha, or translations that use a different split of verses per chapter.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> __AwokenRef__ <span class="hljs-keyword">from</span> <span class="hljs-string">'awoken-bible-reference'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> __AwokenRef__ <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;awoken-bible-reference&#x27;</span>;
 
 <span class="hljs-keyword">const</span> AwokenRef = <span class="hljs-keyword">new</span> __AwokenRef__(my_versificaton);
 
-<span class="hljs-keyword">let</span> vref = AwokenRef.parse(<span class="hljs-string">'MyBook 100:999'</span>);</code></pre>
+<span class="hljs-keyword">let</span> vref = AwokenRef.parse(<span class="hljs-string">&#x27;MyBook 100:999&#x27;</span>);</code></pre>
 				<p>The full list of methods on the <code>AwokenRef</code> object can be found in the <a href="https://awoken-bible.github.io/reference/index.html">API docs</a>.</p>
 				<a href="#browser" id="browser" style="color: inherit; text-decoration: none;">
 					<h3>Browser</h3>
@@ -111,14 +111,14 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 				<p>If using plain javascript in the browser with no build-system to bundle your dependencies, you may simply reference the file found in <code>./dist.browser/awoken-ref.js</code>.</p>
 				<p>This will create a global &quot;AwokenRef` variable, which can be used as both an instance of the library, and a constructor to create new instances with non-default versification schemes.</p>
 				<pre><code class="language-html">
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"[path]/awoken-ref.js"</span>/&gt;</span><span class="handlebars"><span class="xml">
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;[path]/awoken-ref.js&quot;</span>/&gt;</span><span class="handlebars"><span class="xml">
 
 
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">
-    <span class="hljs-keyword">var</span> refs = AwokenRef.parseOrThrow(<span class="hljs-string">'Tobit 1.1'</span>); <span class="hljs-comment">// error!</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-keyword">var</span> refs = AwokenRef.parseOrThrow(<span class="hljs-string">&#x27;Tobit 1.1&#x27;</span>); <span class="hljs-comment">// error!</span>
 
     <span class="hljs-keyword">var</span> lib = <span class="hljs-keyword">new</span> AwokenRef(myCustomVersificationWithApocrytha);
-    <span class="hljs-keyword">var</span> myRefs = lib.parseOrThrow(<span class="hljs-string">'Tobit 1.1'</span>); <span class="hljs-comment">// success!</span>
+    <span class="hljs-keyword">var</span> myRefs = lib.parseOrThrow(<span class="hljs-string">&#x27;Tobit 1.1&#x27;</span>); <span class="hljs-comment">// success!</span>
 </span></span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 				<a href="#type-representations" id="type-representations" style="color: inherit; text-decoration: none;">
 					<h1>Type Representations</h1>
@@ -150,23 +150,23 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 						<td>JSON</td>
 						<td>
 							<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> BibleVerse {
-  book    : <span class="hljs-built_in">string</span>,
-  chapter : <span class="hljs-built_in">number</span>,
-  verse   : <span class="hljs-built_in">number</span>,
+  <span class="hljs-attr">book</span>    : <span class="hljs-built_in">string</span>,
+  <span class="hljs-attr">chapter</span> : <span class="hljs-built_in">number</span>,
+  <span class="hljs-attr">verse</span>   : <span class="hljs-built_in">number</span>,
 }</code></pre>
 						</td>
 						<td>
 							<pre><code class="language-json">{
-  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"GEN"</span>,
-  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">1</span>,
-  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">1</span>,
+  <span class="hljs-attr">&quot;book&quot;</span>    : <span class="hljs-string">&quot;GEN&quot;</span>,
+  <span class="hljs-attr">&quot;chapter&quot;</span> : <span class="hljs-number">1</span>,
+  <span class="hljs-attr">&quot;verse&quot;</span>   : <span class="hljs-number">1</span>,
 }</code></pre>
 						</td>
 						<td>
 							<pre><code class="language-json">{
-  <span class="hljs-attr">"book"</span>    : <span class="hljs-string">"REV"</span>,
-  <span class="hljs-attr">"chapter"</span> : <span class="hljs-number">22</span>,
-  <span class="hljs-attr">"verse"</span>   : <span class="hljs-number">21</span>,
+  <span class="hljs-attr">&quot;book&quot;</span>    : <span class="hljs-string">&quot;REV&quot;</span>,
+  <span class="hljs-attr">&quot;chapter&quot;</span> : <span class="hljs-number">22</span>,
+  <span class="hljs-attr">&quot;verse&quot;</span>   : <span class="hljs-number">21</span>,
 }</code></pre>
 						</td>
 					</tr>
@@ -181,9 +181,9 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 				<p>BibleRanges are represented by an object of the form:</p>
 				<pre><code class="language-typescript"><span class="hljs-comment">/** Representation of continous block of verses */</span>
 <span class="hljs-keyword">interface</span> BibleRange {
-    is_range : <span class="hljs-literal">true</span>,
-    start    : BibleVerse,
-    end      : BibleVerse,
+    <span class="hljs-attr">is_range</span> : <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">start</span>    : BibleVerse,
+    <span class="hljs-attr">end</span>      : BibleVerse,
 };</code></pre>
 				<a href="#mixed-sets" id="mixed-sets" style="color: inherit; text-decoration: none;">
 					<h2>Mixed Sets</h2>
@@ -291,10 +291,16 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 						<a href="globals.html#formatpreset" class="tsd-kind-icon">Format<wbr>Preset</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#intersectionset" class="tsd-kind-icon">Intersection<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#parseresult" class="tsd-kind-icon">Parse<wbr>Result</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#validationerror" class="tsd-kind-icon">Validation<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#versification" class="tsd-kind-icon">VERSIFICATION</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#combineranges" class="tsd-kind-icon">combine<wbr>Ranges</a>
@@ -304,6 +310,9 @@ vref = AwokenRef.getIntersection(vref, AwokenRef.parseOrThrow(<span class="hljs-
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#countverses" class="tsd-kind-icon">count<wbr>Verses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#createintersectionset" class="tsd-kind-icon">create<wbr>Intersection<wbr>Set</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#createversification" class="tsd-kind-icon">create<wbr>Versification</a>
