@@ -103,9 +103,9 @@ export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | Int
 
 	for(let needle of needles) {
 		// haystack is sorted by min, so find the first possible item that could possibly intersect
-		// with binary search (IE: O(log(n)) rather than O(n) performance)
+		// using a binary search (IE: O(log(n)) rather than O(n) performance)
 		let minLo = 0;
-		let minHi = haystack.length;
+		let minHi = haystack.length-1;
 		while(minLo < minHi-1) {
 			let center = minLo + Math.ceil((minHi - minLo)/2);
 			while(minLo < minHi-1 && haystack[center].min < needle.min) {
@@ -115,24 +115,17 @@ export function intersects(this: BibleRefLibData, x: BibleRef | BibleRef[] | Int
 			minHi = center;
 		}
 
-		let maxLo = minLo;
-		let maxHi = haystack.length;
-		while(maxLo < maxHi-1) {
-			let center = Math.ceil((maxHi + maxLo)/2);
-			while(maxLo < maxHi-1 && haystack[center].min > needle.min) {
-				maxHi  = center;
-				center = Math.ceil((maxHi + maxLo)/2);
-			}
-			maxLo = center;
-		}
-
-		for(let i = minLo; i <= maxHi && i < haystack.length; ++i) {
-			if(_intersectLineSegment(needle, haystack[i])){
-				return true;
-			}
+		// now do a linear search from minLow to end of haystack
+		// in reality, we can bail out much sooner
+		// (as soon as the haystack's min is greater than needle's max)
+		for(let i = minLo; i < haystack.length; ++i) {
+			if(needle.max < haystack[i].min) { break; }
+			if(_intersectLineSegment(needle, haystack[i])){ return true; }
 		}
 
 	}
+
+	// if still going, we obviously don't have an intersection
 	return false;
 }
 
