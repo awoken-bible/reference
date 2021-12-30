@@ -480,225 +480,296 @@ describe("parse", () => {
     }]);
   });
 
-  it("Chicago Book Abbreviation", () => {
-    // Old testemant: https://hbl.gcc.libguides.com/ld.php?content_id=13822328
-    expect(parse('Am       1:1').value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Chron. 1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Chr    1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Chron. 1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Chr    1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
-    expect(parse('Dan.     1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
-    expect(parse('Dn       1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
-    expect(parse('Deut.    1:1').value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
-    expect(parse('Dt       1:1').value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
-    expect(parse('Eccles.  1:1').value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
-    expect(parse('Eccl     1:1').value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
-    expect(parse('Est      1:1').value).to.deep.equal([ { book: 'EST', chapter: 1, verse: 1 } ]);
-    expect(parse('Exod.    1:1').value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
-    expect(parse('Ex       1:1').value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
-    expect(parse('Ezek.    1:1').value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
-    expect(parse('Ez       1:1').value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
-    expect(parse('Ezr      1:1').value).to.deep.equal([ { book: 'EZR', chapter: 1, verse: 1 } ]);
-    expect(parse('Gen.     1:1').value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
-    expect(parse('Gn       1:1').value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
-    expect(parse('Hab.     1:1').value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
-    expect(parse('Hb       1:1').value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
-    expect(parse('Hag.     1:1').value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
-    expect(parse('Hg       1:1').value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
-    expect(parse('Hos      1:1').value).to.deep.equal([ { book: 'HOS', chapter: 1, verse: 1 } ]);
-    expect(parse('Isa.     1:1').value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
-    expect(parse('Is       1:1').value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
-    expect(parse('Jer.     1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
-    expect(parse('Jer      1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
-    expect(parse('Job      1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
-    expect(parse('Jb       1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
-    expect(parse('Jl       1:1').value).to.deep.equal([ { book: 'JOL', chapter: 1, verse: 1 } ]);
-    expect(parse('Jon.     1:1').value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
-    expect(parse('Jon      1:1').value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
-    expect(parse('Josh.    1:1').value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
-    expect(parse('Jo       1:1').value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
-    expect(parse('Judg.    1:1').value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
-    expect(parse('Jgs      1:1').value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Kgs    1:1').value).to.deep.equal([ { book: '1KI', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Kgs    1:1').value).to.deep.equal([ { book: '2KI', chapter: 1, verse: 1 } ]);
-    expect(parse('Lam.     1:1').value).to.deep.equal([ { book: 'LAM', chapter: 1, verse: 1 } ]);
-    expect(parse('Lam      1:1').value).to.deep.equal([ { book: 'LAM', chapter: 1, verse: 1 } ]);
-    expect(parse('Lev.     1:1').value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
-    expect(parse('Lv       1:1').value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
-    expect(parse('Mal.     1:1').value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
-    expect(parse('Mal      1:1').value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
-    expect(parse('Mic.     1:1').value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
-    expect(parse('Mi       1:1').value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
-    expect(parse('Nah.     1:1').value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
-    expect(parse('Na       1:1').value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
-    expect(parse('Neh.     1:1').value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
-    expect(parse('Neh      1:1').value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
-    expect(parse('Num.     1:1').value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
-    expect(parse('Nm       1:1').value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
-    expect(parse('Obad.    1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
-    expect(parse('Ob       1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
-    expect(parse('Prov.    1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
-    expect(parse('Prv      1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
-    expect(parse('Ps.      1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
-    expect(parse('Pss.     1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
-    expect(parse('Ps       1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
-    expect(parse('Pss      1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
-    expect(parse('Ru       1:1').value).to.deep.equal([ { book: 'RUT', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Sam.   1:1').value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Sm     1:1').value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Sam.   1:1').value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Sm     1:1').value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
-    expect(parse('Song of Sol. 1:1').value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
-    expect(parse('Sg       1:1').value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
-    expect(parse('Zech.    1:1').value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
-    expect(parse('Zec      1:1').value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
-    expect(parse('Zeph.    1:1').value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
-    expect(parse('Zep      1:1').value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
+	describe("Book Abbreviation Styles", () => {
+		it("Chicago Book Abbreviation", () => {
+			// Old testemant: https://hbl.gcc.libguides.com/ld.php?content_id=13822328
+			expect(parse('Am       1:1').value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Chron. 1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Chr    1:1').value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Chron. 1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Chr    1:1').value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
+			expect(parse('Dan.     1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
+			expect(parse('Dn       1:1').value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
+			expect(parse('Deut.    1:1').value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
+			expect(parse('Dt       1:1').value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
+			expect(parse('Eccles.  1:1').value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
+			expect(parse('Eccl     1:1').value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
+			expect(parse('Est      1:1').value).to.deep.equal([ { book: 'EST', chapter: 1, verse: 1 } ]);
+			expect(parse('Exod.    1:1').value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
+			expect(parse('Ex       1:1').value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
+			expect(parse('Ezek.    1:1').value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
+			expect(parse('Ez       1:1').value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
+			expect(parse('Ezr      1:1').value).to.deep.equal([ { book: 'EZR', chapter: 1, verse: 1 } ]);
+			expect(parse('Gen.     1:1').value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
+			expect(parse('Gn       1:1').value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
+			expect(parse('Hab.     1:1').value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
+			expect(parse('Hb       1:1').value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
+			expect(parse('Hag.     1:1').value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
+			expect(parse('Hg       1:1').value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
+			expect(parse('Hos      1:1').value).to.deep.equal([ { book: 'HOS', chapter: 1, verse: 1 } ]);
+			expect(parse('Isa.     1:1').value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
+			expect(parse('Is       1:1').value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
+			expect(parse('Jer.     1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
+			expect(parse('Jer      1:1').value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
+			expect(parse('Job      1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
+			expect(parse('Jb       1:1').value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
+			expect(parse('Jl       1:1').value).to.deep.equal([ { book: 'JOL', chapter: 1, verse: 1 } ]);
+			expect(parse('Jon.     1:1').value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
+			expect(parse('Jon      1:1').value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
+			expect(parse('Josh.    1:1').value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
+			expect(parse('Jo       1:1').value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
+			expect(parse('Judg.    1:1').value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
+			expect(parse('Jgs      1:1').value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Kgs    1:1').value).to.deep.equal([ { book: '1KI', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Kgs    1:1').value).to.deep.equal([ { book: '2KI', chapter: 1, verse: 1 } ]);
+			expect(parse('Lam.     1:1').value).to.deep.equal([ { book: 'LAM', chapter: 1, verse: 1 } ]);
+			expect(parse('Lam      1:1').value).to.deep.equal([ { book: 'LAM', chapter: 1, verse: 1 } ]);
+			expect(parse('Lev.     1:1').value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
+			expect(parse('Lv       1:1').value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
+			expect(parse('Mal.     1:1').value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
+			expect(parse('Mal      1:1').value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
+			expect(parse('Mic.     1:1').value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
+			expect(parse('Mi       1:1').value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
+			expect(parse('Nah.     1:1').value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
+			expect(parse('Na       1:1').value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
+			expect(parse('Neh.     1:1').value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
+			expect(parse('Neh      1:1').value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
+			expect(parse('Num.     1:1').value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
+			expect(parse('Nm       1:1').value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
+			expect(parse('Obad.    1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
+			expect(parse('Ob       1:1').value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
+			expect(parse('Prov.    1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
+			expect(parse('Prv      1:1').value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
+			expect(parse('Ps.      1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
+			expect(parse('Pss.     1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
+			expect(parse('Ps       1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
+			expect(parse('Pss      1:1').value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
+			expect(parse('Ru       1:1').value).to.deep.equal([ { book: 'RUT', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Sam.   1:1').value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Sm     1:1').value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Sam.   1:1').value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Sm     1:1').value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
+			expect(parse('Song of Sol. 1:1').value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
+			expect(parse('Sg       1:1').value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
+			expect(parse('Zech.    1:1').value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
+			expect(parse('Zec      1:1').value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
+			expect(parse('Zeph.    1:1').value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
+			expect(parse('Zep      1:1').value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
 
 
-    // New testemant: http://hbl.gcc.libguides.com/ld.php?content_id=13822330
-    expect(parse('Acts     1:1').value).to.deep.equal([ { book: 'ACT', chapter: 1, verse: 1 } ]);
-    expect(parse('Apoc.    1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
-    expect(parse('Col.     1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
-    expect(parse('Col      1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Cor.   1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Cor    1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Cor.   1:1').value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Cor    1:1').value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
-    expect(parse('Eph.     1:1').value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
-    expect(parse('Eph      1:1').value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
-    expect(parse('Gal.     1:1').value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
-    expect(parse('Gal      1:1').value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
-    expect(parse('Heb.     1:1').value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
-    expect(parse('Heb      1:1').value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
-    expect(parse('Jas      1:1').value).to.deep.equal([ { book: 'JAS', chapter: 1, verse: 1 } ]);
-    expect(parse('Jn       1:1').value).to.deep.equal([ { book: 'JHN', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Jn     1:1').value).to.deep.equal([ { book: '1JN', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Jn     1:1').value).to.deep.equal([ { book: '2JN', chapter: 1, verse: 1 } ]);
-    expect(parse('3 Jn     1:1').value).to.deep.equal([ { book: '3JN', chapter: 1, verse: 1 } ]);
-    expect(parse('Lk       1:1').value).to.deep.equal([ { book: 'LUK', chapter: 1, verse: 1 } ]);
-    expect(parse('Mk       1:1').value).to.deep.equal([ { book: 'MRK', chapter: 1, verse: 1 } ]);
-    expect(parse('Mt       1:1').value).to.deep.equal([ { book: 'MAT', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Pet.   1:1').value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Pt     1:1').value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Pet.   1:1').value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Pt     1:1').value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
-    expect(parse('Philem.  1:1').value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
-    expect(parse('Phlm.    1:1').value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
-    expect(parse('Phil.    1:1').value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
-    expect(parse('Phil     1:1').value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
-    expect(parse('Rev.     1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
-    expect(parse('Rv       1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
-    expect(parse('Rom.     1:1').value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
-    expect(parse('Rom      1:1').value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Thess. 1:1').value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Thes   1:1').value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Thess. 1:1').value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Thes   1:1').value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Tim.   1:1').value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
-    expect(parse('1 Tm     1:1').value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Tim.   1:1').value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
-    expect(parse('2 Tm     1:1').value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
-    expect(parse('Ti       1:1').value).to.deep.equal([ { book: 'TIT', chapter: 1, verse: 1 } ]);
-  });
-
-	describe("OSIS References", () => {
-		it('Book Ids', () => {
-			// https://wiki.crosswire.org/OSIS_Book_Abbreviations
-
-			expect(parse('Gen.1.1'   ).value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
-			expect(parse('Exod.1.1'  ).value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
-			expect(parse('Lev.1.1'   ).value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
-			expect(parse('Num.1.1'   ).value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
-			expect(parse('Deut.1.1'  ).value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
-			expect(parse('Josh.1.1'  ).value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
-			expect(parse('Judg.1.1'  ).value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
-			expect(parse('Ruth.1.1'  ).value).to.deep.equal([ { book: 'RUT', chapter: 1, verse: 1 } ]);
-			expect(parse('1Sam.1.1'  ).value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
-			expect(parse('2Sam.1.1'  ).value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
-			expect(parse('1Kgs.1.1'  ).value).to.deep.equal([ { book: '1KI', chapter: 1, verse: 1 } ]);
-			expect(parse('2Kgs.1.1'  ).value).to.deep.equal([ { book: '2KI', chapter: 1, verse: 1 } ]);
-			expect(parse('1Chr.1.1'  ).value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
-			expect(parse('2Chr.1.1'  ).value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
-			expect(parse('Ezra.1.1'  ).value).to.deep.equal([ { book: 'EZR', chapter: 1, verse: 1 } ]);
-			expect(parse('Neh.1.1'   ).value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
-			expect(parse('Esth.1.1'  ).value).to.deep.equal([ { book: 'EST', chapter: 1, verse: 1 } ]);
-			expect(parse('Job.1.1'   ).value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
-			expect(parse('Ps.1.1'    ).value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
-			expect(parse('Prov.1.1'  ).value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
-			expect(parse('Eccl.1.1'  ).value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
-			expect(parse('Song.1.1'  ).value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
-			expect(parse('Isa.1.1'   ).value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
-			expect(parse('Jer.1.1'   ).value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
-			expect(parse('Ezek.1.1'  ).value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
-			expect(parse('Dan.1.1'   ).value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
-			expect(parse('Hos.1.1'   ).value).to.deep.equal([ { book: 'HOS', chapter: 1, verse: 1 } ]);
-			expect(parse('Joel.1.1'  ).value).to.deep.equal([ { book: 'JOL', chapter: 1, verse: 1 } ]);
-			expect(parse('Amos.1.1'  ).value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
-			expect(parse('Obad.1.1'  ).value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
-			expect(parse('Jonah.1.1' ).value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
-			expect(parse('Mic.1.1'   ).value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
-			expect(parse('Nah.1.1'   ).value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
-			expect(parse('Hab.1.1'   ).value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
-			expect(parse('Zeph.1.1'  ).value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
-			expect(parse('Hag.1.1'   ).value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
-			expect(parse('Zech.1.1'  ).value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
-			expect(parse('Mal.1.1'   ).value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
-
-			expect(parse('Matt.1.1'   ).value).to.deep.equal([ { book: 'MAT', chapter: 1, verse: 1 } ]);
-			expect(parse('Mark.1.1'   ).value).to.deep.equal([ { book: 'MRK', chapter: 1, verse: 1 } ]);
-			expect(parse('Luke.1.1'   ).value).to.deep.equal([ { book: 'LUK', chapter: 1, verse: 1 } ]);
-			expect(parse('John.1.1'   ).value).to.deep.equal([ { book: 'JHN', chapter: 1, verse: 1 } ]);
-			expect(parse('Acts.1.1'   ).value).to.deep.equal([ { book: 'ACT', chapter: 1, verse: 1 } ]);
-			expect(parse('Rom.1.1'    ).value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
-			expect(parse('1Cor.1.1'   ).value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
-			expect(parse('2Cor.1.1'   ).value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
-			expect(parse('Gal.1.1'    ).value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
-			expect(parse('Eph.1.1'    ).value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
-			expect(parse('Phil.1.1'   ).value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
-			expect(parse('Col.1.1'    ).value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
-			expect(parse('1Thess.1.1' ).value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
-			expect(parse('2Thess.1.1' ).value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
-			expect(parse('1Tim.1.1'   ).value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
-			expect(parse('2Tim.1.1'   ).value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
-			expect(parse('Titus.1.1'  ).value).to.deep.equal([ { book: 'TIT', chapter: 1, verse: 1 } ]);
-			expect(parse('Phlm.1.1'   ).value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
-			expect(parse('Heb.1.1'    ).value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
-
-			expect(parse('Jas.1.1'    ).value).to.deep.equal([ { book: 'JAS', chapter: 1, verse: 1 } ]);
-			expect(parse('1Pet.1.1'   ).value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
-			expect(parse('2Pet.1.1'   ).value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
-			expect(parse('1John.1.1'  ).value).to.deep.equal([ { book: '1JN', chapter: 1, verse: 1 } ]);
-			expect(parse('2John.1.1'  ).value).to.deep.equal([ { book: '2JN', chapter: 1, verse: 1 } ]);
-			expect(parse('3John.1.1'  ).value).to.deep.equal([ { book: '3JN', chapter: 1, verse: 1 } ]);
-			expect(parse('Jude.1.1'   ).value).to.deep.equal([ { book: 'JUD', chapter: 1, verse: 1 } ]);
-			expect(parse('Rev.1.1'    ).value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+			// New testemant: http://hbl.gcc.libguides.com/ld.php?content_id=13822330
+			expect(parse('Acts     1:1').value).to.deep.equal([ { book: 'ACT', chapter: 1, verse: 1 } ]);
+			expect(parse('Apoc.    1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+			expect(parse('Col.     1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
+			expect(parse('Col      1:1').value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Cor.   1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Cor    1:1').value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Cor.   1:1').value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Cor    1:1').value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
+			expect(parse('Eph.     1:1').value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
+			expect(parse('Eph      1:1').value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
+			expect(parse('Gal.     1:1').value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
+			expect(parse('Gal      1:1').value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
+			expect(parse('Heb.     1:1').value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
+			expect(parse('Heb      1:1').value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
+			expect(parse('Jas      1:1').value).to.deep.equal([ { book: 'JAS', chapter: 1, verse: 1 } ]);
+			expect(parse('Jn       1:1').value).to.deep.equal([ { book: 'JHN', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Jn     1:1').value).to.deep.equal([ { book: '1JN', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Jn     1:1').value).to.deep.equal([ { book: '2JN', chapter: 1, verse: 1 } ]);
+			expect(parse('3 Jn     1:1').value).to.deep.equal([ { book: '3JN', chapter: 1, verse: 1 } ]);
+			expect(parse('Lk       1:1').value).to.deep.equal([ { book: 'LUK', chapter: 1, verse: 1 } ]);
+			expect(parse('Mk       1:1').value).to.deep.equal([ { book: 'MRK', chapter: 1, verse: 1 } ]);
+			expect(parse('Mt       1:1').value).to.deep.equal([ { book: 'MAT', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Pet.   1:1').value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Pt     1:1').value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Pet.   1:1').value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Pt     1:1').value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
+			expect(parse('Philem.  1:1').value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
+			expect(parse('Phlm.    1:1').value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
+			expect(parse('Phil.    1:1').value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
+			expect(parse('Phil     1:1').value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
+			expect(parse('Rev.     1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+			expect(parse('Rv       1:1').value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+			expect(parse('Rom.     1:1').value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
+			expect(parse('Rom      1:1').value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Thess. 1:1').value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Thes   1:1').value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Thess. 1:1').value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Thes   1:1').value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Tim.   1:1').value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
+			expect(parse('1 Tm     1:1').value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Tim.   1:1').value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
+			expect(parse('2 Tm     1:1').value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
+			expect(parse('Ti       1:1').value).to.deep.equal([ { book: 'TIT', chapter: 1, verse: 1 } ]);
 		});
 
-		it('Ranges', () => {
-			expect(parse('Gen.3.2, Gen.3.3, Gen.3.4').value).to.deep.equal([
-				{ book: 'GEN', chapter: 3, verse:  2 },
-				{ book: 'GEN', chapter: 3, verse:  3 },
-				{ book: 'GEN', chapter: 3, verse:  4 },
-			]);
+		it("Blue Letter Bible", () => {
+			expect(parse('Gen').value[0].start).to.deep.equal({ book: 'GEN', chapter: 1, verse: 1 });
+			expect(parse('Exo').value[0].start).to.deep.equal({ book: 'EXO', chapter: 1, verse: 1 });
+			expect(parse('Lev').value[0].start).to.deep.equal({ book: 'LEV', chapter: 1, verse: 1 });
+			expect(parse('Num').value[0].start).to.deep.equal({ book: 'NUM', chapter: 1, verse: 1 });
+			expect(parse('Deu').value[0].start).to.deep.equal({ book: 'DEU', chapter: 1, verse: 1 });
+			expect(parse('Jos').value[0].start).to.deep.equal({ book: 'JOS', chapter: 1, verse: 1 });
+			expect(parse('Jdg').value[0].start).to.deep.equal({ book: 'JDG', chapter: 1, verse: 1 });
+			expect(parse('Rth').value[0].start).to.deep.equal({ book: 'RUT', chapter: 1, verse: 1 });
+			expect(parse('1Sa').value[0].start).to.deep.equal({ book: '1SA', chapter: 1, verse: 1 });
+			expect(parse('2Sa').value[0].start).to.deep.equal({ book: '2SA', chapter: 1, verse: 1 });
+			expect(parse('1Ki').value[0].start).to.deep.equal({ book: '1KI', chapter: 1, verse: 1 });
+			expect(parse('2Ki').value[0].start).to.deep.equal({ book: '2KI', chapter: 1, verse: 1 });
+			expect(parse('1Ch').value[0].start).to.deep.equal({ book: '1CH', chapter: 1, verse: 1 });
+			expect(parse('2Ch').value[0].start).to.deep.equal({ book: '2CH', chapter: 1, verse: 1 });
+			expect(parse('Ezr').value[0].start).to.deep.equal({ book: 'EZR', chapter: 1, verse: 1 });
+			expect(parse('Neh').value[0].start).to.deep.equal({ book: 'NEH', chapter: 1, verse: 1 });
+			expect(parse('Est').value[0].start).to.deep.equal({ book: 'EST', chapter: 1, verse: 1 });
+			expect(parse('Job').value[0].start).to.deep.equal({ book: 'JOB', chapter: 1, verse: 1 });
+			expect(parse('Psa').value[0].start).to.deep.equal({ book: 'PSA', chapter: 1, verse: 1 });
+			expect(parse('Pro').value[0].start).to.deep.equal({ book: 'PRO', chapter: 1, verse: 1 });
+			expect(parse('Ecc').value[0].start).to.deep.equal({ book: 'ECC', chapter: 1, verse: 1 });
+			expect(parse('Sng').value[0].start).to.deep.equal({ book: 'SNG', chapter: 1, verse: 1 });
+			expect(parse('Isa').value[0].start).to.deep.equal({ book: 'ISA', chapter: 1, verse: 1 });
+			expect(parse('Jer').value[0].start).to.deep.equal({ book: 'JER', chapter: 1, verse: 1 });
+			expect(parse('Eze').value[0].start).to.deep.equal({ book: 'EZK', chapter: 1, verse: 1 });
+			expect(parse('Dan').value[0].start).to.deep.equal({ book: 'DAN', chapter: 1, verse: 1 });
+			expect(parse('Hos').value[0].start).to.deep.equal({ book: 'HOS', chapter: 1, verse: 1 });
+			expect(parse('Joe').value[0].start).to.deep.equal({ book: 'JOL', chapter: 1, verse: 1 });
+			expect(parse('Amo').value[0].start).to.deep.equal({ book: 'AMO', chapter: 1, verse: 1 });
+			expect(parse('Oba').value[0].start).to.deep.equal({ book: 'OBA', chapter: 1, verse: 1 });
+			expect(parse('Jon').value[0].start).to.deep.equal({ book: 'JON', chapter: 1, verse: 1 });
+			expect(parse('Mic').value[0].start).to.deep.equal({ book: 'MIC', chapter: 1, verse: 1 });
+			expect(parse('Nah').value[0].start).to.deep.equal({ book: 'NAM', chapter: 1, verse: 1 });
+			expect(parse('Hab').value[0].start).to.deep.equal({ book: 'HAB', chapter: 1, verse: 1 });
+			expect(parse('Zep').value[0].start).to.deep.equal({ book: 'ZEP', chapter: 1, verse: 1 });
+			expect(parse('Hag').value[0].start).to.deep.equal({ book: 'HAG', chapter: 1, verse: 1 });
+			expect(parse('Zec').value[0].start).to.deep.equal({ book: 'ZEC', chapter: 1, verse: 1 });
+			expect(parse('Mal').value[0].start).to.deep.equal({ book: 'MAL', chapter: 1, verse: 1 });
 
-			expect(parse('Gen.3.2-Gen.3.4').value).to.deep.equal([
-				{ is_range : true,
-					start    : { book: 'GEN', chapter: 3, verse: 2 },
-					end      : { book: 'GEN', chapter: 3, verse: 4 },
-				},
-			]);
+			expect(parse('Mat').value[0].start).to.deep.equal({ book: 'MAT', chapter: 1, verse: 1 });
+			expect(parse('Mar').value[0].start).to.deep.equal({ book: 'MRK', chapter: 1, verse: 1 });
+			expect(parse('Luk').value[0].start).to.deep.equal({ book: 'LUK', chapter: 1, verse: 1 });
+			expect(parse('Jhn').value[0].start).to.deep.equal({ book: 'JHN', chapter: 1, verse: 1 });
+			expect(parse('Act').value[0].start).to.deep.equal({ book: 'ACT', chapter: 1, verse: 1 });
+			expect(parse('Rom').value[0].start).to.deep.equal({ book: 'ROM', chapter: 1, verse: 1 });
+			expect(parse('1Co').value[0].start).to.deep.equal({ book: '1CO', chapter: 1, verse: 1 });
+			expect(parse('2Co').value[0].start).to.deep.equal({ book: '2CO', chapter: 1, verse: 1 });
+			expect(parse('Gal').value[0].start).to.deep.equal({ book: 'GAL', chapter: 1, verse: 1 });
+			expect(parse('Eph').value[0].start).to.deep.equal({ book: 'EPH', chapter: 1, verse: 1 });
+			expect(parse('Phl').value[0].start).to.deep.equal({ book: 'PHP', chapter: 1, verse: 1 });
+			expect(parse('Col').value[0].start).to.deep.equal({ book: 'COL', chapter: 1, verse: 1 });
+			expect(parse('1Th').value[0].start).to.deep.equal({ book: '1TH', chapter: 1, verse: 1 });
+			expect(parse('2Th').value[0].start).to.deep.equal({ book: '2TH', chapter: 1, verse: 1 });
+			expect(parse('1Ti').value[0].start).to.deep.equal({ book: '1TI', chapter: 1, verse: 1 });
+			expect(parse('2Ti').value[0].start).to.deep.equal({ book: '2TI', chapter: 1, verse: 1 });
+			expect(parse('Tit').value[0].start).to.deep.equal({ book: 'TIT', chapter: 1, verse: 1 });
+			expect(parse('Phm').value[0].start).to.deep.equal({ book: 'PHM', chapter: 1, verse: 1 });
+			expect(parse('Heb').value[0].start).to.deep.equal({ book: 'HEB', chapter: 1, verse: 1 });
+			expect(parse('Jas').value[0].start).to.deep.equal({ book: 'JAS', chapter: 1, verse: 1 });
+			expect(parse('1Pe').value[0].start).to.deep.equal({ book: '1PE', chapter: 1, verse: 1 });
+			expect(parse('2Pe').value[0].start).to.deep.equal({ book: '2PE', chapter: 1, verse: 1 });
+			expect(parse('1Jo').value[0].start).to.deep.equal({ book: '1JN', chapter: 1, verse: 1 });
+			expect(parse('2Jo').value[0].start).to.deep.equal({ book: '2JN', chapter: 1, verse: 1 });
+			expect(parse('3Jo').value[0].start).to.deep.equal({ book: '3JN', chapter: 1, verse: 1 });
+			expect(parse('Jde').value[0].start).to.deep.equal({ book: 'JUD', chapter: 1, verse: 1 });
+			expect(parse('Rev').value[0].start).to.deep.equal({ book: 'REV', chapter: 1, verse: 1 });
+		});
 
-			expect(parse('Gen.1.2-Gen.1.10, Exod.5.3-Exod.6.4').value).to.deep.equal([
-				{ is_range : true,
-					start    : { book: 'GEN', chapter: 1, verse:  2 },
-					end      : { book: 'GEN', chapter: 1, verse: 10 },
-				},
-				{ is_range : true,
-					start    : { book: 'EXO', chapter: 5, verse:  3 },
-					end      : { book: 'EXO', chapter: 6, verse:  4 },
-				},
-			]);
+		describe("OSIS References", () => {
+			it('Book Ids', () => {
+				// https://wiki.crosswire.org/OSIS_Book_Abbreviations
+
+				expect(parse('Gen.1.1'   ).value).to.deep.equal([ { book: 'GEN', chapter: 1, verse: 1 } ]);
+				expect(parse('Exod.1.1'  ).value).to.deep.equal([ { book: 'EXO', chapter: 1, verse: 1 } ]);
+				expect(parse('Lev.1.1'   ).value).to.deep.equal([ { book: 'LEV', chapter: 1, verse: 1 } ]);
+				expect(parse('Num.1.1'   ).value).to.deep.equal([ { book: 'NUM', chapter: 1, verse: 1 } ]);
+				expect(parse('Deut.1.1'  ).value).to.deep.equal([ { book: 'DEU', chapter: 1, verse: 1 } ]);
+				expect(parse('Josh.1.1'  ).value).to.deep.equal([ { book: 'JOS', chapter: 1, verse: 1 } ]);
+				expect(parse('Judg.1.1'  ).value).to.deep.equal([ { book: 'JDG', chapter: 1, verse: 1 } ]);
+				expect(parse('Ruth.1.1'  ).value).to.deep.equal([ { book: 'RUT', chapter: 1, verse: 1 } ]);
+				expect(parse('1Sam.1.1'  ).value).to.deep.equal([ { book: '1SA', chapter: 1, verse: 1 } ]);
+				expect(parse('2Sam.1.1'  ).value).to.deep.equal([ { book: '2SA', chapter: 1, verse: 1 } ]);
+				expect(parse('1Kgs.1.1'  ).value).to.deep.equal([ { book: '1KI', chapter: 1, verse: 1 } ]);
+				expect(parse('2Kgs.1.1'  ).value).to.deep.equal([ { book: '2KI', chapter: 1, verse: 1 } ]);
+				expect(parse('1Chr.1.1'  ).value).to.deep.equal([ { book: '1CH', chapter: 1, verse: 1 } ]);
+				expect(parse('2Chr.1.1'  ).value).to.deep.equal([ { book: '2CH', chapter: 1, verse: 1 } ]);
+				expect(parse('Ezra.1.1'  ).value).to.deep.equal([ { book: 'EZR', chapter: 1, verse: 1 } ]);
+				expect(parse('Neh.1.1'   ).value).to.deep.equal([ { book: 'NEH', chapter: 1, verse: 1 } ]);
+				expect(parse('Esth.1.1'  ).value).to.deep.equal([ { book: 'EST', chapter: 1, verse: 1 } ]);
+				expect(parse('Job.1.1'   ).value).to.deep.equal([ { book: 'JOB', chapter: 1, verse: 1 } ]);
+				expect(parse('Ps.1.1'    ).value).to.deep.equal([ { book: 'PSA', chapter: 1, verse: 1 } ]);
+				expect(parse('Prov.1.1'  ).value).to.deep.equal([ { book: 'PRO', chapter: 1, verse: 1 } ]);
+				expect(parse('Eccl.1.1'  ).value).to.deep.equal([ { book: 'ECC', chapter: 1, verse: 1 } ]);
+				expect(parse('Song.1.1'  ).value).to.deep.equal([ { book: 'SNG', chapter: 1, verse: 1 } ]);
+				expect(parse('Isa.1.1'   ).value).to.deep.equal([ { book: 'ISA', chapter: 1, verse: 1 } ]);
+				expect(parse('Jer.1.1'   ).value).to.deep.equal([ { book: 'JER', chapter: 1, verse: 1 } ]);
+				expect(parse('Ezek.1.1'  ).value).to.deep.equal([ { book: 'EZK', chapter: 1, verse: 1 } ]);
+				expect(parse('Dan.1.1'   ).value).to.deep.equal([ { book: 'DAN', chapter: 1, verse: 1 } ]);
+				expect(parse('Hos.1.1'   ).value).to.deep.equal([ { book: 'HOS', chapter: 1, verse: 1 } ]);
+				expect(parse('Joel.1.1'  ).value).to.deep.equal([ { book: 'JOL', chapter: 1, verse: 1 } ]);
+				expect(parse('Amos.1.1'  ).value).to.deep.equal([ { book: 'AMO', chapter: 1, verse: 1 } ]);
+				expect(parse('Obad.1.1'  ).value).to.deep.equal([ { book: 'OBA', chapter: 1, verse: 1 } ]);
+				expect(parse('Jonah.1.1' ).value).to.deep.equal([ { book: 'JON', chapter: 1, verse: 1 } ]);
+				expect(parse('Mic.1.1'   ).value).to.deep.equal([ { book: 'MIC', chapter: 1, verse: 1 } ]);
+				expect(parse('Nah.1.1'   ).value).to.deep.equal([ { book: 'NAM', chapter: 1, verse: 1 } ]);
+				expect(parse('Hab.1.1'   ).value).to.deep.equal([ { book: 'HAB', chapter: 1, verse: 1 } ]);
+				expect(parse('Zeph.1.1'  ).value).to.deep.equal([ { book: 'ZEP', chapter: 1, verse: 1 } ]);
+				expect(parse('Hag.1.1'   ).value).to.deep.equal([ { book: 'HAG', chapter: 1, verse: 1 } ]);
+				expect(parse('Zech.1.1'  ).value).to.deep.equal([ { book: 'ZEC', chapter: 1, verse: 1 } ]);
+				expect(parse('Mal.1.1'   ).value).to.deep.equal([ { book: 'MAL', chapter: 1, verse: 1 } ]);
+
+				expect(parse('Matt.1.1'   ).value).to.deep.equal([ { book: 'MAT', chapter: 1, verse: 1 } ]);
+				expect(parse('Mark.1.1'   ).value).to.deep.equal([ { book: 'MRK', chapter: 1, verse: 1 } ]);
+				expect(parse('Luke.1.1'   ).value).to.deep.equal([ { book: 'LUK', chapter: 1, verse: 1 } ]);
+				expect(parse('John.1.1'   ).value).to.deep.equal([ { book: 'JHN', chapter: 1, verse: 1 } ]);
+				expect(parse('Acts.1.1'   ).value).to.deep.equal([ { book: 'ACT', chapter: 1, verse: 1 } ]);
+				expect(parse('Rom.1.1'    ).value).to.deep.equal([ { book: 'ROM', chapter: 1, verse: 1 } ]);
+				expect(parse('1Cor.1.1'   ).value).to.deep.equal([ { book: '1CO', chapter: 1, verse: 1 } ]);
+				expect(parse('2Cor.1.1'   ).value).to.deep.equal([ { book: '2CO', chapter: 1, verse: 1 } ]);
+				expect(parse('Gal.1.1'    ).value).to.deep.equal([ { book: 'GAL', chapter: 1, verse: 1 } ]);
+				expect(parse('Eph.1.1'    ).value).to.deep.equal([ { book: 'EPH', chapter: 1, verse: 1 } ]);
+				expect(parse('Phil.1.1'   ).value).to.deep.equal([ { book: 'PHP', chapter: 1, verse: 1 } ]);
+				expect(parse('Col.1.1'    ).value).to.deep.equal([ { book: 'COL', chapter: 1, verse: 1 } ]);
+				expect(parse('1Thess.1.1' ).value).to.deep.equal([ { book: '1TH', chapter: 1, verse: 1 } ]);
+				expect(parse('2Thess.1.1' ).value).to.deep.equal([ { book: '2TH', chapter: 1, verse: 1 } ]);
+				expect(parse('1Tim.1.1'   ).value).to.deep.equal([ { book: '1TI', chapter: 1, verse: 1 } ]);
+				expect(parse('2Tim.1.1'   ).value).to.deep.equal([ { book: '2TI', chapter: 1, verse: 1 } ]);
+				expect(parse('Titus.1.1'  ).value).to.deep.equal([ { book: 'TIT', chapter: 1, verse: 1 } ]);
+				expect(parse('Phlm.1.1'   ).value).to.deep.equal([ { book: 'PHM', chapter: 1, verse: 1 } ]);
+				expect(parse('Heb.1.1'    ).value).to.deep.equal([ { book: 'HEB', chapter: 1, verse: 1 } ]);
+
+				expect(parse('Jas.1.1'    ).value).to.deep.equal([ { book: 'JAS', chapter: 1, verse: 1 } ]);
+				expect(parse('1Pet.1.1'   ).value).to.deep.equal([ { book: '1PE', chapter: 1, verse: 1 } ]);
+				expect(parse('2Pet.1.1'   ).value).to.deep.equal([ { book: '2PE', chapter: 1, verse: 1 } ]);
+				expect(parse('1John.1.1'  ).value).to.deep.equal([ { book: '1JN', chapter: 1, verse: 1 } ]);
+				expect(parse('2John.1.1'  ).value).to.deep.equal([ { book: '2JN', chapter: 1, verse: 1 } ]);
+				expect(parse('3John.1.1'  ).value).to.deep.equal([ { book: '3JN', chapter: 1, verse: 1 } ]);
+				expect(parse('Jude.1.1'   ).value).to.deep.equal([ { book: 'JUD', chapter: 1, verse: 1 } ]);
+				expect(parse('Rev.1.1'    ).value).to.deep.equal([ { book: 'REV', chapter: 1, verse: 1 } ]);
+			});
+
+			it('Ranges', () => {
+				expect(parse('Gen.3.2, Gen.3.3, Gen.3.4').value).to.deep.equal([
+					{ book: 'GEN', chapter: 3, verse:  2 },
+					{ book: 'GEN', chapter: 3, verse:  3 },
+					{ book: 'GEN', chapter: 3, verse:  4 },
+				]);
+
+				expect(parse('Gen.3.2-Gen.3.4').value).to.deep.equal([
+					{ is_range : true,
+						start    : { book: 'GEN', chapter: 3, verse: 2 },
+						end      : { book: 'GEN', chapter: 3, verse: 4 },
+					},
+				]);
+
+				expect(parse('Gen.1.2-Gen.1.10, Exod.5.3-Exod.6.4').value).to.deep.equal([
+					{ is_range : true,
+						start    : { book: 'GEN', chapter: 1, verse:  2 },
+						end      : { book: 'GEN', chapter: 1, verse: 10 },
+					},
+					{ is_range : true,
+						start    : { book: 'EXO', chapter: 5, verse:  3 },
+						end      : { book: 'EXO', chapter: 6, verse:  4 },
+					},
+				]);
+			});
 		});
 	});
 });
