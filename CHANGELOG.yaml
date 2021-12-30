@@ -1,3 +1,11 @@
+- v2.5.0:
+  date: '2021-12-30'
+  name: 'Additional Book Abbreviations'
+  features:
+    - Add support for textual 'First', 'Second' and 'Third' before numbered book names
+    - Add support for Bible book abbreviations used by Blue Letter Bible
+    - Add misc additional book abbreviations and aliases
+
 - v2.4.0:
   date: '2021-12-16'
   name: 'Intersection Optimization'
