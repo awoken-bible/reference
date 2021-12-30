@@ -38,6 +38,9 @@ const pBookPrefixNumber : P.Parser<number> = P.alt(
 	P.string("1st").map((x) => 1),
 	P.string("2nd").map((x) => 2),
 	P.string("3rd").map((x) => 3),
+	P.string("First" ).map(() => 1),
+	P.string("Second").map(() => 2),
+	P.string("Third" ).map(() => 3),
 	P.oneOf("123").map(x => parseInt(x)),
 	P.oneOf("I").times(1,3).map(x => x.length),
 );
