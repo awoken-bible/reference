@@ -4,6 +4,7 @@
 
 import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
 import { Parsers, ParseResult } from './parser';
+import { parseUrlEncoded }      from './parser-url';
 import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
 import * as Vidx                from './vidx';
@@ -23,6 +24,7 @@ import { GeometryFunctions    } from './geometry';
 export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, GeometryFunctions {
 	parse(str: string) : ParseResult;
 	parseOrThrow(str: string) : BibleRef[];
+	parseUrlEncoded(this: BibleRefLib, str: string): BibleRef[];
 	parseBookName(this: BibleRefLib, str: string) : string | null;
 	format(b : BibleRef | BibleRef[], opts?: FormatArg) : string;
 	sort(refs : BibleRef[]) : BibleRef[];
@@ -233,6 +235,7 @@ const AwokenRef : BibleRefLib & BibleRefLibConstructor = function(this: BibleRef
 	this.versification         = v;
 	this.parse                 = parse;
 	this.parseOrThrow          = parseOrThrow;
+	this.parseUrlEncoded       = parseUrlEncoded;
 	this.format                = format;
 	this.sort                  = sort;
 	this.toVidx                = toVidx;
@@ -271,6 +274,7 @@ const AwokenRef : BibleRefLib & BibleRefLibConstructor = function(this: BibleRef
 AwokenRef.versification         = VERSIFICATION;
 AwokenRef.parse                 = parse.bind(AwokenRef);
 AwokenRef.parseOrThrow          = parseOrThrow.bind(AwokenRef);
+AwokenRef.parseUrlEncoded       = parseUrlEncoded.bind(AwokenRef);
 AwokenRef.parseBookName         = parseBookName.bind(AwokenRef);
 AwokenRef.format                = format.bind(AwokenRef);
 AwokenRef.sort                  = sort.bind(AwokenRef);

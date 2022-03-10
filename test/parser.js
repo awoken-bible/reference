@@ -411,30 +411,37 @@ describe("parse", () => {
 
 	// These are the sorts of strings produced by formatter with url: true option
 	it("URL", () => {
+		const run = (str, expected) => {
+			let main = parse(str).value;
+			if(expected) {
+				expect(main).to.deep.equal(expected);
+			}
+			expect(AwokenRef.parseUrlEncoded(str)).to.deep.equal(main);
+		};
 
-		expect(parse('gen3v2,3,4').value)
-			.to.deep.equal([ { book: 'GEN', chapter: 3, verse: 2 },
-											 { book: 'GEN', chapter: 3, verse: 3 },
-											 { book: 'GEN', chapter: 3, verse: 4 },
-										 ]);
+		run('gen3v2,3,4', [
+			{ book: 'GEN', chapter: 3, verse: 2 },
+			{ book: 'GEN', chapter: 3, verse: 3 },
+			{ book: 'GEN', chapter: 3, verse: 4 },
+		]);
 
-		expect(parse('gen3v2-4').value)
-			.to.deep.equal([ { is_range: true,
-												 start: { book: 'GEN', chapter: 3, verse: 2 },
-												 end	: { book: 'GEN', chapter: 3, verse: 4 },
-											 }
-										 ]);
+		run('gen3v2-4', [
+			{ is_range: true,
+				start: { book: 'GEN', chapter: 3, verse: 2 },
+				end	: { book: 'GEN', chapter: 3, verse: 4 },
+			}
+		]);
 
-		expect(parse('gen1v2-10_exo5v3-6v4').value)
-			.to.deep.equal([ { is_range: true,
-												 start: { book: 'GEN', chapter: 1, verse:	 2 },
-												 end	: { book: 'GEN', chapter: 1, verse: 10 },
-											 },
-											 { is_range: true,
-												 start: { book: 'EXO', chapter: 5, verse: 3 },
-												 end	: { book: 'EXO', chapter: 6, verse: 4 },
-											 }
-										 ]);
+		run('gen1v2-10_exo5v3-6v4', [
+			{ is_range: true,
+				start: { book: 'GEN', chapter: 1, verse:	 2 },
+				end	: { book: 'GEN', chapter: 1, verse: 10 },
+			},
+			{ is_range: true,
+				start: { book: 'EXO', chapter: 5, verse: 3 },
+				end	: { book: 'EXO', chapter: 6, verse: 4 },
+			}
+		]);
 	});
 
 	// I've seen this "dots only" style in various places online, so we should make sure we can parse
