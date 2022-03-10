@@ -9,18 +9,29 @@ const CHAR_CODE_0 = '0'.charCodeAt(0);
 const CHAR_CODE_9 = '9'.charCodeAt(0);
 
 export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] {
-	console.log('hello world');
+	//console.log('hello world');
 	let results : BibleRef[] = [];
-	let curBook  = null;
-	let curChpt  = null;
-	let curVerse = null;
+
+	// what is the active book in this block?
+	let book = null;
+
+	// queues of values and placeholders being processed
+	// we only emit values to results once the sequence of
+	// seperators is unambigious
+	// eg 1v2-3
+	// (sequence seperator v-) is ambigious since
+	// it could be:
+	// - chapter 1v2-3
+	// - chapter 1v2, chapter 3v(next item to read)
+	// seps is a string so we can compare whole list in one go ('v-' == seps rather than seps[0] === 'v' && ...)
+	let nums : number[] = [];
+	let seps : string   = '';
 
 	const BKS = this.versification.book;
 
-
 	let idx = 0;
 
-	function consumeInt() {
+	function consumeInt(error: string) {
 		let out : any = null;
 		while(true) {
 			let code = raw.charCodeAt(idx);
@@ -31,91 +42,93 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 				break;
 			}
 		}
+		if(error && !out) { throw new Error(error); }
 		return out;
 	}
 
 	const mkR = makeRange.bind(this);
 
-	console.log('parsing: ' + raw);
+	//console.log('parsing: ' + raw);
 	top: while(idx < raw.length) {
-		console.log('--------------');
-		console.log(raw.substring(idx));
-		let curBook = raw.substring(idx, idx+3).toUpperCase();
+		//	console.log('--------------');
+		//console.log(raw.substring(idx));
+		let book = raw.substring(idx, idx+3).toUpperCase();
 		idx += 3;
-		if(!BKS[curBook]) {
-			throw new Error('Failed to parse url BibleRef, wanted book id, got: ' + curBook);
+		if(!BKS[book]) {
+			throw new Error('Failed to parse url BibleRef, wanted book id, got: ' + book);
 		}
 
 		let bSep = raw.charAt(idx);
-		console.log('bSep: ' + bSep + ', rest: ' + raw.substring(idx));
+		//console.log('bSep: ' + bSep + ', rest: ' + raw.substring(idx));
 		if(bSep === '_' || bSep === '' ) {
-			results.push(mkR(curBook));
+			results.push(mkR(book));
 			continue top;
 		}
 
-		chpt: while(true) {
-			curChpt = consumeInt();
-			if(!curChpt) {
-				throw new Error(`Expected chpt number or _ seperator at char ${idx}, got: raw.charAt(idx)`);
-			}
+		// where the current chapter-verse specifier started
+		let cvStartIdx = idx;
+		// current chaper context
+		let chapter : number | null = null;
 
-			console.log('got chpt: ' + curChpt);
-			console.log(raw.substring(idx));
+		parseChapterVerse: while(true) {
+			//console.log('Loop');
+			// parse an extra nums and seps
+			//
+			// _ is used as seperator to reset to top:
+			// hence if idx is beyond end of raw, we use _ instead of the returned empty string
+			nums.push(consumeInt(`Expected int or _ seperator or end of string at char ${idx}, got: raw.charAt(idx)`));
+			let nextSep = (raw.charAt(idx++) || '_');
 
+			//console.dir({ seps, nums, nextSep });
 
-			let cSep = raw.charAt(idx++);
-			switch(cSep) {
-			case '': // end of string
-				results.push(mkR(curBook, curChpt));
-				break top;
-			case ',': // seperator for new chapter value
-				results.push(mkR(curBook, curChpt));
-				continue chpt;
-			case '-': { // range of full chapters
-				let endChpt = consumeInt();
-				if(!endChpt) { throw new Error(`Expected end of chapter range int at ${idx}, got: ${raw.charAt(idx)}`); }
-				results.push({ is_range: true, start: mkR(curBook, curChpt).start, end: mkR(curBook, endChpt).end });
-				let c = raw.charAt(idx++);
-				if(c === ',') { continue chpt; }
-				continue top;
-			}
-			case 'v': {
-				verse: while(true) {
-					let v1 = consumeInt();
-					console.log('got verse ' + v1 + ', rest: ' + raw.substring(idx));
-					if(!v1) {
-						throw new Error(`Expected verse number at ${idx}, got: ${raw.charAt(idx)}`);
-					}
-					let vSep = raw.charAt(idx++);
-					console.log('vSep: ' + vSep + ', rest: ' + raw.substring(idx));
-					switch(vSep) {
-					case '': // end of string
-					case '_':
-						results.push({ book: curBook, chapter: curChpt, verse: v1 });
-						continue top;
-					case ',': // seperator for new verse specifier
-						results.push({ book: curBook, chapter: curChpt, verse: v1 });
-						continue verse;
-					case '-': { // verse range
-						let v2 = consumeInt();
-						if(!v2) { throw new Error(`Expected ending verse in range at ${idx}, got: ${raw.charAt(idx)}`); }
-						results.push({ is_range: true, start: { book: curBook, chapter: curChpt, verse: v1}, end: { book: curBook, chapter: curChpt, verse: v2 }});
-						let c = raw.charAt(idx++);
-						if(c === ',') { continue verse; }
-						continue top;
-					}
-					default:
-						throw new Error('Unexpected seperator in verse specifier: ' + vSep);
-					}
+			let matched = true;
+
+			if(seps === '') {
+				switch(nextSep){
+				case 'v': // update the current chapter context, emit nothing
+					chapter = nums.shift()!;
+					break;
+				case ',':
+				case '_':
+					results.push(chapter ? { book, chapter, verse: nums.shift()! } : mkR(book, nums.shift()!) );
+					break;
+				default:
+					matched = false;
+					break;
 				}
+			} else if(seps === '-' && ( nextSep === ',' || nextSep === '_')) {
+				if(chapter) { // gen1v2-3,
+					results.push({ is_range: true, start: { book, chapter, verse: nums.shift()! }, end: { book, chapter, verse: nums.shift()! }});
+				} else { // gen1-2,
+					results.push({ is_range: true, start: { book, chapter: nums.shift()!, verse: 1}, end: mkR(book, nums.shift()!).end});
+				}
+			} else if(seps === '-v' && (nextSep === ',' || nextSep === '_')) {
+				if(chapter) { // gen1v2-3v4
+					results.push({
+						is_range: true,
+						start: { book, chapter, verse: nums.shift()! },
+						end: { book, chapter: nums.shift()!, verse: nums.shift()! }
+					});
+					chapter = null;
+				} else { // gen1-2v3
+					throw new Error('Invalid chapter-verse specifier: ' + raw.substring(cvStartIdx, idx));
+				}
+			} else {
+				matched = false;
 			}
-			default:
-				throw new Error('Unexpected seperator in chapter specifier: ' + cSep);
+
+			if(matched){
+				seps = '';
+				cvStartIdx = idx;
+				if(nextSep === '_') { continue top; } else { continue parseChapterVerse; }
 			}
+
+			//console.log("  NO MATCH");
+			seps += nextSep;
 		}
 	}
 
-	console.dir(results);
+	//console.dir(results);
 
 	return results;
 }
