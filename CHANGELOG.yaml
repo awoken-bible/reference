@@ -1,8 +1,16 @@
+- v2.6.1:
+  date: '2022-03-11'
+  name: 'parseUrlEncoded Fixes'
+  fixes:
+    - Prevent certain bad input strings causing infinite loop in parseUrlEncoded, throw instead
+    - Fix parsing of cross book range for books whose id starts with in (eg: 1KI, 3JN)
+    - Fix parsing new block after book-book range without chapter/verse data
+
 - v2.6.0:
-    date: '2022-03-11'
-    name: 'Speedy URL Encoded Parsing'
-    features:
-      - Add 'parseUrlEncoded' function as specialized version of 'parseOrThrow' that takes about 1/20th the time
+  date: '2022-03-11'
+  name: 'Speedy URL Encoded Parsing'
+  features:
+    - Add 'parseUrlEncoded' function as specialized version of 'parseOrThrow' that takes about 1/20th the time
 
 - v2.5.0:
   date: '2021-12-30'
