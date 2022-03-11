@@ -5,6 +5,18 @@
 import { BibleRef, BibleRefLibData } from './BibleRef';
 import { makeRange } from './range-manip';
 
+/**
+ * Function to parse data written using 'format' with the 'url' preset
+ * This operates ~20x faster than the generic parser and guarentied to produce the
+ * exact same output as standard parseOrThrow on good input. Behaviour is undefined
+ * on bad input - some checks are omitted for increased performance which may cause
+ * this function to return garbage output when parseOrThrow would have thrown
+ *
+ * For reference, a 5.5kb url-encoded BibleRef string takes 1.5ms to parse with
+ * this function, or 30ms to parse with the generic parser.
+ * The equivalent JSON representation of the data is 72kb, but can be parsed
+ * in ~0.7ms using the native JSON.parse function
+ */
 export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] {
 	const BKS = this.versification.book;
 	let results : BibleRef[] = [];
@@ -58,9 +70,6 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 			continue top;
 		}
 
-		// record where the current chapter-verse specifier started to make error messages
-		let cvStartIdx = idx;
-
 		parseChapterVerse: while(true) {
 			// on each iteration of the loop we consider one more number and following seperator
 			// _ is used as seperator to reset to top:
@@ -105,13 +114,15 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 			// eg, gen1v3-5 (IE: seperators 'v-') is ambigious, since it could be
 			// - chapter 1 v 3-5
 			// - chapter 1v3 - 5v(?? to read next ??)
-			let matched = true;
 			if(seps === '' && nextSep === 'v') {
 				// if first sep in a region is a v, the just update the current chapter
 				// context but emit nothing
 				chapter = nums.shift()!;
 				continue parseChapterVerse;
-			} else if(nextSep === ',' || nextSep === '_') { // then we're probably closing a block, try and emit data
+			}
+
+			// if we're closing a region then try and emit data
+			if(nextSep === ',' || nextSep === '_') {
 				switch(seps) {
 				case '': // gen1 or gen1v1
 					results.push(chapter ? { book, chapter, verse: nums.shift()! } : mkR(book, nums.shift()!) );
@@ -124,31 +135,28 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 					}
 					break;
 				case '-v':
-					if(chapter) { // gen1v2-3v4
-						results.push({
-							is_range: true,
-							start: { book, chapter, verse: nums.shift()! },
-							end: { book, chapter: nums.shift()!, verse: nums.shift()! }
-						});
-						chapter = null;
-					} else { // gen1-2v3
-						throw new Error('Invalid chapter-verse specifier: ' + raw.substring(cvStartIdx, idx));
-					}
+					// this could either be gen1v2-3v4 or gen1-2v3 depending on if the
+					// chapter variable is set
+					// The later is invalid input, so in the spirit of being fast on good
+					// input, we don't bother checking!
+					results.push({
+						is_range: true,
+						start: { book, chapter: chapter!, verse: nums.shift()! },
+						end: { book, chapter: nums.shift()!, verse: nums.shift()! }
+					});
 					break;
 				default:
-					matched = false;
+					seps += nextSep;
+					continue parseChapterVerse;
 				}
 			} else {
-				matched = false;
+				seps += nextSep;
+				continue parseChapterVerse;
 			}
 
-			if(matched){
-				seps = '';
-				cvStartIdx = idx;
-				if(nextSep === '_') { continue top; } else { continue parseChapterVerse; }
-			}
-
-			seps += nextSep;
+			// if still going, we must have emitted some data...
+			seps = '';
+			if(nextSep === '_') { continue top; }
 		}
 	}
 
