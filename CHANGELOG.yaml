@@ -1,3 +1,9 @@
+- v2.6.0:
+    date: '2022-03-11'
+    name: 'Speedy URL Encoded Parsing'
+    features:
+      - Add 'parseUrlEncoded' function as specialized version of 'parseOrThrow' that takes about 1/20th the time
+
 - v2.5.0:
   date: '2021-12-30'
   name: 'Additional Book Abbreviations'
