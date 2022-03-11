@@ -12,6 +12,7 @@ describe("index", () => {
     expect(BibleRef.parse('John 3:16')).to.deep.equal({ status: true, value: [{ book: 'JHN', chapter: 3, verse: 16 }]});
     expect(BibleRef.parseOrThrow('John 3:16')).to.deep.equal([{ book: 'JHN', chapter: 3, verse: 16 }]);
     expect(() => BibleRef.parseOrThrow('hello')).to.throw();
+		expect(BibleRef.parseUrlEncoded('gen1v2')).to.deep.equal([{ book: 'GEN', chapter: 1, verse: 2 }]);
 
     expect(BibleRef.format({ is_range: true,
                          start: { book: 'MAL', chapter: 3, verse: 6 },
