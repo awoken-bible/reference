@@ -106,21 +106,16 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 			// - chapter 1 v 3-5
 			// - chapter 1v3 - 5v(?? to read next ??)
 			let matched = true;
-			if(seps === '') { // parsing an opening sep for a region, see if we can consume it...
-				switch(nextSep){
-				case 'v': // update the current chapter context, but emit nothing
-					chapter = nums.shift()!;
-					break;
-				case ',':
-				case '_':
-					results.push(chapter ? { book, chapter, verse: nums.shift()! } : mkR(book, nums.shift()!) );
-					break;
-				default:
-					matched = false;
-					break;
-				}
+			if(seps === '' && nextSep === 'v') {
+				// if first sep in a region is a v, the just update the current chapter
+				// context but emit nothing
+				chapter = nums.shift()!;
+				continue parseChapterVerse;
 			} else if(nextSep === ',' || nextSep === '_') { // then we're probably closing a block, try and emit data
 				switch(seps) {
+				case '': // gen1 or gen1v1
+					results.push(chapter ? { book, chapter, verse: nums.shift()! } : mkR(book, nums.shift()!) );
+					break;
 				case '-':
 					if(chapter) { // gen1v2-3,
 						results.push({ is_range: true, start: { book, chapter, verse: nums.shift()! }, end: { book, chapter, verse: nums.shift()! }});
