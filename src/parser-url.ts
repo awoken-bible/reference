@@ -106,7 +106,7 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 			// - chapter 1 v 3-5
 			// - chapter 1v3 - 5v(?? to read next ??)
 			let matched = true;
-			if(seps === '') {
+			if(seps === '') { // parsing an opening sep for a region, see if we can consume it...
 				switch(nextSep){
 				case 'v': // update the current chapter context, but emit nothing
 					chapter = nums.shift()!;
@@ -119,22 +119,29 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 					matched = false;
 					break;
 				}
-			} else if(seps === '-' && ( nextSep === ',' || nextSep === '_')) {
-				if(chapter) { // gen1v2-3,
-					results.push({ is_range: true, start: { book, chapter, verse: nums.shift()! }, end: { book, chapter, verse: nums.shift()! }});
-				} else { // gen1-2,
-					results.push({ is_range: true, start: { book, chapter: nums.shift()!, verse: 1}, end: mkR(book, nums.shift()!).end});
-				}
-			} else if(seps === '-v' && (nextSep === ',' || nextSep === '_')) {
-				if(chapter) { // gen1v2-3v4
-					results.push({
-						is_range: true,
-						start: { book, chapter, verse: nums.shift()! },
-						end: { book, chapter: nums.shift()!, verse: nums.shift()! }
-					});
-					chapter = null;
-				} else { // gen1-2v3
-					throw new Error('Invalid chapter-verse specifier: ' + raw.substring(cvStartIdx, idx));
+			} else if(nextSep === ',' || nextSep === '_') { // then we're probably closing a block, try and emit data
+				switch(seps) {
+				case '-':
+					if(chapter) { // gen1v2-3,
+						results.push({ is_range: true, start: { book, chapter, verse: nums.shift()! }, end: { book, chapter, verse: nums.shift()! }});
+					} else { // gen1-2,
+						results.push({ is_range: true, start: { book, chapter: nums.shift()!, verse: 1}, end: mkR(book, nums.shift()!).end});
+					}
+					break;
+				case '-v':
+					if(chapter) { // gen1v2-3v4
+						results.push({
+							is_range: true,
+							start: { book, chapter, verse: nums.shift()! },
+							end: { book, chapter: nums.shift()!, verse: nums.shift()! }
+						});
+						chapter = null;
+					} else { // gen1-2v3
+						throw new Error('Invalid chapter-verse specifier: ' + raw.substring(cvStartIdx, idx));
+					}
+					break;
+				default:
+					matched = false;
 				}
 			} else {
 				matched = false;
