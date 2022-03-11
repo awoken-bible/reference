@@ -66,27 +66,25 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 
 		// restart loop immediately if we've reached end of block
 		if((raw.charAt(idx) || '_') === '_') {
+			++idx;
 			results.push(mkR(book));
 			continue top;
 		}
 
-		parseChapterVerse: while(true) {
-			// on each iteration of the loop we consider one more number and following seperator
-			// _ is used as seperator to reset to top:
-			// hence if idx is beyond end of raw, we use _ instead of the returned empty string
-			let int = consumeInt();
-			let nextSep = (raw.charAt(idx++) || '_');
+		// this disambiugates parsing cross-range book like 1ki-2ki where
+		// the first char after range looks like an int!
+		if(raw.charAt(idx) === '-') {
+			++idx;
+			seps = '-';
+		}
 
-			if(int){
-				nums.push(int);
-			} else {
-				if(seps === '-') {
-					// then this must be a cross-book range
-					let book2 = (nextSep + raw.substring(idx, idx+2)).toUpperCase();
-					idx+=2;
-					if(!BKS[book2]) {
-						throw new Error('Invalid book id in close of cross-book range, got: ' + book2);
-					}
+		parseChapterVerse: while(true) {
+
+			if(seps === '-') {
+				let book2 = raw.substring(idx, idx+3).toUpperCase();
+				if(BKS[book2]) {
+					// this is a cross book range!
+					idx+=3;
 
 					// we need to parse optional chapter and verse number, but we
 					// don't allow any continuation after them, so this is simple
@@ -104,10 +102,20 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 							throw new Error("Expected integer after 'v' seperator in closing cross-book range");
 						}
 					}
+					if (raw.charAt(idx) === '_') { ++idx; }
+					seps = '';
 					results.push({ is_range: true, start, end });
 					continue top;
 				}
-			} // end of cross-book range parsing
+			}
+
+			// on each iteration of the loop we consider one more number and following seperator
+			// _ is used as seperator to reset to top:
+			// hence if idx is beyond end of raw, we use _ instead of the returned empty string
+			nums.push(consumeInt()!);
+			let nextSep = (raw.charAt(idx++) || '_');
+
+			//console.dir({ seps, nextSep, rest: raw.substring(idx), nums });
 
 			// try and consume the head of the nums/seps lists
 			// only doing so if the sequence of seperators so far is unambigious
