@@ -5,15 +5,12 @@
 import { BibleRef, BibleRefLibData } from './BibleRef';
 import { makeRange } from './range-manip';
 
-const CHAR_CODE_0 = '0'.charCodeAt(0);
-const CHAR_CODE_9 = '9'.charCodeAt(0);
-
 export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] {
-	//console.log('hello world');
+	const BKS = this.versification.book;
 	let results : BibleRef[] = [];
 
 	// variables to store context of the book/chapter for ranges/comma lists
-	let book = null;
+	let book    : string | null = null;
 	let chapter : number | null = null;
 
 	// queues of values and placeholders being processed
@@ -28,31 +25,24 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 	let nums : number[] = [];
 	let seps : string   = '';
 
-	const BKS = this.versification.book;
-
+	// next char index of 'raw' to process
 	let idx = 0;
 
-	function consumeInt(error?: string) {
-		let out : any = null;
-		while(true) {
-			let code = raw.charCodeAt(idx);
-			if(code >= CHAR_CODE_0 && code <= CHAR_CODE_9){
-				out = 10*out + (code-CHAR_CODE_0);
-				++idx;
-			} else {
-				break;
-			}
+	function consumeInt() : number | null {
+		// in testing, using the built in parseInt and substring
+		// is faster than iterating character by character and builing our own int
+		let out = parseInt(raw.substring(idx));
+		if(out) {
+			idx += `${out}`.length;
+			return out;
+		} else {
+			return null;
 		}
-		if(error && !out) { throw new Error(error); }
-		return out;
 	}
-
 	const mkR = makeRange.bind(this);
 
-	//console.log('parsing: ' + raw);
 	top: while(idx < raw.length) {
-		//console.log('--------------');
-		//console.log(raw.substring(idx));
+		// parse book name
 		let book = raw.substring(idx, idx+3).toUpperCase();
 		idx += 3;
 		if(!BKS[book]) {
@@ -63,8 +53,7 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 		chapter = null;
 
 		// restart loop immediately if we've reached end of block
-		let bSep = raw.charAt(idx) || '_';
-		if(bSep === '_') {
+		if((raw.charAt(idx) || '_') === '_') {
 			results.push(mkR(book));
 			continue top;
 		}
@@ -73,9 +62,7 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 		let cvStartIdx = idx;
 
 		parseChapterVerse: while(true) {
-			//console.log('Loop');
-			// parse an extra nums and seps
-			//
+			// on each iteration of the loop we consider one more number and following seperator
 			// _ is used as seperator to reset to top:
 			// hence if idx is beyond end of raw, we use _ instead of the returned empty string
 			let int = consumeInt();
@@ -103,7 +90,7 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 					let end : BibleRef = chapter2 ? mkR(book2, chapter2).end : mkR(book2).end;
 					if(chapter2 && raw.charAt(idx) === 'v') {
 						++idx;
-						end.verse = consumeInt();
+						end.verse = consumeInt()!;
 						if(!end.verse) {
 							throw new Error("Expected integer after 'v' seperator in closing cross-book range");
 						}
@@ -113,13 +100,15 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 				}
 			} // end of cross-book range parsing
 
-			//console.dir({ seps, nums, nextSep });
-
+			// try and consume the head of the nums/seps lists
+			// only doing so if the sequence of seperators so far is unambigious
+			// eg, gen1v3-5 (IE: seperators 'v-') is ambigious, since it could be
+			// - chapter 1 v 3-5
+			// - chapter 1v3 - 5v(?? to read next ??)
 			let matched = true;
-
 			if(seps === '') {
 				switch(nextSep){
-				case 'v': // update the current chapter context, emit nothing
+				case 'v': // update the current chapter context, but emit nothing
 					chapter = nums.shift()!;
 					break;
 				case ',':
@@ -157,7 +146,6 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 				if(nextSep === '_') { continue top; } else { continue parseChapterVerse; }
 			}
 
-			//console.log('no match');
 			seps += nextSep;
 		}
 	}
