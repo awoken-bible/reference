@@ -147,6 +147,9 @@ export function parseUrlEncoded(this: BibleRefLibData, raw: string): BibleRef[] 
 					break;
 				default:
 					seps += nextSep;
+					if(seps.length > 2) {
+						throw new Error('Invalid bible ref url input');
+					}
 					continue parseChapterVerse;
 				}
 			} else {
