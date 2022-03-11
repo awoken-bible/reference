@@ -6,13 +6,13 @@ import { BibleRef, BibleRefLibData } from './BibleRef';
 import { makeRange } from './range-manip';
 
 /**
- * Function to parse data written using 'format' with the 'url' preset
- * This operates ~20x faster than the generic parser and guarentied to produce the
- * exact same output as standard parseOrThrow on good input. Behaviour is undefined
+ * Function to parse data written using [[format]] with the 'url' preset
+ * This operates ~20x faster than the generic parser and guarantied to produce the
+ * exact same output as standard [[parseOrThrow]] on good input. Behaviour is undefined
  * on bad input - some checks are omitted for increased performance which may cause
- * this function to return garbage output when parseOrThrow would have thrown
+ * this function to return garbage output when [[parseOrThrow]] would have thrown
  *
- * For reference, a 5.5kb url-encoded BibleRef string takes 1.5ms to parse with
+ * For reference, a 5.5kb url-encoded [[BibleRef]] string takes 1.5ms to parse with
  * this function, or 30ms to parse with the generic parser.
  * The equivalent JSON representation of the data is 72kb, but can be parsed
  * in ~0.7ms using the native JSON.parse function

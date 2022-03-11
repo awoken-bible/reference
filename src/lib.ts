@@ -84,6 +84,10 @@ function parse(this: BibleRefLib, str: string) : ParseResult {
  * As with [[parse]], but throws error if the input string is not a valid representation
  * of a [[BibleRef]]
  *
+ * If the input string is known to be in syntax as written by [[format]] function
+ * using the 'url' preset, [[parseUrlEncoded]] is equivalent to this function
+ * but runs ~20x faster
+ *
  * @public
  * @param this - Instance of [[BibleRefLib]] (includes the versification to use)
  * @param str  - The string to parse
