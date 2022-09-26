@@ -22,6 +22,8 @@ export interface RangeManipFunctions {
 	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
 	nextBook(ref: BibleRef) : BibleRange | null;
 	previousBook(ref: BibleRef) : BibleRange | null;
+	nextVerse(ref: BibleRef, opts?: { constrain_book?: boolean, constrain_chapter?: boolean }): BibleVerse | null;
+	previousVerse(ref: BibleRef, opts?: { constrain_book?: boolean, constrain_chapter?: boolean }): BibleVerse | null;
 	isFullBook(ref: BibleRef) : boolean;
 	isFullChapter(ref: BibleRef) : boolean;
 };
@@ -105,6 +107,62 @@ export function iterateByVerse(this: BibleRefLibData, refs: BibleRef | BibleRef[
 }
 
 /**
+ * Given a BibleRef, returns a new BibleVerse which represents the next verse after
+ * the last verse in the input ref
+ * @param opts.constrain_book - If set, will not cross book boundaries to find another verse
+ * @param opts.constrain_chapter - If set, will not cross chapter boundaries to find another verse
+ */
+export function nextVerse(
+	this: BibleRefLibData,
+	ref: BibleRef,
+	opts: { constrain_book?: boolean, constrain_chapter?: boolean } = {}
+) : BibleVerse | null {
+	let v : BibleVerse = ref.is_range ? ref.end : ref;
+
+	let cur_book = this.versification.book[v.book];
+	let cur_chpt = cur_book?.chapters[v.chapter-1];
+	if(!cur_book || !cur_chpt){
+		throw new Error("Invalid input reference to nextVerse!");
+	}
+
+	if(v.verse+1 < cur_chpt.verse_count) {
+		return { book: v.book, chapter: v.chapter, verse: v.verse + 1 };
+	}
+	if(opts.constrain_chapter) { return null; }
+
+	let next = nextChapter.bind(this)(ref, opts.constrain_book);
+	if(next) {
+		return next.start;
+	}
+	return null;
+}
+
+/**
+ * Given a BibleRef, returns a new BibleVerse which represents the verse preceeding
+ * the first verse in the input ref
+ * @param opts.constrain_book - If set, will not cross book boundaries to find another verse
+ * @param opts.constrain_chapter - If set, will not cross chapter boundaries to find another verse
+ */
+export function previousVerse(
+	this: BibleRefLibData,
+	ref: BibleRef,
+	opts: { constrain_book?: boolean, constrain_chapter?: boolean } = {}
+) : BibleVerse | null {
+	let v : BibleVerse = ref.is_range ? ref.end : ref;
+
+	if(v.verse > 1) {
+		return { book: v.book, chapter: v.chapter, verse: v.verse -1 };
+	}
+	if(opts.constrain_chapter) { return null; }
+	let prev = previousChapter.bind(this)(ref, opts.constrain_book);
+	if(prev) {
+		return prev.end;
+	}
+	return null;
+}
+
+
+/**
  * Given a BibleRef, returns a new BibleRef which represents the next chapter
  * after the last verse in the input ref.
  * @param constrain_book - If true, will not cross book boundaries to find another chapter
@@ -115,7 +173,7 @@ export function nextChapter(this: BibleRefLibData, ref: BibleRef, constrain_book
 
 	let cur_book = this.versification.book[r.book];
 	if(cur_book === undefined){
-		throw new Error("Invalid input reference!");
+		throw new Error("Invalid input reference to nextChapter!");
 	}
 
 	if(r.chapter < cur_book.chapters.length){
@@ -145,7 +203,7 @@ export function previousChapter(this: BibleRefLibData, ref: BibleRef, constrain_
 	if(r.chapter <= 1){
 		if(constrain_book){ return null; }
 		let old_book = this.versification.book[r.book];
-		if(old_book === undefined){ throw new Error("Invalid input reference"); }
+		if(old_book === undefined){ throw new Error("Invalid input reference to previousChapter"); }
 		if(old_book.index === 0){ return null; }
 		let new_book = this.versification.order[old_book.index-1];
 		new_book_id = new_book.id;

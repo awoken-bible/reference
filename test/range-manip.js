@@ -785,9 +785,97 @@ describe('range-manip', () => {
       },
       { book: 'EXO', chapter: 2, verse:  9 },
     ]);
-
-
   });
+
+	it('nextVerse', () => {
+		expect(Rm.nextVerse({
+			book: 'GEN', chapter: 1, verse: 1,
+		})).to.deep.equal({
+			book: 'GEN', chapter: 1, verse: 2,
+		});
+
+		// can cross chapter boundary unless constrain_chapter is set
+		expect(Rm.nextVerse({
+			book: 'EXO', chapter: 1, verse: 22,
+		})).to.deep.equal({
+			book: 'EXO', chapter: 2, verse: 1,
+		});
+		expect(Rm.nextVerse({
+			book: 'EXO', chapter: 1, verse: 22,
+		}, { constrain_chapter: true })).to.deep.equal(null);
+		expect(Rm.nextVerse({
+			book: 'EXO', chapter: 1, verse: 22,
+		}, { constrain_book: true })).to.deep.equal({
+			book: 'EXO', chapter: 2, verse: 1,
+		});
+
+		// can cross book boundaries unless constrain_chapter or constrain_book is set
+		expect(Rm.nextVerse({
+			book: 'LEV', chapter: 27, verse: 34,
+		})).to.deep.equal({
+			book: 'NUM', chapter: 1, verse: 1,
+		});
+		expect(Rm.nextVerse({
+			book: 'LEV', chapter: 27, verse: 34,
+		}, { constrain_chapter: true })).to.deep.equal(null);
+		expect(Rm.nextVerse({
+			book: 'LEV', chapter: 27, verse: 34,
+		}, { constrain_book: true })).to.deep.equal(null);
+
+
+		// always get null for last verse in versification
+		expect(Rm.nextVerse({
+			book: 'REV', chapter: 22, verse: 21,
+		})).to.deep.equal(null);
+
+		expect(() => Rm.nextVerse({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+	});
+
+	it('previousVerse', () => {
+		expect(Rm.previousVerse({
+			book: 'GEN', chapter: 1, verse: 2,
+		})).to.deep.equal({
+			book: 'GEN', chapter: 1, verse: 1,
+		});
+
+		// can cross chapter boundary unless constrain_chapter is set
+		expect(Rm.previousVerse({
+			book: 'DEU', chapter: 2, verse: 1,
+		})).to.deep.equal({
+			book: 'DEU', chapter: 1, verse: 46,
+		});
+		expect(Rm.previousVerse({
+			book: 'DEU', chapter: 2, verse: 1,
+		}, { constrain_chapter: true })).to.deep.equal(null);
+		expect(Rm.previousVerse({
+			book: 'DEU', chapter: 2, verse: 1,
+		}, { constrain_book: true })).to.deep.equal({
+			book: 'DEU', chapter: 1, verse: 46,
+		});
+
+		// can cross book boundaries unless constrain_chapter or constrain_book is set
+		expect(Rm.previousVerse({
+			book: 'JOS', chapter: 1, verse: 1,
+		})).to.deep.equal({
+			book: 'DEU', chapter: 34, verse: 12,
+		});
+		expect(Rm.previousVerse({
+			book: 'JOS', chapter: 1, verse: 1,
+		}, { constrain_chapter: true })).to.deep.equal(null);
+		expect(Rm.previousVerse({
+			book: 'JOS', chapter: 1, verse: 1,
+		}, { constrain_book: true })).to.deep.equal(null);
+
+
+		// always get null for first verse in versification
+		expect(Rm.previousVerse({
+			book: 'GEN', chapter: 1, verse: 1,
+		})).to.deep.equal(null);
+
+		expect(() => Rm.previousVerse({ book: 'XYZ', chapter: 1, verse: 1 })).to.throw();
+	});
+
+
 
   it('nextChapter', () => {
     expect(Rm.nextChapter({
