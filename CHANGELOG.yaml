@@ -1,3 +1,13 @@
+- v3.0.0:
+  date: '2022-09-26'
+  name: 'Hybrid CommonJs and EsModule Compatability'
+  breaking:
+    - Reorganize library dist directory, adding export for minified browser file (this may break automated build systems that relied on location of the browser bundle, which was not previously exported in a way require() could resolve)
+    - Rely on conditional exports in package.json - breaking support for node versions < v12.16.0
+  features:
+    - Add support for loading EsModule version of library (via import() in nodejs)
+    - Add nextVerse and previousVerse functions
+
 - v2.6.1:
   date: '2022-03-11'
   name: 'parseUrlEncoded Fixes'
