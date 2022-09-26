@@ -1,6 +1,6 @@
 import VERSIFICATION from './Versification';
 import BibleRef      from './BibleRef';
-import * as P from 'parsimmon';
+import P from 'parsimmon';
 
 
 let book_name_to_id : { [ index: string ] : string } = {};

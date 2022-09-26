@@ -5,8 +5,8 @@ module.exports = {
     'awoken-ref' : './src/lib.ts',
   },
 	output: {
-		path: path.resolve(__dirname, 'dist.browser/'),
-		filename: '[name].js',
+		path: path.resolve(__dirname, 'dist'),
+		filename: '[name].min.js',
 		library: {
 			name: 'AwokenRef',
 			type: 'var',

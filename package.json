@@ -2,16 +2,32 @@
   "name": "awoken-bible-reference",
   "version": "2.6.1",
   "description": "Bible verse reference parser, generator and manipulator",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/awoken-ref.cjs.js",
+  "module": "dist/awoken-ref.esm.mjs",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "test": "mocha test/ -r ts-node/register --reporter spec",
     "cover": "./node_modules/.bin/nyc ./node_modules/.bin/mocha && ./node_modules/.bin/nyc report --reporter lcov --reporter html",
-    "build:node": "tsc",
+    "build:cjs": "esbuild ./src/index.ts --format=cjs --bundle --outfile=dist/awoken-ref.cjs.js --sourcemap=external --platform=node",
+    "build:esm": "esbuild ./src/index.ts --format=esm --bundle --outfile=dist/awoken-ref.esm.mjs --sourcemap=external --platform=node",
+    "build:types": "tsc --build ./tsconfig.types.json",
     "build:browser": "webpack --mode=production",
-    "build": "npm run build:node && npm run build:browser",
+    "build": "npm-run-all build:*",
     "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludeNotDocumented --excludePrivate",
-    "prepare": "git clean -Xf && npm run build"
+    "prepack": "git clean -Xf && npm run build"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/awoken-ref.esm.mjs",
+        "types": "./dist/types/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/awoken-ref.cjs.js",
+        "types": "./dist/types.index.d.ts"
+      }
+    },
+    "./browser": "./dist/browser/awoken-ref.min.js"
   },
   "dependencies": {
     "parsimmon": "^1.18.0"
@@ -24,7 +40,9 @@
     "babel-loader": "^8.2.2",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
+    "esbuild": "^0.15.9",
     "mocha": "^9.1.3",
+    "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "rewire": "^5.0.0",
     "source-map-loader": "^2.0.1",
@@ -56,8 +74,7 @@
   },
   "homepage": "https://awoken-bible.github.io/reference/index.html",
   "files": [
-    "dist/**/*",
-    "dist.browser/**/*"
+    "dist/**/*"
   ],
   "nyc": {
     "extension": [
