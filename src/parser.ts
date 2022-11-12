@@ -280,40 +280,72 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 		// - Genesis 1:1 - Genesis 5:1
 		// - Genesis 1   - Genesis 5
 		// - Genesis - Exodus
-		P.seqMap(
+		P.seq(
 			pBook,
 			P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
 			pRangeSeparator,
 			pBook,
-			P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
-			(b1, b1_extra, r, b2, b2_extra) => {
-				let start = { book: b1, chapter: 1, verse: 1};
-				if(b1_extra){
-					let [c1, v1] = b1_extra;
-					start.chapter = c1;
-					if(v1 !== null) { start.verse = v1; }
-				}
+			(pChapterVerseSpecifier.sepBy(pCommaSeparator)), // sepBy automatically falls back to []
+		).chain(([b1, b1_extra, r, b2, b2_extra]) => {
+			let results : BibleRef[] = [];
 
-				let end = {
-					book    : b2,
-					chapter : versification.book[b2].chapters.length,
-					verse   : 0
-				};
-				if(b2_extra){
-					let [ c2, v2 ] = b2_extra;
-					end.chapter = c2;
-					if(v2 == null){
-						end.verse = versification.book[b2][end.chapter].verse_count;
-					} else {
-						end.verse = v2;
-					}
-				} else {
-					end.verse = versification.book[b2][end.chapter].verse_count;
-				}
-
-				return [{ is_range: true, start, end }];
+			let start = { book: b1, chapter: 1, verse: 1};
+			if(b1_extra){
+				let [c1, v1] = b1_extra;
+				start.chapter = c1;
+				if(v1 !== null) { start.verse = v1; }
 			}
-		),
+
+			let end = {
+				book    : b2,
+				chapter : versification.book[b2].chapters.length,
+				verse   : 0
+			};
+			if(!b2_extra.length) {
+				end.verse = versification.book[b2][end.chapter].verse_count;
+				results.push({ is_range: true, start, end });
+			} else {
+				// The first item in the cv_list needs special handling, since the pChapterVerseSpecifier
+				// allows for ranges - which are NOT allowed here
+				// After handling the head of the cv_list we can fallback to the standard chapterVerseSpeciferToBibleRef
+				const cv_first = b2_extra[0]!;
+				switch(cv_first.kind) {
+				case 'full_chapter':
+					if(cv_first.range.end) {
+						// This is a case like "Gen 1 - Exo 2-3" which makes no sense
+						return P.fail('Double range encountered');
+					}
+					end.chapter = cv_first.range.start;
+					end.verse = versification.book[b2][end.chapter].verse_count;
+					results.push({ is_range: true, start, end });
+
+					// consume head of cv_list fully!
+					b2_extra.shift();
+					break;
+				case 'verse':
+					if(cv_first.verses[0].end) {
+						// This is a case Like "Gen 1 - Exo 2:3 - 4:5" which makes no sense
+						return P.fail('Double range encountered');
+					}
+					end.chapter = cv_first.chapter;
+					end.verse   = cv_first.verses[0].start;
+					results.push({ is_range: true, start, end });
+					// consume only first item in verse list, reset
+					// is processed as normal
+					cv_first.verses.shift();
+					break;
+				default:
+					// this represents other range types
+					return P.fail('Double range encountered')
+				}
+			}
+
+			// consume extra items still left in cv_list
+			for(let cv of (b2_extra || [])) {
+				results = results.concat(chapterVerseSpecifierToBibleRef(b2, cv));
+			}
+			return P.succeed(results);
+		}),
 
 		// Ranges within a single chapter
 		// EG: Gen 5:12-14

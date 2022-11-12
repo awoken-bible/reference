@@ -336,6 +336,7 @@ describe("parse", () => {
 	});
 
 	it("Comma separated", () => {
+		// Comma after verse retains book and chapter context
 		expect(parse('GEN 3:12,15')).to.deep.equal({
 			status: true,
 			value: [
@@ -344,6 +345,7 @@ describe("parse", () => {
 			],
 		});
 
+		// Comma after verse range retains book and chapter context
 		expect(parse('GEN 3:12-15,18')).to.deep.equal({
 			status: true,
 			value: [
@@ -355,6 +357,7 @@ describe("parse", () => {
 			],
 		});
 
+		// comma after verse introduce new chapter context using chapter seperator character
 		expect(parse('GEN 3:12,4:15')).to.deep.equal({
 			status: true,
 			value: [
@@ -363,6 +366,7 @@ describe("parse", () => {
 			],
 		});
 
+		// comma after chapter retains book context
 		expect(parse('GEN 2,6')).to.deep.equal({
 			status: true,
 			value: [
@@ -376,6 +380,45 @@ describe("parse", () => {
 				}
 			],
 		});
+
+		// comma after cross book chapter range retains
+		// context of latest book
+		expect(parse('GEN 1 - EXO 3, 5, 7v2,4')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'EXO', chapter: 3, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: 'EXO', chapter: 5, verse: 1 },
+				end: { book: 'EXO', chapter: 5, verse: 23 },
+			}, {
+				book: 'EXO', chapter: 7, verse: 2
+			}, {
+				book: 'EXO', chapter: 7, verse: 4
+			}]
+		});
+
+		// if first cv sepecifier after book at end of range includes verse,
+		// subsequent items are also interpretted as verses
+		expect(parse('GEN 1 - EXO 3v2,5,7, 4v8,9')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+ 				end: { book: 'EXO', chapter: 3, verse: 2 },
+			}, {
+				book: 'EXO', chapter: 3, verse: 5
+			}, {
+				book: 'EXO', chapter: 3, verse: 7
+			}, {
+				book: 'EXO', chapter: 4, verse: 8
+			}, {
+				book: 'EXO', chapter: 4, verse: 9
+			}]
+		});
+
 	});
 
 
@@ -434,26 +477,50 @@ describe("parse", () => {
 	it("All features simultaniosuly", () => {
 		expect(parse('Genesis 2, 4:3,8, 6:9-12,18-20,27 ; ECC 7')).to.deep.equal({
 			status: true,
-			value: [{ is_range: true,
-								start: { book: 'GEN', chapter: 2, verse:  1 },
-								end  : { book: 'GEN', chapter: 2, verse: 25 },
-							},
-							{ book: 'GEN', chapter: 4, verse: 3 },
-							{ book: 'GEN', chapter: 4, verse: 8 },
-							{ is_range: true,
-								start: { book: 'GEN', chapter: 6, verse:  9 },
-								end  : { book: 'GEN', chapter: 6, verse: 12 },
-							},
-							{ is_range: true,
-								start: { book: 'GEN', chapter: 6, verse: 18 },
-								end  : { book: 'GEN', chapter: 6, verse: 20 },
-							},
-							{ book: 'GEN', chapter: 6, verse: 27 },
-							{ is_range: true,
-								start: { book: 'ECC', chapter: 7, verse:  1 },
-								end  : { book: 'ECC', chapter: 7, verse: 29 },
-							},
-						 ]
+			value: [
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 2, verse:  1 },
+					end  : { book: 'GEN', chapter: 2, verse: 25 },
+				},
+				{ book: 'GEN', chapter: 4, verse: 3 },
+				{ book: 'GEN', chapter: 4, verse: 8 },
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 6, verse:  9 },
+					end  : { book: 'GEN', chapter: 6, verse: 12 },
+				},
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 6, verse: 18 },
+					end  : { book: 'GEN', chapter: 6, verse: 20 },
+				},
+				{ book: 'GEN', chapter: 6, verse: 27 },
+				{ is_range: true,
+					start: { book: 'ECC', chapter: 7, verse:  1 },
+					end  : { book: 'ECC', chapter: 7, verse: 29 },
+				},
+			]
+		});
+
+		expect(parse('GEN1.1-2; EXO3:4 - DEU5v6,10; 1st - 2nd Jn; Revelation 22')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'GEN', chapter: 1, verse: 2 },
+			}, {
+				is_range: true,
+				start: { book: 'EXO', chapter: 3, verse: 4 },
+				end: { book: 'DEU', chapter: 5, verse: 6 },
+			}, {
+				book: 'DEU', chapter: 5, verse: 10
+			}, {
+				is_range: true,
+				start: { book: '1JN', chapter: 1, verse: 1 },
+				end: { book: '2JN', chapter: 1, verse: 13 },
+			}, {
+				is_range: true,
+				start: { book: 'REV', chapter: 22, verse: 1 },
+				end: { book: 'REV', chapter: 22, verse: 21 },
+			}],
 		});
 	});
 
