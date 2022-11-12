@@ -211,7 +211,7 @@ let default_data : BookMetaRaw[] = [
 	{ id            : '1KI',
 	  osisId        : '1Kgs',
 	  name          : '1 Kings',
-	  aliases       : ['1 Kgs', ' 1 Kin'],
+	  aliases       : ['1 Kgs', '1 Kin'],
 	  verse_counts  : [53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53],
 	},
 	{ id            : '2KI',
