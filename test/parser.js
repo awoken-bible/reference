@@ -220,6 +220,7 @@ describe("parse", () => {
 	});
 
 	it("Comma separated", () => {
+		// Comma after verse retains book and chapter context
 		expect(parse('GEN 3:12,15')).to.deep.equal({
 			status: true,
 			value: [
@@ -228,6 +229,7 @@ describe("parse", () => {
 			],
 		});
 
+		// Comma after verse range retains book and chapter context
 		expect(parse('GEN 3:12-15,18')).to.deep.equal({
 			status: true,
 			value: [
@@ -239,6 +241,7 @@ describe("parse", () => {
 			],
 		});
 
+		// comma after verse introduce new chapter context using chapter seperator character
 		expect(parse('GEN 3:12,4:15')).to.deep.equal({
 			status: true,
 			value: [
@@ -247,6 +250,7 @@ describe("parse", () => {
 			],
 		});
 
+		// comma after chapter retains book context
 		expect(parse('GEN 2,6')).to.deep.equal({
 			status: true,
 			value: [
@@ -259,6 +263,12 @@ describe("parse", () => {
 					end   : { book: 'GEN', chapter: 6, verse: 22 },
 				}
 			],
+		});
+
+		// comma after cross book chapter range retains
+		// context of latest book
+		expect(parse('GEN 1 - EXO 3,5')).to.deep.equal({
+			status: true,
 		});
 	});
 
@@ -318,26 +328,31 @@ describe("parse", () => {
 	it("All features simultaniosuly", () => {
 		expect(parse('Genesis 2, 4:3,8, 6:9-12,18-20,27 ; ECC 7')).to.deep.equal({
 			status: true,
-			value: [{ is_range: true,
-								start: { book: 'GEN', chapter: 2, verse:  1 },
-								end  : { book: 'GEN', chapter: 2, verse: 25 },
-							},
-							{ book: 'GEN', chapter: 4, verse: 3 },
-							{ book: 'GEN', chapter: 4, verse: 8 },
-							{ is_range: true,
-								start: { book: 'GEN', chapter: 6, verse:  9 },
-								end  : { book: 'GEN', chapter: 6, verse: 12 },
-							},
-							{ is_range: true,
-								start: { book: 'GEN', chapter: 6, verse: 18 },
-								end  : { book: 'GEN', chapter: 6, verse: 20 },
-							},
-							{ book: 'GEN', chapter: 6, verse: 27 },
-							{ is_range: true,
-								start: { book: 'ECC', chapter: 7, verse:  1 },
-								end  : { book: 'ECC', chapter: 7, verse: 29 },
-							},
-						 ]
+			value: [
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 2, verse:  1 },
+					end  : { book: 'GEN', chapter: 2, verse: 25 },
+				},
+				{ book: 'GEN', chapter: 4, verse: 3 },
+				{ book: 'GEN', chapter: 4, verse: 8 },
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 6, verse:  9 },
+					end  : { book: 'GEN', chapter: 6, verse: 12 },
+				},
+				{ is_range: true,
+					start: { book: 'GEN', chapter: 6, verse: 18 },
+					end  : { book: 'GEN', chapter: 6, verse: 20 },
+				},
+				{ book: 'GEN', chapter: 6, verse: 27 },
+				{ is_range: true,
+					start: { book: 'ECC', chapter: 7, verse:  1 },
+					end  : { book: 'ECC', chapter: 7, verse: 29 },
+				},
+			]
+		});
+
+		expect(parse('GEN1.1-2; EXO3:4 - DEU5v6,10; Revelation 22')).to.deep.equal({
+			status: true,
 		});
 	});
 

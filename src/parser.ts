@@ -278,8 +278,12 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 			P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
 			pRangeSeparator,
 			pBook,
-			P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
+			(pChapterVerseSpecifier.sepBy(pCommaSeparator)).fallback(null),
 			(b1, b1_extra, r, b2, b2_extra) => {
+
+				console.log(JSON.stringify({ b1, b1_extra, r, b2, b2_extra }, null, 2));
+
+				let results : BibleRef[] = [];
 
 				let start = { book: b1, chapter: 1, verse: 1};
 				if(b1_extra){
@@ -293,19 +297,43 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 					chapter : versification.book[b2].chapters.length,
 					verse   : 0
 				};
-				if(b2_extra){
-					let [ c2, v2 ] = b2_extra;
-					end.chapter = c2;
-					if(v2 == null){
-						end.verse = versification.book[b2][end.chapter].verse_count;
-					} else {
-						end.verse = v2;
-					}
-				} else {
+				if(!b2_extra?.length) {
 					end.verse = versification.book[b2][end.chapter].verse_count;
+					results.push({ is_range: true, start, end });
+				} else {
+					const cv_first = b2_extra.pop()!;
+					switch(cv_first.kind) {
+					case 'verse':
+						if(cv_first.verses[0].end) {
+							// This is a case Like "Gen 1 - Exo 2:3 - 4:5" which makes no sense
+							throw new Error('Double range encountered');
+						}
+						end.chapter = cv_first.chapter;
+						end.verse   = cv_first.verses[0].start;
+						results.push({ is_range: true, start, end });
+						for(let v of cv_first.verses.slice(1)) {
+							if(v.end) {
+								results.push({
+									is_range: true,
+									start: { ...end, verse: v.start },
+									end: { ...end, verse: v.end },
+								})
+							} else {
+								results.push({ ...end, verse: v.start })
+							}
+						}
+						break;
+					default:
+						// this represents other range types
+						throw new Error('Double range encountered')
+					}
 				}
 
-				return [{ is_range: true, start, end }];
+				// consume extra items in cv_list
+				for(let cv of (b2_extra || [])) {
+					results = results.concat(chapterVerseSpecifierToBibleRef(b2, cv));
+				}
+				return results;
 			}
 		),
 
