@@ -4,20 +4,11 @@ const rewire    = require('rewire');
 const chai      = require('chai');
 const expect    = chai.expect;
 
-const Parser    = require('../src/parser.ts').default;
+const Parsers   = require('../src/parser.ts').default;
 const p         = rewire('../src/parser.ts');
 const AwokenRef = require('../src/index.ts').default;
 
-describe("parser internals", () => {
-	it("pBookId", () => {
-		let pBookId = p.__get__("pBookId");
-		expect(      pBookId.tryParse("GEN")).to.equal("GEN");
-		expect(      pBookId.tryParse("Gen")).to.equal("GEN");
-		expect(      pBookId.tryParse("gen")).to.equal("GEN");
-		expect(      pBookId.tryParse("REV")).to.equal("REV");
-		expect(() => pBookId.tryParse("123")).to.throw();
-	});
-
+describe("Parser Internals", () => {
 	it("pBookPrefixNumber", () => {
 		let pBookId = p.__get__("pBookPrefixNumber");
 		expect(      pBookId.tryParse(  "1")).to.equal(1);
@@ -31,47 +22,58 @@ describe("parser internals", () => {
 		expect(() => pBookId.tryParse("a")).to.throw();
 		expect(() => pBookId.tryParse("4")).to.throw();
 	});
+});
 
-	it("pBookName", () => {
-		let pBookName = p.__get__("pBookName");
-		expect(      pBookName.tryParse("Genesis"        )).to.equal("GEN");
-		expect(      pBookName.tryParse("genesis"        )).to.equal("GEN");
-		expect(      pBookName.tryParse("GENESIS"        )).to.equal("GEN");
-		expect(      pBookName.tryParse("Exodus"         )).to.equal("EXO");
-		expect(      pBookName.tryParse("exod"           )).to.equal("EXO");
-		expect(      pBookName.tryParse("Mark"           )).to.equal("MRK");
-		expect(      pBookName.tryParse("Psalm"          )).to.equal("PSA");
-		expect(      pBookName.tryParse("Psalms"         )).to.equal("PSA");
-		expect(      pBookName.tryParse("Ps"             )).to.equal("PSA");
-		expect(      pBookName.tryParse("1Kings"         )).to.equal("1KI");
-		expect(      pBookName.tryParse("2 Kgs"          )).to.equal("2KI");
-		expect(      pBookName.tryParse("2 Kings"        )).to.equal("2KI");
-		expect(      pBookName.tryParse("John"           )).to.equal("JHN");
-		expect(      pBookName.tryParse("I John"         )).to.equal("1JN");
-		expect(      pBookName.tryParse("1 John"         )).to.equal("1JN");
-		expect(      pBookName.tryParse("1st John"       )).to.equal("1JN");
-		expect(      pBookName.tryParse("First John"     )).to.equal("1JN");
-		expect(      pBookName.tryParse("II John"        )).to.equal("2JN");
-		expect(      pBookName.tryParse("2 John"         )).to.equal("2JN");
-		expect(      pBookName.tryParse("III John"       )).to.equal("3JN");
-		expect(      pBookName.tryParse("2 THESS"        )).to.equal("2TH");
-		expect(      pBookName.tryParse("II THESS"       )).to.equal("2TH");
-		expect(      pBookName.tryParse("3 John"         )).to.equal("3JN");
-		expect(      pBookName.tryParse("3rd John"       )).to.equal("3JN");
-		expect(      pBookName.tryParse("Third John"     )).to.equal("3JN");
-		expect(      pBookName.tryParse("2nd Samuel"     )).to.equal("2SA");
-		expect(      pBookName.tryParse("2nd Sam"        )).to.equal("2SA");
-		expect(      pBookName.tryParse("Second Sam"     )).to.equal("2SA");
-		expect(      pBookName.tryParse("song of solomon")).to.equal("SNG");
-		expect(      pBookName.tryParse("Song of Solomon")).to.equal("SNG");
-		expect(      pBookName.tryParse("song of songs"  )).to.equal("SNG");
-		expect(      pBookName.tryParse("Song of Songs"  )).to.equal("SNG");
-		expect(      pBookName.tryParse("SongofSolomon"  )).to.equal("SNG");
-		expect(      pBookName.tryParse("sos"            )).to.equal("SNG");
+describe("Parse Book", () => {
+	const pBook = Parsers.Book;
 
-		expect(() => pBookName.tryParse(""       )).to.throw();
-		expect(() => pBookName.tryParse("hello"  )).to.throw();
-		expect(() => pBookName.tryParse("3 Kings")).to.throw();
+	it("Book Ids are Unchanged", () => {
+		expect(      pBook.tryParse("GEN")).to.equal("GEN");
+		expect(      pBook.tryParse("Gen")).to.equal("GEN");
+		expect(      pBook.tryParse("gen")).to.equal("GEN");
+		expect(      pBook.tryParse("REV")).to.equal("REV");
+		expect(() => pBook.tryParse("123")).to.throw();
+	});
+
+	it("Book Names", () => {
+		expect(      pBook.tryParse("Genesis"        )).to.equal("GEN");
+		expect(      pBook.tryParse("genesis"        )).to.equal("GEN");
+		expect(      pBook.tryParse("GENESIS"        )).to.equal("GEN");
+		expect(      pBook.tryParse("Exodus"         )).to.equal("EXO");
+		expect(      pBook.tryParse("exod"           )).to.equal("EXO");
+		expect(      pBook.tryParse("Mark"           )).to.equal("MRK");
+		expect(      pBook.tryParse("Psalm"          )).to.equal("PSA");
+		expect(      pBook.tryParse("Psalms"         )).to.equal("PSA");
+		expect(      pBook.tryParse("Ps"             )).to.equal("PSA");
+		expect(      pBook.tryParse("1Kings"         )).to.equal("1KI");
+		expect(      pBook.tryParse("2 Kgs"          )).to.equal("2KI");
+		expect(      pBook.tryParse("2 Kings"        )).to.equal("2KI");
+		expect(      pBook.tryParse("John"           )).to.equal("JHN");
+		expect(      pBook.tryParse("I John"         )).to.equal("1JN");
+		expect(      pBook.tryParse("1 John"         )).to.equal("1JN");
+		expect(      pBook.tryParse("1st John"       )).to.equal("1JN");
+		expect(      pBook.tryParse("First John"     )).to.equal("1JN");
+		expect(      pBook.tryParse("II John"        )).to.equal("2JN");
+		expect(      pBook.tryParse("2 John"         )).to.equal("2JN");
+		expect(      pBook.tryParse("III John"       )).to.equal("3JN");
+		expect(      pBook.tryParse("2 THESS"        )).to.equal("2TH");
+		expect(      pBook.tryParse("II THESS"       )).to.equal("2TH");
+		expect(      pBook.tryParse("3 John"         )).to.equal("3JN");
+		expect(      pBook.tryParse("3rd John"       )).to.equal("3JN");
+		expect(      pBook.tryParse("Third John"     )).to.equal("3JN");
+		expect(      pBook.tryParse("2nd Samuel"     )).to.equal("2SA");
+		expect(      pBook.tryParse("2nd Sam"        )).to.equal("2SA");
+		expect(      pBook.tryParse("Second Sam"     )).to.equal("2SA");
+		expect(      pBook.tryParse("song of solomon")).to.equal("SNG");
+		expect(      pBook.tryParse("Song of Solomon")).to.equal("SNG");
+		expect(      pBook.tryParse("song of songs"  )).to.equal("SNG");
+		expect(      pBook.tryParse("Song of Songs"  )).to.equal("SNG");
+		expect(      pBook.tryParse("SongofSolomon"  )).to.equal("SNG");
+		expect(      pBook.tryParse("sos"            )).to.equal("SNG");
+
+		expect(() => pBook.tryParse(""       )).to.throw();
+		expect(() => pBook.tryParse("hello"  )).to.throw();
+		expect(() => pBook.tryParse("3 Kings")).to.throw();
 	});
 });
 

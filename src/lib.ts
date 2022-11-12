@@ -3,7 +3,7 @@
  */
 
 import { BibleRef, BibleVerse, BibleRange, BibleRefLibData } from './BibleRef';
-import { Parsers, ParseResult } from './parser';
+import { Parsers, DefaultParsers, ParseResult, buildParsers } from './parser';
 import { parseUrlEncoded }      from './parser-url';
 import * as Printer             from './printer';
 import VERSIFICATION            from './Versification';
@@ -34,6 +34,7 @@ export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, Geome
 	countVerses(refs : BibleRef | BibleRef[]) : number;
 	validate(refs: BibleRef | BibleRef[], include_warnings?: boolean) : ValidationError[];
 	repair(ref: BibleRef, include_warnings?: boolean) : BibleRef;
+	_parsers: Parsers;
 };
 
 /**
@@ -73,7 +74,7 @@ export interface BibleRefLib extends BibleRefLibData, RangeManipFunctions, Geome
  * @param str  - The string to parse
  */
 function parse(this: BibleRefLib, str: string) : ParseResult {
-	let result = Parsers.BibleRef.parse(str);
+	let result = this._parsers.BibleRef.parse(str);
 	if(result.status === false){
 		return { ...result, input: str };
 	}
@@ -107,7 +108,7 @@ function parseOrThrow(this: BibleRefLib, str: string) : BibleRef[]{
  * @param str  - The string to parse
  */
 function parseBookName(this: BibleRefLib, str: string) : string | null {
-	let result = Parsers.Book.parse(str);
+	let result = this._parsers.Book.parse(str);
 	if(result.status === true){
 		return result.value;
 	} else {
@@ -237,6 +238,7 @@ type BibleRefLibConstructor =	(v: Versification) => BibleRefLib;
 
 const AwokenRef : BibleRefLib & BibleRefLibConstructor = function(this: BibleRefLib, v: Versification) : BibleRefLib {
 	this.versification         = v;
+	this._parsers              = buildParsers(v);
 	this.parse                 = parse;
 	this.parseOrThrow          = parseOrThrow;
 	this.parseUrlEncoded       = parseUrlEncoded;
@@ -278,6 +280,7 @@ const AwokenRef : BibleRefLib & BibleRefLibConstructor = function(this: BibleRef
 
 // Allow calling of all methods statically, with the default Versification scheme used
 AwokenRef.versification         = VERSIFICATION;
+AwokenRef._parsers              = DefaultParsers;
 AwokenRef.parse                 = parse.bind(AwokenRef);
 AwokenRef.parseOrThrow          = parseOrThrow.bind(AwokenRef);
 AwokenRef.parseUrlEncoded       = parseUrlEncoded.bind(AwokenRef);
