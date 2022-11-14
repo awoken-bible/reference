@@ -191,5 +191,5 @@ The published copy of this library multiple output targets. Node.js projects sho
 
 - `dist/awoken-ref.cjs.js` - CommonJS module loadable via require() in nodejs project - built via esbuild
 - `dist/awoken-ref.esm.mjs` - ESModule loadable via import() in nodejs type=module projects - built via esbuild
-- `dist/awoken-ref.min.js` - Browser bundle, loadable via <script> tag, and will create a global AwokenRef variable with attached functions using the default versification, or you can create a new instance with `new AwokenRef(customVersification)` - built via webpack/babel
+- `dist/awoken-ref.min.js` - Browser bundle, loadable via `<script>` tag, and will create a global AwokenRef variable with attached functions using the default versification, or you can create a new instance with `new AwokenRef(customVersification)` - built via webpack/babel
 - `dist/types` - Contains typescript declaration (.d.ts) files - package.json is setup such that these should be auto-loaded by typescript consumers of this library
