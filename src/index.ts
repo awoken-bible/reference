@@ -10,7 +10,7 @@
  * Export types which should be visible to users of the library
  */
 export { BibleRef, BibleVerse, BibleRange }       from './BibleRef';
-export { Versification   }                        from './Versification';
+export { Versification, createVersification  }    from './Versification';
 export { FormatOptions, FormatArg  }              from './printer';
 export { ValidationError }                        from './validate';
 export { RefsByBook, RefsByChapter, RefsByLevel } from './range-manip';

@@ -18,6 +18,7 @@ export interface RangeManipFunctions {
 	groupByChapter(refs: BibleRef | BibleRef[]) : RefsByChapter[];
 	groupByLevel(refs: BibleRef | BibleRef[], options?: RefsByLevelOptions) : RefsByLevel;
 	makeRange(book : string, chapter?: number) : BibleRange;
+	makeBookRange(book_start: string, book_end: string): BibleRange;
 	nextChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
 	previousChapter(ref: BibleRef, constrain_book?: boolean) : BibleRange | null;
 	nextBook(ref: BibleRef) : BibleRange | null;
@@ -37,8 +38,20 @@ export interface RangeManipFunctions {
  * @param this - Any object with a `versification` field
  */
 export function makeRange(this: BibleRefLibData, book : string, chapter? : number) : BibleRange {
-	let v = this.versification;
 	return _makeRange(this.versification, book, chapter);
+}
+
+/**
+ * Creates a [[BibleRange]] representing a number of complete books, starting
+ * at chapter 1 verse 1 of `book_start`, and ending at the final chapter/verse
+ * of book_end
+ *
+ * @note book_end can be left undefined in which case it will be assumed to be
+ * equal to book_start. Useful for code where book_end is a variable since
+ * caller doesn't know if book_end will be defined
+ */
+export function makeBookRange(this: BibleRefLibData, book_start: string, book_end?: string): BibleRange {
+	return _makeBookRange(this.versification, book_start, book_end);
 }
 
 /**
@@ -510,6 +523,17 @@ function _makeRange(v: Versification, book : string, chapter? : number) : BibleR
 								}
 		};
 	}
+}
+
+export function _makeBookRange(v: Versification, book_start: string, book_end: string = book_start): BibleRange {
+	let end_b = v.book[book_end];
+	let end_c = end_b.chapters[end_b.chapters.length-1];
+	return {
+		is_range: true,
+		start: { book: book_start, chapter: 1, verse: 1 },
+		end: { book: book_end, chapter: end_b.chapters.length, verse: end_c.verse_count },
+	}
+
 }
 
 function* _iterateBookRanges(v: Versification, refs: BibleRef[], verse_as_range: boolean) : Iterable<BibleRef> {

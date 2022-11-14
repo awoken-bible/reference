@@ -4,6 +4,8 @@
  *
  * This module exports both a type decleration, and the default data set
  */
+import BibleRef from './BibleRef';
+import { _makeBookRange } from './range-manip';
 
 /**
  * Minimal data set used to create full BookMeta
@@ -73,23 +75,57 @@ export interface BookMeta {
 	[index: number] : ChapterMeta,
 };
 
+/**
+ * A range alias is a regex pattern which denotes a named BibleRef set
+ * Eg, these should parse equivalently:
+ * - "Gospels" 'Mat-Jhn'
+ * - "Old Testament" = 'Gen-Mal'
+ */
+interface RangeAlias {
+	pattern: RegExp;
+	refs: BibleRef[];
+}
+
+/**
+ * Argument that can be used to create a RangeAlias using just a compact
+ * [book,book] representation for full book ranges where the books are used
+ * as an argument to makeBookRange
+ *
+ * (this is primarily used in the createVersification arguments to make
+ * the hard coded data we need to store both smaller (good for browser bundle)
+ * and more compatible with versifications with different verse number divisions
+ * (as we don't duplicate data about chapter/verse count inside a raw refs array)
+ */
+type RangeAliasRaw = RangeAlias | {
+	pattern: RegExp
+	books: ([string,string] | [string])[];
+}
+
 export interface Versification {
-	// Array of books within this Versification scheme
+	/**
+	 * Array of books within this Versification scheme
+	 */
 	order : BookMeta[],
 
-	// Mapping from book ID (eg GEN, REV) to the corresponding
-	// element of the order array
-	book : { [ index: string ] : BookMeta }
+	/**
+	 * Mapping from book ID (eg GEN, REV) to the corresponding
+	 * element of the order array
+	 */
+	book : { [ index: string ] : BookMeta },
+
+	/** Set of aliases that map onto cross-book ranges */
+	rangeAliases: RangeAlias[];
 };
 
 /**
  * Creates a full Versification object from the minimal data set by computing
  * the rest
  */
-export function createVersification(data: BookMetaRaw[]) : Versification {
+export function createVersification(data: BookMetaRaw[], rangeAliases: RangeAliasRaw[] = []) : Versification {
 	let result : Versification = {
 		order: [],
 		book : {},
+		rangeAliases: [],
 	};
 
 	let accumulator = 0;
@@ -121,6 +157,14 @@ export function createVersification(data: BookMetaRaw[]) : Versification {
 		result.book[b_meta.id] = b_meta;
 	}
 
+	result.rangeAliases = rangeAliases.map(x => {
+		if('refs' in x) { return x; }
+		return {
+			pattern: x.pattern,
+			refs: x.books.map(b => _makeBookRange(result, b[0], b[1]))
+		}
+	}) as any[];
+
 	return result;
 }
 
@@ -147,7 +191,7 @@ export function createVersification(data: BookMetaRaw[]) : Versification {
  *
  * @private
  */
-let default_data : BookMetaRaw[] = [
+const default_data : BookMetaRaw[] = [
 	{ id            : 'GEN',
 	  osisId        : 'Gen',
 	  name          : 'Genesis',
@@ -211,13 +255,13 @@ let default_data : BookMetaRaw[] = [
 	{ id            : '1KI',
 	  osisId        : '1Kgs',
 	  name          : '1 Kings',
-	  aliases       : ['1 Kgs', '1 Kin'],
+	  aliases       : ['1 Kgs', '1 Kin', '1 Kngs'],
 	  verse_counts  : [53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53],
 	},
 	{ id            : '2KI',
 	  osisId        : '2Kgs',
 	  name          : '2 Kings',
-	  aliases       : ['2 Kgs', '2 Kin'],
+	  aliases       : ['2 Kgs', '2 Kin', '2 Kngs'],
 	  verse_counts  : [18,25,27,44,27,33,20,29,37,36,21,21,25,29,38,20,41,37,37,21,26,20,37,20,30],
 	},
 	{ id            : '1CH',
@@ -551,5 +595,27 @@ let default_data : BookMetaRaw[] = [
 	},
 ];
 
-export const VERSIFICATION : Versification = createVersification(default_data);
+const default_range_aliases : RangeAliasRaw[] = [
+	{
+		pattern: /gospels?/i,
+		books: [['MAT', 'JHN']],
+	}, {
+		pattern: /torah|pentateuch|law|(five )?books of moses/i,
+		books: [['GEN', 'DEU']],
+	}, {
+		pattern: /old test[ae]ment|tanakh/i, // accept common mis-spelling
+		books: [['GEN', 'MAL']],
+	}, {
+		pattern: /new test[ae]ment/i, // accept common mis-spelling
+		books: [['MAT', 'REV']],
+	}, {
+		pattern: /ketuvim/i,
+		books: [['JOS', 'JDG'], ['1SA', '2KI'], ['ISA', 'JER'], ['EZK'], ['HOS', 'MAL']],
+	}, {
+		pattern: /nevi'?im/i,
+		books: [['RUT'], ['1CH', 'SNG'], ['LAM'], ['DAN']],
+	}
+]
+
+export const VERSIFICATION : Versification = createVersification(default_data, default_range_aliases);
 export default VERSIFICATION;
