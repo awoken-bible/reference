@@ -190,6 +190,81 @@ describe("parse", () => {
 		});
 	});
 
+	it("Range Aliases", () => {
+		expect(parse('Gospels')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'MAT', chapter: 1, verse: 1 },
+				end: { book: 'JHN', chapter: 21, verse: 25 },
+			}]
+		});
+
+		expect(parse('Old Testament')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'MAL', chapter: 4, verse: 6 },
+			}]
+		});
+
+		expect(parse('Books of Moses')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'DEU', chapter: 34, verse: 12 },
+			}],
+		});
+
+		expect(parse('Ketuvim')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'JOS', chapter: 1, verse: 1 },
+				end: { book: 'JDG', chapter: 21, verse: 25 },
+			}, {
+				is_range: true,
+				start: { book: '1SA', chapter: 1, verse: 1 },
+				end: { book: '2KI', chapter: 25, verse: 30 },
+			}, {
+				is_range: true,
+				start: { book: 'ISA', chapter: 1, verse: 1 },
+				end: { book: 'JER', chapter: 52, verse: 34},
+			}, {
+				is_range: true,
+				start: { book: 'EZK', chapter: 1, verse: 1 },
+				end: { book: 'EZK', chapter: 48, verse: 35 },
+			}, {
+				is_range: true,
+				start: { book: 'HOS', chapter: 1, verse: 1 },
+				end: { book: 'MAL', chapter: 4, verse: 6 },
+			}]
+		});
+
+		expect(parse('Nevi\'im')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'RUT', chapter: 1, verse: 1 },
+				end: { book: 'RUT', chapter: 4, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: '1CH', chapter: 1, verse: 1 },
+				end: { book: 'SNG', chapter: 8, verse: 14 },
+			}, {
+				is_range: true,
+				start: { book: 'LAM', chapter: 1, verse: 1 },
+				end: { book: 'LAM', chapter: 5, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: 'DAN', chapter: 1, verse: 1 },
+				end: { book: 'DAN', chapter: 12, verse: 13 },
+			}]
+		});
+	});
+
 	it("Book Range", () => {
 		expect(parse('Genesis - Leviticus')).to.deep.equal({
 			status: true,

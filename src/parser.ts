@@ -156,6 +156,11 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 		})
 	).desc("Book name (eg, 'Genesis', '2 Kings')");
 
+	const rangeAliases = versification.rangeAliases.map(({ pattern, refs }) => (
+		P.regexp(pattern).chain(x => P.succeed(refs))
+	))
+	const pRangeAlias : P.Parser<BibleRef[]> = P.alt(...rangeAliases);
+
 	const pBook : P.Parser<string> = P.alt(pBookName, pBookId).skip(P.regexp(/\.? */));
 
 	///////////////////////////////////////////////////////////////////////
@@ -280,7 +285,6 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 			pBook,
 			P.seq(pInt, pVerseSeparator.then(pInt).fallback(null)).fallback(null),
 			(b1, b1_extra, r, b2, b2_extra) => {
-
 				let start = { book: b1, chapter: 1, verse: 1};
 				if(b1_extra){
 					let [c1, v1] = b1_extra;
@@ -334,6 +338,8 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 				return results;
 			}
 		),
+
+		pRangeAlias,
 	);
 
 	const pBibleRef : P.Parser<BibleRef[]> = pBibleRefSingle
