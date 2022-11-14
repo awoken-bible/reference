@@ -1,3 +1,20 @@
+- v3.1.0:
+  date: '2022-11-14'
+  name: 'Named Range Alias Parsing'
+  features:
+    - 'Parser functions now obey specified Versification (issue #1)'
+    - 'Support specifying a list of "RangeAliases" as part of verisifcation scheme'
+      - 'Eg, "Torah" can map to the range "Gen-Deu" and thus be parsable'
+      - 'Add common RangeAliases to default versification'
+      - 'This feature can be disabled by creating a custom versification with no RangeAliases specified'
+      - 'Support parsing range of number prefixed books, eg: "1 - 2 Kings" now parses (issue #23)'
+    - 'Add makeBookRange function to make cross-book ranges, eg: `makeBookRange("GEN", "DEU")'
+  fixes:
+    - 'Parser now works for cross-book ranges with trailing chapter/verse specifiers, eg: "Gen 3 - Exo 5, 6" (issue #17)'
+    - 'Remove extra space from "1 Kin" alias breaking parsing (PR #22)'
+  misc:
+    - 'Update typedocs and typescript dependencies'
+
 - v3.0.0:
   date: '2022-09-26'
   name: 'Hybrid CommonJs and EsModule Compatability'
