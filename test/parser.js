@@ -333,6 +333,49 @@ describe("parse", () => {
 				end: { book: '2KI', chapter: 25, verse: 30 },
 			}],
 		});
+
+		// Check that context can be used to disambiguate a trailing range from prefix range
+		expect(parse('Gen - Exo 1, 2-3')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'EXO', chapter: 1, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: 'EXO', chapter: 2, verse: 1 },
+				end: { book: 'EXO', chapter: 3, verse: 22 },
+			}],
+		});
+		expect(parse('Gen - Exo 1, 2-3 Jn')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'EXO', chapter: 1, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: '2JN', chapter: 1, verse: 1 },
+				end: { book: '3JN', chapter: 1, verse: 14 },
+			}],
+		});
+		expect(parse('Gen - Exo 1, 2-3, Jn')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: 'GEN', chapter: 1, verse: 1 },
+				end: { book: 'EXO', chapter: 1, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: 'EXO', chapter: 2, verse: 1 },
+				end: { book: 'EXO', chapter: 3, verse: 22 },
+			}, {
+				is_range: true,
+				start: { book: 'JHN', chapter: 1, verse: 1 },
+				end: { book: 'JHN', chapter: 21, verse: 25 },
+			}],
+		});
+
 	});
 
 	it("Comma separated", () => {
