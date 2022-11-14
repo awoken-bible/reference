@@ -294,6 +294,47 @@ describe("parse", () => {
 		});
 	});
 
+	it('Numbered Book Ranges', () => {
+		expect(parse('1 - 2 Kings')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: '1KI', chapter: 1, verse: 1 },
+				end: { book: '2KI', chapter: 25, verse: 30 },
+			}],
+		});
+		expect(parse('1 - 2 Kings 3').status).to.equal(false);
+		expect(parse('1 - 3 Kings').status).to.equal(false);
+
+		expect(parse('1st-III John')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: '1JN', chapter: 1, verse: 1 },
+				end: { book: '3JN', chapter: 1, verse: 14 },
+			}],
+		});
+
+		expect(parse('1-2Cor')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: '1CO', chapter: 1, verse: 1 },
+				end: { book: '2CO', chapter: 13, verse: 14 },
+			}],
+		});
+
+		// check we don't somehow conflict with ranges between numbered books
+		expect(parse('1 Sam - 2 Kngs')).to.deep.equal({
+			status: true,
+			value: [{
+				is_range: true,
+				start: { book: '1SA', chapter: 1, verse: 1 },
+				end: { book: '2KI', chapter: 25, verse: 30 },
+			}],
+		});
+	});
+
 	it("Comma separated", () => {
 		expect(parse('GEN 3:12,15')).to.deep.equal({
 			status: true,

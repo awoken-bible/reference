@@ -1,7 +1,9 @@
+import P from 'parsimmon';
+
 import VERSIFICATION from './Versification';
 import type { Versification } from './Versification';
 import BibleRef      from './BibleRef';
-import P from 'parsimmon';
+import { _makeBookRange } from './range-manip';
 
 /**
  * Represents the result of a successful attempt to parse a string representing a [[BibleRef]]
@@ -339,6 +341,28 @@ export function buildParsers(versification: Versification = VERSIFICATION) : Par
 			}
 		),
 
+		// A range of numbered books, eg, 1-2 Kings
+		// These cannot have a cv specifier afterwards, IE: 1-2 Kings 3v4 doesn't make sense
+		P.seq(
+			pBookPrefixNumber,
+			pRangeSeparator.then(pBookPrefixNumber),
+			pAnySpace.then(P.letters)
+		).chain(([ prefix_a, prefix_b, book ]: [ number, number, string ]) => {
+			if(prefix_a === prefix_b) { return P.fail('Numbered book range must have different start to end'); }
+
+			let name_a = prefix_a + ' ' + book.toLowerCase();
+			let id_a = book_name_to_id[name_a];
+			if(!id_a) { return P.fail(`Invalid book name: ${prefix_a} ${book.toLowerCase()}`); }
+
+			let name_b = prefix_b + ' ' + book.toLowerCase();
+			let id_b = book_name_to_id[name_b];
+			if(!id_b) { return P.fail(`Invalid book name: ${prefix_b} ${book.toLowerCase()}`); }
+
+			return P.succeed(_makeBookRange(versification, id_a, id_b));
+		}),
+
+		// A named range alias from the versification, eg "Old Testament"
+		// As with numbered book ranges, these cannot have a cv specifier
 		pRangeAlias,
 	);
 
