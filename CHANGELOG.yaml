@@ -1,3 +1,9 @@
+- v3.1.1:
+  date: '2022-06-03'
+  name: 'Fix CJS import under typescript'
+  fixes:
+    - 'Fix path to typescript types file when using CJS import (required for tsc 'moduleResultion: "node16"' option in client libraries)
+
 - v3.1.0:
   date: '2022-11-14'
   name: 'Named Range Alias Parsing'
