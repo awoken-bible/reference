@@ -24,7 +24,7 @@
       },
       "require": {
         "default": "./dist/awoken-ref.cjs.js",
-        "types": "./dist/types.index.d.ts"
+        "types": "./dist/types/index.d.ts"
       }
     },
     "./browser": "./dist/browser/awoken-ref.min.js"
