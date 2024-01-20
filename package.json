@@ -19,12 +19,13 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/awoken-ref.esm.mjs",
-        "types": "./dist/types/index.d.ts"
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/awoken-ref.esm.mjs"
       },
       "require": {
-        "default": "./dist/awoken-ref.cjs.js",
-        "types": "./dist/types/index.d.ts"
+        
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/awoken-ref.cjs.js"
       }
     },
     "./browser": "./dist/browser/awoken-ref.min.js"
