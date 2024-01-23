@@ -1,5 +1,11 @@
+- v3.1.2
+  date: '2024-01-23'
+  name: 'Fix Nextjs 14 Import Error'
+  fixes:
+    - 'Fix library import error under next.js 14 due to package.json config issue'
+
 - v3.1.1:
-  date: '2022-06-03'
+  date: '2023-06-03'
   name: 'Fix CJS import under typescript'
   fixes:
     - 'Fix path to typescript types file when using CJS import (required for tsc 'moduleResultion: "node16"' option in client libraries)
